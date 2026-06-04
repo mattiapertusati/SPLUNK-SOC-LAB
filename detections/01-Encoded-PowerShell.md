@@ -31,7 +31,6 @@ index=wineventlog EventCode=4688 New_Process_Name="*powershell.exe" (Process_Com
 2. **Decodifica Forense**
    Copiare la stringa offuscata e utilizzare **CyberChef**.
 
-   > [!NOTE]
    > Ricorda che PowerShell codifica nativamente in Base64 partendo da testo in formato **UTF-16LE** (o Unicode), non semplice ASCII.
    > Su CyberChef la ricetta corretta è: `From Base64` ➡️ `Decode Text (UTF-16LE)`.
 
