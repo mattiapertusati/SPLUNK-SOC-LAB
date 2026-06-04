@@ -1,10 +1,10 @@
 # 🚨 Detection of Encoded PowerShell Command
 
 
-| 🏷️ **Metadati** | 📋 **Dettagli** |
+| **Metadati** | **Dettagli** |
 | :--- | :--- |
-| **Tecnica MITRE ATT&CK** | 💻 `T1059.001 - PowerShell` |
-| **Log Source** | 🪵 `Windows Security Event Log (EventCode 4688)` |
+| **Tecnica MITRE ATT&CK** | `T1059.001 - PowerShell` |
+| **Log Source** | `Windows Security Event Log (EventCode 4688)` |
 
 ---
 
