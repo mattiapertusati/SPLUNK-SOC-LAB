@@ -1,4 +1,4 @@
-# 🚨 Detection of Local User Creation
+# 🚨 Detection of Local Privilege Escalation
 
 | **Metadati** | **Dettagli** |
 | :--- | :--- |
