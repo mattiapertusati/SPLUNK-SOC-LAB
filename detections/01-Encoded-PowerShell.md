@@ -8,10 +8,10 @@
 
 ---
 
-### 📝 Descrizione
+### Descrizione
 Rileva l'esecuzione di PowerShell con parametri di offuscamento e codifica in Base64 (`-enc`, `-e`, `-encodedcommand`). Questa tecnica è comunemente usata da malware e attaccanti per bypassare i controlli in chiaro e nascondere payload maligni.
 
-### 🔍 Query SPL
+### Query SPL
 ```splunk
 index=wineventlog EventCode=4688 New_Process_Name="*powershell.exe" (Process_Command_Line="* -enc*" OR Process_Command_Line="* -e *" OR Process_Command_Line="* -encoded*")
 | table _time, host, Account_Name, New_Process_Name, Process_Command_Line
@@ -23,7 +23,7 @@ index=wineventlog EventCode=4688 New_Process_Name="*powershell.exe" (Process_Com
 
 ---
 
-### 🛠️ Note di Triage / Azioni Consigliate
+### Note di Triage / Azioni Consigliate
 
 1. **Ispezione del Payload**
    Esaminare immediatamente il campo `Process_Command_Line` per isolare l'intera stringa codificata dopo il flag **-enc** (o simili).
@@ -36,6 +36,6 @@ index=wineventlog EventCode=4688 New_Process_Name="*powershell.exe" (Process_Com
 
 3. **Analisi post-decodifica (Caccia agli IoC)**
    Una volta ottenuto il testo in chiaro, analizzare il codice alla ricerca di:
-   * 🌐 Indirizzi IP esterni o domini (potenziali server di Comando e Controllo C2).
-   * 📥 URL di download (es. `Invoke-WebRequest`, `rundll32`).
-   * 📁 Percorsi di file anomali (es. esecuzioni spostate dentro `C:\Windows\Temp\`).
+   * Indirizzi IP esterni o domini (potenziali server di Comando e Controllo C2).
+   * URL di download (es. `Invoke-WebRequest`, `rundll32`).
+   * Percorsi di file anomali (es. esecuzioni spostate dentro `C:\Windows\Temp\`).
