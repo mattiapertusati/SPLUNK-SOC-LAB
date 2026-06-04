@@ -1,4 +1,4 @@
-# 🚨 Detection of Local Privilege Escalation
+# 🚨 Detection of Windows Defender Evasion (Real-Time Protection Disabled)
 
 | **Metadati** | **Dettagli** |
 | :--- | :--- |
