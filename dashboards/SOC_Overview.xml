@@ -1,0 +1,75 @@
+<dashboard version="1.1" theme="dark">
+  <label>🛡️ SOC Overview - DetectionLab</label>
+  <description>Cruscotto di monitoraggio in tempo reale per le tecniche mappate nel laboratorio.</description>
+  <row>
+    <panel>
+      <single>
+        <title>🚨 Totale Processi Sospetti (4688)</title>
+        <search>
+          <query>index=wineventlog EventCode=4688 (New_Process_Name="*powershell.exe" OR "*tscon*" OR "*netsh*" OR "*procdump*") | stats count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0xf8be34","0xdc4e41"]</option>
+        <option name="rangeValues">[0,5]</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>🧹 Tentativi di Cancellazione Log (1102/104)</title>
+        <search>
+          <query>index=wineventlog (EventCode=1102 OR EventCode=104) | stats count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="rangeColors">["0x53a051","0xdc4e41"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>👤 Nuovi Utenti Locali Creati (4720)</title>
+        <search>
+          <query>index=wineventlog EventCode=4720 | stats count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="rangeColors">["0x53a051","0xdc4e41"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>📊 Distribuzione Eventi Host Compromessi</title>
+        <search>
+          <query>index=wineventlog EventCode IN (4688, 4720, 4732, 1102, 104) | chart count by host</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+    <panel>
+      <table>
+        <title>📝 Timeline degli Ultimi Attacchi Rilevati</title>
+        <search>
+          <query>index=wineventlog EventCode IN (4688, 4720, 4732, 1102, 104) | eval Descrizione_Attacco=case(EventCode=1102 OR EventCode=104, "Cancellazione Event Log", EventCode=4720, "Creazione Nuovo Utente", EventCode=4732, "Privilege Escalation", EventCode=4688 AND LIKE(Process_Command_Line, "%tscon%"), "RDP Session Hijacking", EventCode=4688 AND LIKE(Process_Command_Line, "%powershell%"), "Esecuzione PowerShell Sospetta") | table _time, host, EventCode, Account_Name, Descrizione_Attacco | sort -_time</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+</dashboard>
