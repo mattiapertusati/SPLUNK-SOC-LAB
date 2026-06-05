@@ -1,47 +1,50 @@
-# 🛡️ SOC & Detection Engineering Lab
+# 🛡️ Detection Engineering & SOC Analyst Portfolio
 
-Questo progetto è un ambiente di laboratorio (DetectionLab) costruito per simulare attacchi reali su sistemi Windows, raccogliere la telemetria e sviluppare logiche di Detection e Alerting personalizzate all'interno di un SIEM (Splunk).
+Benvenuto nel mio progetto pratico di Detection Engineering! 
+In questo repository ho costruito da zero un ambiente di laboratorio (basato su DetectionLab) per simulare scenari di attacco reali, raccogliere la telemetria centralizzata e sviluppare logiche difensive all'interno di **Splunk**.
 
-## 🎯 Obiettivi del Progetto
-- Configurare un'infrastruttura di logging centralizzata (Windows Event Forwarding -> Splunk).
-- Simulare tecniche di attacco reali basate sul framework MITRE ATT&CK.
-- Sviluppare **Detection as Code** creando allarmi e dashboard operative per un Security Operations Center (SOC).
+## 🚀 Panoramica del Progetto
+L'obiettivo di questo progetto è dimostrare competenze pratiche nelle operazioni di un Security Operations Center (SOC) e nel Blue Teaming. Ho ricreato l'intero ciclo di vita della difesa: dall'ingegnerizzazione dell'infrastruttura di log, all'esecuzione degli attacchi, fino alla scrittura di allarmi e dashboard.
+
+**Competenze dimostrate:**
+* **SIEM & Log Management:** Configurazione e utilizzo di Splunk Enterprise.
+* **Windows Security:** Analisi di Windows Event Logs, Sysmon e Windows Event Forwarding (WEF).
+* **Threat Detection:** Sviluppo di query SPL avanzate basate sulle tecniche del framework **MITRE ATT&CK**.
+* **Detection as Code:** Gestione degli allarmi tramite file di configurazione (`savedsearches.conf`).
+* **Data Visualization:** Creazione di Dashboard interattive (XML) per il triage rapido.
 
 ---
 
-## 🏗️ Architettura e Flusso dei Dati
+## 📂 Struttura del Repository
 
-L'infrastruttura è basata su macchine virtuali gestite tramite Vagrant. La logica del laboratorio si divide in due flussi principali:
-1. **Flusso Offensivo:** L'attaccante colpisce gli endpoint (Win10) o il Domain Controller (DC). Le azioni malevole generano log locali.
-2. **Flusso Difensivo:** I log vengono inoltrati tramite WinRM al server WEF (Windows Event Forwarder) e infine centralizzati su Splunk (Logger). Da qui, il team SOC monitora gli eventi, gestisce gli allarmi e analizza le dashboard.
+Ho organizzato il progetto in moduli chiari per facilitare la navigazione. Clicca sulle singole cartelle per esplorare i dettagli:
 
-```mermaid
-graph TD
-    classDef attacker fill:#2d3436,stroke:#ff7675,stroke-width:2px,color:#fff;
-    classDef windows fill:#0984e3,stroke:#74b9ff,stroke-width:2px,color:#fff;
-    classDef splunk fill:#00b894,stroke:#55efc4,stroke-width:2px,color:#fff;
-    classDef soc fill:#6c5ce7,stroke:#a29bfe,stroke-width:2px,color:#fff;
+* [**`/detections`**](./detections/): Contiene la documentazione dettagliata di 10 casi d'uso di sicurezza (Use Cases). Per ogni minaccia ho mappato l'EventCode, la tecnica MITRE e la query SPL necessaria per individuarla.
+* [**`/alerts`**](./alerts/): Contiene il file `savedsearches.conf` che automatizza le detections in Splunk (Detection as Code), trasformando le query in allarmi schedulati con azioni specifiche.
+* [**`/dashboards`**](./dashboards/): Contiene il codice sorgente XML (`SOC_Overview.xml`) del cruscotto operativo creato per gli analisti L1, con metriche, grafici a torta e timeline degli attacchi.
+* [**`/infrastructure`**](./infrastructure/): Contiene la documentazione sull'infrastruttura di rete, il flusso dei log e il diagramma dell'ambiente Vagrant/VirtualBox utilizzato per i test.
 
-    A[🥷 Attaccante / Red Team]:::attacker
+---
 
-    subgraph "DetectionLab Environment"
-        direction TB
-        W10[💻 WIN10<br/>Endpoint Vittima]:::windows
-        DC[🏢 DC<br/>Domain Controller]:::windows
-        WEF[🛡️ WEF<br/>Windows Event Forwarder]:::windows
-        SPLUNK[🧠 LOGGER<br/>Splunk Enterprise]:::splunk
-    end
+## ⚔️ Le Minacce Simulate
+Durante il laboratorio, ho simulato e rilevato con successo le seguenti attività malevole:
+1. Esecuzione di **PowerShell Offuscato** (Base64).
+2. Creazione di **Utenti Locali** per persistenza.
+3. **Privilege Escalation** (Aggiunta al gruppo Administrators).
+4. Disattivazione di **Windows Defender**.
+5. Creazione di **Scheduled Tasks** malevoli.
+6. Dumping della memoria **LSASS** (Estrazione Credenziali).
+7. Movimento Laterale tramite **PsExec**.
+8. Manipolazione delle regole del **Firewall** (Netsh).
+9. **Log Clearing** (Cancellazione tracce / EventCode 1102).
+10. **RDP Session Hijacking** tramite utility `tscon`.
 
-    SOC[🧑‍💻 Analista SOC / Blue Team]:::soc
+---
 
-    %% Flusso di Attacco
-    A -. "Attacchi (RDP, PsExec, PowerShell)" .-> W10
-    A -. "Enumerazione" .-> DC
+## 🛠️ Strumenti Utilizzati
+* **Virtualizzazione:** Vagrant, Oracle VirtualBox
+* **Sistemi Operativi:** Windows 10, Windows Server 2016
+* **Telemetria & SIEM:** Splunk Enterprise, Windows Event Forwarder, Sysmon
+* **Frameworks:** MITRE ATT&CK
 
-    %% Flusso dei Log (Telemetry)
-    W10 -- "Inoltro Eventi (WinRM)" --> WEF
-    DC -- "Inoltro Eventi (WinRM)" --> WEF
-    WEF -- "Log Centralizzati" --> SPLUNK
-
-    %% Monitoraggio
-    SOC -- "Gestione Allarmi & Dashboard" --> SPLUNK
+> *Progetto realizzato come dimostrazione pratica per ruoli di SOC Analyst / Detection Engineer.*
