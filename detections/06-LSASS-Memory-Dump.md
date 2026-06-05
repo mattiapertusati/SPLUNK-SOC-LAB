@@ -25,11 +25,11 @@ index=sysmon EventCode=1 "comsvcs.dll" "MiniDump"
 
 ### Note di Triage / Azioni Consigliate
 
-1. **Analisi della Riga di Comando ('CommandLine')**
-   Verificare il percorso in cui viene salvato il file di dump. Se il file viene scritto in directory temporanee (es. 'C:\Windows\Temp\', 'C:\Users\...\AppData\Local\Temp\'), l'attività è quasi certamente malevola.
+1. **Analisi della Riga di Comando (`CommandLine`)**
+   Verificare il percorso in cui viene salvato il file di dump. Se il file viene scritto in directory temporanee (es. `C:\Windows\Temp\`, `C:\Users\...\AppData\Local\Temp\`), l'attività è quasi certamente malevola.
 
-2. **Caccia a comandi correlati**
-   Un attaccante che usa PowerShell per spegnere Defender, spesso lo usa subito dopo per scaricare il malware. Cercare nello stesso intervallo temporale esecuzioni di 'Invoke-WebRequest' (iwr) o 'Net.WebClient'.
+2. **Verifica dei Privilegi**
+   Questo attacco richiede privilegi di Amministratore (nello specifico `SeDebugPrivilege`). Investigare immediatamente quale account ha lanciato il comando: se è un account utente standard compromesso che ha effettuato una `Privilege Escalation`, o se è un account amministrativo legittimo di cui sono state rubate le credenziali.
    
 3. **Contenimento (Remediation)**
-   Se l'azione è malevola, isolare immediatamente l'host dalla rete aziendale. La riattivazione di Windows Defender dovrà essere forzata tramite Group Policy (GPO) o tramite la console EDR centrale, poiché l'attaccante potrebbe aver alterato i permessi locali.
+   Considerare l'host come criticamente compromesso. Isolare immediatamente la macchina dalla rete. Poiché l'attaccante potrebbe aver già estratto e decifrato le password, è obbligatorio forzare il reset delle credenziali per tutti gli account che hanno effettuato l'accesso di recente su quell'endpoint.
