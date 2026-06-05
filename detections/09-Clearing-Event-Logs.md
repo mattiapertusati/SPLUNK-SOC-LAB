@@ -12,7 +12,7 @@ Rileva la cancellazione manuale o scriptata dei registri degli eventi di Windows
 
 ### Query SPL
 ```splunk
-index=* (EventCode=1102 OR EventCode=104) "*cl*" ("*Security*" OR "*System*")
+index=wineventlog (EventCode=1102 OR EventCode=104)
 | table _time, host, EventCode, Account_Name, TaskCategory
 ```
 
