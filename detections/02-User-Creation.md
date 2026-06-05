@@ -25,11 +25,11 @@ index=wineventlog EventCode=4720
 
 ### Note di Triage / Azioni Consigliate
 
-1. **Verifica dell'Origine (Subject)**
+1. **Verifica dell'Origine (`Subject`)**
    Analizzare il campo `SubjectUserName` per determinare chi ha generato l'account. Se l'utente non appartiene al reparto IT o se l'azione                  avviene fuori dal normale orario lavorativo, l'evento è critico.
 
-2. **Contesto dell'Endpoint (Host)**
+2. **Contesto dell'Endpoint (`Host`)**
    Valutare la macchina target (`host`). La creazione di un account locale su un laptop aziendale standard (Endpoint) è altamente sospetta rispetto alla creazione su un Domain Controller.
 
-3. **Caccia ad attività correlate (Escalation)**
+3. **Caccia ad attività correlate (`Escalation`)**
    Cercare log successivi (es. EventCode 4732) per verificare se il nuovo account (`TargetUserName`) è stato immediatamente aggiunto a gruppi con privilegi elevati, come Administrators o Remote Desktop Users.
