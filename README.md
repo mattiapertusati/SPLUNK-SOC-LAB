@@ -1,57 +1,47 @@
-# 🛡️ End-to-End Splunk SIEM Engineering & Advanced Threat Hunting Lab
+# 🛡️ SOC & Detection Engineering Lab
 
-## 👤 Candidato: Mattia Pertusati
-### 🎯 Progetto di Cyber Security, Incident Response & SOC Automation
+Questo progetto è un ambiente di laboratorio (DetectionLab) costruito per simulare attacchi reali su sistemi Windows, raccogliere la telemetria e sviluppare logiche di Detection e Alerting personalizzate all'interno di un SIEM (Splunk).
 
----
-
-## 📝 Descrizione del Progetto
-Questo repository documenta la progettazione, la realizzazione e l'analisi forense avanzata di un laboratorio di **Security Operations Center (SOC)** basato sul framework aziendale **Detection Lab**. L'obiettivo del progetto è simulare una catena di attacco informatico completa (Kill Chain) contro un'infrastruttura Microsoft Active Directory e configurare un server **Splunk Enterprise** centrale per il monitoraggio, l'estrazione degli Indicatori di Compromissione (IoC) e l'automazione dei rilevamenti.
-
----
-
-## 🗺️ Roadmap dello Sviluppo (Alberatura delle Fasi)
-
-Il progetto è suddiviso in moduli strutturati, ognuno corredato da evidenze digitali, screenshot operativi e configurazioni tecniche:
-
-*   **Fase 1: 📁 [01-Environment-Setup](./01-Environment-Setup)** ➔ Provisioning dell'infrastruttura multi-host via Vagrant e Oracle VirtualBox (`Logger`, `dc-prod`, `wef`, `win10-client`).
-*   **Fase 2: 📁 [02-Sysmon-Installation](./02-Sysmon-Installation)** ➔ Implementazione di Microsoft Sysmon con template avanzato SwiftOnSecurity per l'eliminazione del rumore di fondo.
-*   **Fase 3: 📁 [03-Log-Ingestion-Troubleshooting](./03-Log-Ingestion-Troubleshooting)** ➔ Protocollo analitico di troubleshooting forense applicato per la risoluzione del drop-out dei log.
-*   **Fase 4: 📁 [04-Splunk-SPL-Fundamentals](./04-Splunk-SPL-Fundamentals)** ➔ Sviluppo di query analitiche in linguaggio SPL (`table`, `stats count by`, `where`) per la strutturazione dei dati.
-*   **Fase 5: 📁 [05-Threat-Hunting-Base](./05-Threat-Hunting-Base)** ➔ Attività di triage su attacchi reali di Password Spraying e tracciamento delle attività di Discovery.
-*   **Fase 6: 📁 [06-CyberChef-Analysis](./06-CyberChef-Analysis)** ➔ Reverse engineering e decodifica forense di payload PowerShell cifrati in Base64 (Reverse Shell).
-*   **Fase 7: 📁 [07-Persistence-Detection](./07-Persistence-Detection)** ➔ Rilevamento di tecniche di persistenza e camuffamento (Masquerading) via `schtasks.exe` e `sc.exe`.
-*   **Fase 8: 📁 [08-Credential-Theft-Forensics](./08-Credential-Theft-Forensics)** ➔ Monitoraggio del furto definitivo di credenziali tramite LSASS Process Dump e manipolazione di Mimikatz.
-*   **Fase 9: 📁 [09-SOC-Automation](./09-SOC-Automation)** ➔ Ingegneria dei rilevamenti e attivazione di un Allarme in tempo reale (Real-time Alert) con logica di Throttling.
+## 🎯 Obiettivi del Progetto
+- Configurare un'infrastruttura di logging centralizzata (Windows Event Forwarding -> Splunk).
+- Simulare tecniche di attacco reali basate sul framework MITRE ATT&CK.
+- Sviluppare **Detection as Code** creando allarmi e dashboard operative per un Security Operations Center (SOC).
 
 ---
 
-## 📐 Architettura di Rete del Laboratorio
+## 🏗️ Architettura e Flusso dei Dati
 
-La Sandbox utilizza una subnet privata in modalità Host-Only (`192.168.56.0/24`) isolata da Internet per garantire la sicurezza dell'host reale durante l'esecuzione dei payload:
+L'infrastruttura è basata su macchine virtuali gestite tramite Vagrant. La logica del laboratorio si divide in due flussi principali:
+1. **Flusso Offensivo:** L'attaccante colpisce gli endpoint (Win10) o il Domain Controller (DC). Le azioni malevole generano log locali.
+2. **Flusso Difensivo:** I log vengono inoltrati tramite WinRM al server WEF (Windows Event Forwarder) e infine centralizzati su Splunk (Logger). Da qui, il team SOC monitora gli eventi, gestisce gli allarmi e analizza le dashboard.
 
+```mermaid
+graph TD
+    classDef attacker fill:#2d3436,stroke:#ff7675,stroke-width:2px,color:#fff;
+    classDef windows fill:#0984e3,stroke:#74b9ff,stroke-width:2px,color:#fff;
+    classDef splunk fill:#00b894,stroke:#55efc4,stroke-width:2px,color:#fff;
+    classDef soc fill:#6c5ce7,stroke:#a29bfe,stroke-width:2px,color:#fff;
 
-| Nome Host | Indirizzo IP | Sistema Operativo | Ruolo e Servizi Core |
-| :--- | :--- | :--- | :--- |
-| **`logger`** | `192.168.56.105` | Ubuntu Linux 20.04 | Server SIEM centrale (Splunk Enterprise) |
-| **`dc-prod`** | `192.168.56.102` | Windows Server 2016 | Domain Controller centrale (Active Directory / DNS) |
-| **`wef`** | `192.168.56.103` | Windows Server 2016 | Windows Event Collector (Concentratore di log) |
-| **`win10-client`** | `192.168.56.104` | Windows 10 Enterprise | Endpoint della vittima (Postazione client aziendale) |
+    A[🥷 Attaccante / Red Team]:::attacker
 
----
+    subgraph "DetectionLab Environment"
+        direction TB
+        W10[💻 WIN10<br/>Endpoint Vittima]:::windows
+        DC[🏢 DC<br/>Domain Controller]:::windows
+        WEF[🛡️ WEF<br/>Windows Event Forwarder]:::windows
+        SPLUNK[🧠 LOGGER<br/>Splunk Enterprise]:::splunk
+    end
 
-## 🛠️ Nota Ingegneristica sul Troubleshooting dell'Ingestion Dati
+    SOC[🧑‍💻 Analista SOC / Blue Team]:::soc
 
-Durante la **Fase 3**, i test di connettività di rete eseguiti dall'endpoint verso l'indexer centrale hanno confermato il corretto instradamento dei pacchetti sulla porta predefinita (`TcpTestSucceeded : True` sulla porta `9997` con un volume di traffico di **346 Eventi al Secondo (EPS)** certificato dai log di diagnostica `_internal`). 
+    %% Flusso di Attacco
+    A -. "Attacchi (RDP, PsExec, PowerShell)" .-> W10
+    A -. "Enumerazione" .-> DC
 
-Tuttavia, a causa di restrizioni rigide nei permessi di scrittura dei ruoli locali di Splunk Enterprise legati alla build automatica e alla mancanza dei descrittori nativi dei Source Type di Windows sul server Linux in background, la telemetria cruda subiva un drop-out visivo all'interno della dashboard principale.
+    %% Flusso dei Log (Telemetry)
+    W10 -- "Inoltro Eventi (WinRM)" --> WEF
+    DC -- "Inoltro Eventi (WinRM)" --> WEF
+    WEF -- "Log Centralizzati" --> SPLUNK
 
-**Soluzione Strategica Applicata (Pivot)**: Per convalidare gli obiettivi didattici e analitici ed evitare lo stallo dell'infrastruttura, il Threat Hunting è stato condotto importando con successo nell'indice `main` un dataset professionale strutturato in formato **JSON Lines (.jsonl)**, simulando una catena di attacco completa (Advanced Persistent Threat). Questo approccio metodologico ha permesso di dimostrare la piena padronanza del linguaggio SPL, delle metriche di tracciamento di Sysmon e della logica di contenimento degli incidenti, garantendo la perfetta riuscita del laboratorio.
-
----
-
-## 🚀 Competenze Tecniche Dimostrate nel Portfolio
-- **SIEM Engineering**: Installazione agenti, gestione indici, configurazione regole di Throttling e Suppression degli allarmi.
-- **Threat Hunting & Incident Response**: Ricostruzione cronologica degli attacchi, analisi degli EventID di Windows e Sysmon.
-- **Analisi Forense degli Artefatti**: Rilevamento di dump della memoria (LSASS), abuso di credenziali (Mimikatz) e persistenza di sistema.
-- **Cyber Forensics**: Isolamento e decodifica di script offuscati e identificazione degli Indicatori di Compromissione (IoC).
+    %% Monitoraggio
+    SOC -- "Gestione Allarmi & Dashboard" --> SPLUNK
