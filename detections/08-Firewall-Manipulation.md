@@ -1,21 +1,28 @@
 # 🚨Detection of Malicious Firewall Rule Creation via Netsh
 
-| **Metadati** | **Dettagli** |
-| :--- | :--- |
-| **Tecnica MITRE ATT&CK** | `T1562.004 - Impair Defenses: Disable or Modify System Firewall` |
-| **Log Source** | `Sysmon (EventID 1) / Windows Security (EventCode 4688)` |
-
----
-
 ### Descrizione
 Rileva la creazione di una nuova regola nel firewall di Windows tramite l'utility da riga di comando `netsh.exe`. Gli attaccanti utilizzano questa tecnica per aprire porte specifiche (solitamente in ingresso - Inbound) e garantire che il traffico del loro malware o la connessione verso i server Command & Control (C2) non venga bloccato dalle difese di rete locali dell'endpoint.
 
+## 🎯 MITRE ATT&CK
+* **Tactic:** Defense Evasion (TA0005)
+* **Technique:** Impair Defenses (T1562)
+* **Sub-technique:** Disable or Modify System Firewall (T1562.004)
+  
+## 🚦 Alert Metadata
+
+* **Severity:** Medium
+* **Confidence:** High
+* **Impact:** Medium
+
+(Nota: Portiamo Severity e Impact a Medium perché netsh viene usato quotidianamente da installer di software legittimi, browser e tool IT per configurare le porte. Diventa un alert ad alta priorità solo in base a cosa c'è scritto nella riga di comando o se il processo padre è anomalo).
+
 ### Query SPL
 ```splunk
-index=* (EventCode=4688 OR EventCode=1) "*netsh*" "*add rule*" "*allow*"
+index=sysmon OR index=wineventlog (EventCode=4688 OR EventCode=1) "netsh" "advfirewall" "allow"
+
+| rex field=CommandLine "(?i)add\s+ru(le)?\b"
 | rex field=_raw "name=\"(?<nome_regola>[^\"]+)\""
-| eval New_Account_Name=mvindex(Account_Name, 0)
-| table _time, host, EventCode, New_Account_Name, CommandLine, Image, nome_regola, Creator_Process_Name
+| table _time, host, EventCode, User, CommandLine, Image, nome_regola, ParentImage
 ```
 
 ### ⚠️ Possibili Falsi Positivi
