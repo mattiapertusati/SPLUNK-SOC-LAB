@@ -15,8 +15,12 @@ Rileva l'esecuzione di PowerShell con parametri di offuscamento e codifica in Ba
 
 ### Query SPL
 ```splunk
-index=wineventlog EventCode=4688 New_Process_Name="*powershell.exe" (Process_Command_Line="* -enc*" OR Process_Command_Line="* -e *" OR Process_Command_Line="* -encoded*")
-| table _time, host, Account_Name, New_Process_Name, Process_Command_Line
+index=wineventlog EventCode=4688 (New_Process_Name="*powershell.exe" OR Image="*powershell.exe")
+
+| eval Command_Line=coalesce(Process_Command_Line, CommandLine, _raw)
+| regex Command_Line="(?i)[\/\-–—]e(n(c(o(d(e(d(c(o(m(m(a(n(d)? )? )? )? )? )? )? )? )? )? )? )?\b"
+| eval User_Creator=mvindex(Account_Name, 0)
+| table _time, host, User_Creator, New_Process_Name, Command_Line
 ```
 
 ### ⚠️ Possibili Falsi Positivi
