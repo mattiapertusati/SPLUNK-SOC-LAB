@@ -1,20 +1,26 @@
 # 🚨 Detection of Scheduled Task Creation for Persistence
 
-| **Metadati** | **Dettagli** |
-| :--- | :--- |
-| **Tecnica MITRE ATT&CK** | `T1053.005 - Scheduled Task/Job: Scheduled Task` |
-| **Log Source** | `Windows Security Event Log (EventCode 4698)` |
-
----
-
 ### Descrizione
 Rileva la creazione di una nuova attività pianificata (Scheduled Task) sul sistema. Questa tecnica viene sfruttata regolarmente dagli attaccanti per garantire la persistenza all'interno dell'infrastruttura, consentendo al malware o alle backdoor di eseguirsi automaticamente a intervalli prestabiliti o al riavvio del computer, anche in caso di rimozione dell'accesso iniziale.
+
+## 🎯 MITRE ATT&CK
+* **Tactic:** Persistence (TA0003)
+* **Technique:** Scheduled Task/Job (T1053)
+* **Sub-technique:** Scheduled Task (T1053.005)
+* 
+## 🚦 Alert Metadata
+* **Severity:** Medium
+* **Confidence:** High
+* **Impact:** High
+
+(Nota: La Severity è impostata su Medium poiché la creazione di Scheduled Task è un'attività frequentissima del sistema operativo e dei software legittimi. L'Impact rimane High perché, se l'azione è malevola, garantisce all'attaccante l'accesso persistente o l'esecuzione di codice ad alti privilegi).
 
 ### Query SPL
 ```splunk
 index=wineventlog EventCode=4698
 | rex field=_raw "<Command>(?<Task_Command>[^<]+)</Command>"
-| table _time, host, Account_Name, Task_Name, Task_Command
+| rex field=_raw "<Arguments>(?<Task_Arguments>[^<]+)</Arguments>"
+| table _time, host, Account_Name, Task_Name, Task_Command, Task_Arguments
 ```
 
 ### ⚠️ Possibili Falsi Positivi
