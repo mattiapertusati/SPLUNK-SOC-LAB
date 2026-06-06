@@ -1,20 +1,26 @@
 # 🚨 Detection of LSASS Memory Dumping via Comsvcs.dll
 
-| **Metadati** | **Dettagli** |
-| :--- | :--- |
-| **Tecnica MITRE ATT&CK** | `T1003.001 - OS Credential Dumping: LSASS Memory` |
-| **Log Source** | `Sysmon (EventID 1) / Windows Security (EventCode 4688)` |
-
----
-
 ### Descrizione
 Rileva il tentativo di estrarre le credenziali in chiaro e gli hash delle password dalla memoria del processo di sistema `LSASS` (Local Security Authority Subsystem Service). L'attacco utilizza una tecnica "Living off the Land", sfruttando il binario legittimo di Windows `rundll32.exe` per richiamare la funzione esportata MiniDump all'interno della libreria di sistema `comsvcs.dll`. Questo permette all'attaccante di aggirare le restrizioni di base e salvare un file di dump (solitamente `.dmp`) per l'estrazione offline delle password tramite tool come Mimikatz.
+
+## 🎯 MITRE ATT&CK
+* **Tactic:** Credential Access (TA0006)
+* **Technique:** OS Credential Dumping (T1003)
+* **Sub-technique:** LSASS Memory (T1003.001)
+* 
+## 🚦 Alert Metadata
+
+⚠️ Nota sulla Severity: Il dumping di LSASS è uno dei segnali più gravi in assoluto in una rete aziendale (spesso precede il ransomware). Se ha successo, l'attaccante ha le chiavi del regno. Per questo la Severity va alzata al massimo.
+
+* **Severity:** Critical
+* **Confidence:** High
+* **Impact:** Critical
 
 ### Query SPL
 
 ```splunk
-index=sysmon EventCode=1 "comsvcs.dll" "MiniDump"
-| table _time, host, CommandLine
+index=sysmon EventCode=1 "comsvcs.dll" ("MiniDump" OR "#24")
+| table _time, host, User, CommandLine
 ```
 
 ### ⚠️ Possibili Falsi Positivi
