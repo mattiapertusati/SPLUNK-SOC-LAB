@@ -1,15 +1,17 @@
 # 🚨 Detection of Encoded PowerShell Command
 
-
-| **Metadati** | **Dettagli** |
-| :--- | :--- |
-| **Tecnica MITRE ATT&CK** | `T1059.001 - PowerShell` |
-| **Log Source** | `Windows Security Event Log (EventCode 4688)` |
-
----
-
 ### Descrizione
 Rileva l'esecuzione di PowerShell con parametri di offuscamento e codifica in Base64 (`-enc`, `-e`, `-encodedcommand`). Questa tecnica è comunemente usata da malware e attaccanti per bypassare i controlli in chiaro e nascondere payload maligni.
+
+## 🎯 MITRE ATT&CK
+* **Tactic:** Execution (TA0002)
+* **Technique:** Command and Scripting Interpreter (T1059)
+* **Sub-technique:** PowerShell (T1059.001)
+
+## 🚦 Alert Metadata
+* **Severity:** High
+* **Confidence:** Medium (Può generare falsi positivi se amministratori IT usano script offuscati legittimi)
+* **Impact:** High
 
 ### Query SPL
 ```splunk
