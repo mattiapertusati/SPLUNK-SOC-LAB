@@ -1,19 +1,25 @@
 # 🚨Detection of Event Log Clearing
 
-| **Metadati** | **Dettagli** |
-| :--- | :--- |
-| **Tecnica MITRE ATT&CK** | `T1070.001 - Indicator Removal: Clear Windows Event Logs` |
-| **Log Source** | `Windows Security (EventCode 1102) / Windows System (EventCode 104)` |
-
----
-
 ### Descrizione
 Rileva la cancellazione manuale o scriptata dei registri degli eventi di Windows (Security o System). Gli attaccanti utilizzano questa tecnica, nota come "Terra Bruciata", nelle fasi finali di un'intrusione per eliminare le tracce delle loro attività (come creazioni di utenti, movimenti laterali o esecuzione di comandi), rendendo estremamente difficile per i team di Incident Response ricostruire la catena di attacco.
+
+## 🎯 MITRE ATT&CK
+* **Tactic:** Defense Evasion (TA0005)
+* **Technique:** Indicator Removal (T1070)
+* **Sub-technique:** Clear Windows Event Logs (T1070.001)
+
+## 🚦 Alert Metadata
+* **Severity:** Critical
+* **Confidence:** High
+* **Impact:** High
+
+(Nota: La Severity è Critical perché non esistono motivi di business o di amministrazione IT ordinaria per cancellare l'intero log di Sicurezza o di Sistema. Quando questo accade, è quasi sempre un attacco o un amministratore che sta cercando di nascondere un errore grave).
 
 ### Query SPL
 ```splunk
 index=wineventlog (EventCode=1102 OR EventCode=104)
-| table _time, host, EventCode, Account_Name, TaskCategory
+| eval User_Responsible=coalesce(SubjectUserName, Account_Name, UserID, "SYSTEM/Unknown")
+| table _time, host, EventCode, User_Responsible, TaskCategory
 ```
 
 ### ⚠️ Possibili Falsi Positivi
