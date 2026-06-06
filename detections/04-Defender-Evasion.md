@@ -1,14 +1,17 @@
 # 🚨 Detection of Windows Defender Evasion (Real-Time Protection Disabled)
 
-| **Metadati** | **Dettagli** |
-| :--- | :--- |
-| **Tecnica MITRE ATT&CK** | `T1562.001 - Impair Defenses: Disable or Modify Tools` |
-| **Log Source** | `PowerShell Operational Log (EventCode 4103 / 4104)` |
-
----
-
 ### Descrizione
 Rileva il tentativo di disattivazione della protezione in tempo reale di Windows Defender tramite il Cmdlet nativo `Set-MpPreference`. Gli attaccanti eseguono questo comando per "spegnere le telecamere" prima di scaricare o eseguire payload maligni (malware, ransomware) sull'endpoint, evitando il blocco immediato da parte dell'antivirus.
+
+## 🎯 MITRE ATT&CK
+* **Tactic:** Defense Evasion (TA0005)
+* **Technique:** Impair Defenses (T1562)
+* **Sub-technique:** Disable or Modify Tools (T1562.001)
+
+## 🚦 Alert Metadata
+* **Severity:** High
+* **Confidence:** Medium
+* **Impact:** High
 
 ### Query SPL
 ```splunk
