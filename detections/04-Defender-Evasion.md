@@ -15,8 +15,12 @@ Rileva il tentativo di disattivazione della protezione in tempo reale di Windows
 
 ### Query SPL
 ```splunk
-index=wineventlog source="*PowerShell*" (EventCode=4103 OR EventCode=4104) "Set-MpPreference" "DisableRealtimeMonitoring"
-| table _time, host, EventCode, Message
+index=wineventlog source="*PowerShell*" (EventCode=4103 OR EventCode=4104) "Set-MpPreference"
+
+
+| eval Script_Content=coalesce(Message, ScriptBlockText, _raw)
+| regex Script_Content="(?i)-DisableR(ealtimeMonitoring)?\s+(1|\$true)"
+| table _time, host, EventCode, Script_Content
 ```
 
 ### ⚠️ Possibili Falsi Positivi
