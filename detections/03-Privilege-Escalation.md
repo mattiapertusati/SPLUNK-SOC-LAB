@@ -1,14 +1,19 @@
 # 🚨 Detection of Local Privilege Escalation
 
-| **Metadati** | **Dettagli** |
-| :--- | :--- |
-| **Tecnica MITRE ATT&CK** | `T1098 - Account Manipulation` |
-| **Log Source** | `Windows Security Event Log (EventCode 4732)` |
-
----
-
 ### Descrizione
 Rileva l'aggiunta di un account utente a un gruppo locale privilegiato (es. `Administrators`). Gli attaccanti eseguono questa manovra per elevare i propri permessi (`Privilege Escalation`) o per garantire ampi diritti operativi a un account fittizio (`backdoor`) appena creato.
+
+## 🎯 MITRE ATT&CK
+* **Tactic:** Privilege Escalation (TA0004)
+* **Technique:** Abuse Elevation Control Mechanism (T1548)
+* **Sub-technique:** Bypass User Account Control (T1548.002)
+
+## 🚦 Alert Metadata
+* **Severity:** High
+* **Confidence:** Medium
+* **Impact:** High
+
+---
 
 ### Query SPL
 ```splunk
