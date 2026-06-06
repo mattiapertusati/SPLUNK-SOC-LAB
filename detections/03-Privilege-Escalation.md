@@ -4,9 +4,9 @@
 Rileva l'aggiunta di un account utente a un gruppo locale privilegiato (es. `Administrators`). Gli attaccanti eseguono questa manovra per elevare i propri permessi (`Privilege Escalation`) o per garantire ampi diritti operativi a un account fittizio (`backdoor`) appena creato.
 
 ## 🎯 MITRE ATT&CK
-* **Tactic:** Persistence / Privilege Escalation
-* **Technique:** Account Manipulation (T1098)
-* **Sub-technique:** Nessuna
+* **Tactic:** Privilege Escalation (TA0004) / Persistence (TA0003)
+* **Technique:** Permission Groups Discovery (T1069) oppure Account Manipulation (T1098)
+* **Sub-technique:** Local Groups (T1069.001) / Dominant for this action: T1098 
 
 ## 🚦 Alert Metadata
 * **Severity:** High
@@ -18,9 +18,10 @@ Rileva l'aggiunta di un account utente a un gruppo locale privilegiato (es. `Adm
 ### Query SPL
 ```splunk
 index=wineventlog EventCode=4732 Group_Name=Administrators
-| eval Creator_Account=mvindex(Account_Name, 0)
-| eval Added_Account_SID=mvindex(Security_ID, 1)
-| table _time, host, Creator_Account, Group_Name, Added_Account_SID
+| eval Group_Target=coalesce(Group_Name, TargetUserName)
+| eval Creator_Account=coalesce(SubjectUserName, mvindex(Account_Name, 0))
+| eval Added_Account_SID=coalesce(MemberSid, mvindex(Security_ID, 1))
+| table _time, host, Creator_Account, Group_Target, Added_Account_SID
 ```
 
 ### ⚠️ Possibili Falsi Positivi
