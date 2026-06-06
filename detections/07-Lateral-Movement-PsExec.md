@@ -1,18 +1,24 @@
 # 🚨 Detection of Lateral Movement via PsExec
 
-| **Metadati** | **Dettagli** |
-| :--- | :--- |
-| **Tecnica MITRE ATT&CK** | `T1569.002 - System Services: Service Execution  +  T1021.002 - Remote Services: SMB/Windows Admin Shares` |
-| **Log Source** | `Windows System (EventCode 7045) / Security (EventCode 4697)` |
-
----
-
 ### Descrizione
 Rileva l'installazione di un nuovo servizio di sistema associato a PsExec, una utility legittima della suite Sysinternals di Microsoft. Sebbene nata per scopi di amministrazione IT, PsExec è ampiamente abusata dagli attaccanti (inclusi i gruppi Ransomware) per eseguire comandi o distribuire payload su macchine remote all'interno del dominio. L'esecuzione di PsExec da remoto comporta la scrittura del binario `PSEXESVC.exe` nella share `ADMIN$` e la successiva creazione del servizio omonimo per l'esecuzione con privilegi di SYSTEM.
 
+## 🎯 MITRE ATT&CK
+* **Tactic:** Lateral Movement (TA0008), Execution (TA0002)
+* **Technique:** Services (T1021) o Command and Scripting Interpreter (T1059)
+* **Sub-technique:** SMB/Windows Admin Shares (T1021.002)
+  
+## 🚦 Alert Metadata
+
+* **Severity:** High
+* **Confidence:** High
+* **Impact:** High
+
+(Nota: Portiamo la Severity a High invece di Critical solo perché PsExec è uno strumento ufficiale Microsoft usato massicciamente dagli amministratori IT. Diventa Critical nel momento in cui il triage conferma che l'utente non è un admin o il nome del file è alterato).
+
 ### Query SPL
 ```splunk
-index=wineventlog (EventCode=7045 OR EventCode=4697) "*PSEXESVC*"
+index=wineventlog (EventCode=7045 OR EventCode=4697) ("*PSEXESVC*" OR "*PsExec execution service*")
 | table _time, host, EventCode, Account_Name, Service_Name, Service_File_Name
 ```
 
