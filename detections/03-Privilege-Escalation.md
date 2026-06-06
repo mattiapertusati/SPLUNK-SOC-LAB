@@ -4,9 +4,9 @@
 Rileva l'aggiunta di un account utente a un gruppo locale privilegiato (es. `Administrators`). Gli attaccanti eseguono questa manovra per elevare i propri permessi (`Privilege Escalation`) o per garantire ampi diritti operativi a un account fittizio (`backdoor`) appena creato.
 
 ## 🎯 MITRE ATT&CK
-* **Tactic:** Privilege Escalation (TA0004)
-* **Technique:** Abuse Elevation Control Mechanism (T1548)
-* **Sub-technique:** Bypass User Account Control (T1548.002)
+* **Tactic:** Persistence / Privilege Escalation
+* **Technique:** Account Manipulation (T1098)
+* **Sub-technique:** Nessuna
 
 ## 🚦 Alert Metadata
 * **Severity:** High
