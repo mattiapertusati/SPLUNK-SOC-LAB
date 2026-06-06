@@ -1,14 +1,19 @@
 # 🚨 Detection of Local User Creation
 
-| **Metadati** | **Dettagli** |
-| :--- | :--- |
-| **Tecnica MITRE ATT&CK** | `T1136.001 - Local Account` |
-| **Log Source** | `Windows Security Event Log (EventCode 4720)` |
-
----
-
 ### Descrizione
 Rileva la creazione di un nuovo account utente locale sul sistema. Gli attaccanti creano spesso account fittizi (`backdoor`) per garantirsi un accesso persistente all'infrastruttura, bypassando eventuali cambi di password dell'utente compromesso inizialmente.
+
+## 🎯 MITRE ATT&CK
+* **Tactic:** Persistence (TA0003)
+* **Technique:** Create Account (T1136)
+* **Sub-technique:** Local Account (T1136.001)
+
+## 🚦 Alert Metadata
+* **Severity:** High
+* **Confidence:** Medium 
+* **Impact:** High
+
+---
 
 ### Query SPL
 ```splunk
