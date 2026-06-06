@@ -1,20 +1,27 @@
 # 🚨 Detection of RDP Session Hijacking via Tscon
 
-| **Metadati** | **Dettagli** |
-| :--- | :--- |
-| **Tecnica MITRE ATT&CK** | `T1563.002 - Remote Service Session Hijacking: RDP Hijacking` |
-| **Log Source** | `Sysmon (EventID 1) / Windows Security (EventCode 4688)` |
-
----
-
 ### Descrizione
 Rileva il tentativo di dirottare una sessione di Desktop Remoto (RDP) disconnessa o attiva utilizzando l'utility nativa di Windows `tscon.exe`. Gli attaccanti con privilegi di SYSTEM utilizzano questa tecnica per subentrare in sessioni appartenenti ad altri utenti (spesso amministratori di dominio) scavalcando completamente la necessità di conoscere o craccare la password della vittima. L'indicatore chiave è l'uso del parametro `/dest:` per reindirizzare la sessione bersaglio.
 
+## 🎯 MITRE ATT&CK
+* **Tactic:** Lateral Movement (TA0008)
+* **Technique:** Remote Services (T1021)
+* **Sub-technique:** Remote Desktop Protocol (T1021.001)
+
+## 🚦 Alert Metadata
+* **Severity:** Critical
+* **Confidence:** High
+* **Impact:** High
+
 ### Query SPL
 ```splunk
-index=wineventlog EventCode=4688 "*tscon*" "*/dest:*"
-| eval New_Account_Name=mvindex(Account_Name, 0)
-| table _time, host, New_Account_Name, Process_Command_Line
+index=wineventlog EventCode=4688 "tscon"
+
+| eval Command_Check=coalesce(Process_Command_Line, CommandLine, _raw)
+| regex Command_Check="(?i)tscon.*[\/-]dest\s*:"
+| eval User_Creator=mvindex(Account_Name, 0)
+| table _time, host, User_Creator, Command_Check
+
 ```
 
 ### ⚠️ Possibili Falsi Positivi
