@@ -15,10 +15,14 @@ Questa è una regola di **Correlazione Avanzata**. Non cerca un singolo evento, 
 ### Query SPL (Correlation Engine)
 ```splunk
 index=wineventlog EventCode IN (4720, 4732, 1102)
-| transaction host maxspan=30m
-| search EventCode=4720 EventCode=4732 EventCode=1102
+
+| stats min(_time) as Primo_Evento, max(_time) as Ultimo_Evento, values(EventCode) as Eventi_Rilevati, count by host
+| eval duration_minutes = round((Ultimo_Evento - Primo_Evento) / 60, 2)
+| filter duration_minutes <= 30
+
+| filter mvcount(Eventi_Rilevati) == 3
 | eval Attack_Chain="Rilevata Kill Chain: Creazione Utente -> Privilege Escalation -> Log Clearing"
-| table _time, host, Attack_Chain, duration, eventcount
+| table Primo_Evento, Ultimo_Evento, host, Attack_Chain, duration_minutes
 ```
 ## Triage & Azioni Consigliate
 Trattandosi di una regola di correlazione ad alta fedeltà, se questo allarme suona l'host è quasi certamente compromesso.
