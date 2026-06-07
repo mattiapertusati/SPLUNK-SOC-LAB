@@ -14,15 +14,18 @@ Questa è una regola di **Correlazione Avanzata**. Non cerca un singolo evento, 
 
 ### Query SPL (Correlation Engine)
 ```splunk
-index=wineventlog EventCode IN (4720, 4732, 1102)
-
-| stats min(_time) as Primo_Evento, max(_time) as Ultimo_Evento, values(EventCode) as Eventi_Rilevati, count by host
-| eval duration_minutes = round((Ultimo_Evento - Primo_Evento) / 60, 2)
-| filter duration_minutes <= 30
-
-| filter mvcount(Eventi_Rilevati) == 3
-| eval Attack_Chain="Rilevata Kill Chain: Creazione Utente -> Privilege Escalation -> Log Clearing"
-| table Primo_Evento, Ultimo_Evento, host, Attack_Chain, duration_minutes
+(index=wineventlog OR index=sysmon) 
+(
+  EventCode=4720
+) OR (
+  EventCode=4732
+) OR ( 
+  EventCode=1102
+)
+| transaction host maxspan=30m
+| search EventCode=4720 AND (EventCode=4732 AND Group_Name=Administrators) AND EventCode=1102
+| eval Attack_Chain="ALLARME CRITICO: Creazione account in Locale -> Account inserito in Administrators -> Puliza Log"
+| table _time, host, duration, Attack_Chain
 ```
 ## Triage & Azioni Consigliate
 Trattandosi di una regola di correlazione ad alta fedeltà, se questo allarme suona l'host è quasi certamente compromesso.
