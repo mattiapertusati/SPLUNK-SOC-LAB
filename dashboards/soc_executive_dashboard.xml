@@ -1,1 +1,112 @@
-
+<dashboard version="1.1" theme="dark">
+  <label>Detection Engineering &amp; SOC Metrics</label>
+  <description>Executive overview of active detections, MITRE ATT&amp;CK coverage, and alert metrics.</description>
+  <row>
+    <panel>
+      <title>x</title>
+      <single>
+        <title>Detection Attive</title>
+        <search>
+          <query>| makeresults 
+| eval count=15 
+| fields count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="height">91</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+      </single>
+    </panel>
+    <panel>
+      <title>x</title>
+      <single>
+        <title>Alert High (Ultime 24h)</title>
+        <search>
+          <query>| makeresults 
+| eval count=4 
+| fields count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0xffb84d","0xcba700","0xcba700","0xcba700","0xcba700"]</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>x</title>
+      <single>
+        <title>Alert Critical (Ultime 24h)</title>
+        <search>
+          <query>| makeresults 
+| eval count=5 
+| fields count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0xd41f1f","0xd41f1f","0xd41f1f","0xd41f1f","0xd41f1f"]</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>x</title>
+      <table>
+        <title>x</title>
+        <search>
+          <query>| makeresults 
+| eval Initial_Access=1, Execution=4, Persistence=3, Privilege_Escalation=1, Defense_Evasion=5, Credential_Access=1, Lateral_Movement=1, Collection=1, Exfiltration=1, Impact=1, Command_and_Control=1
+| transpose
+| rename column as Tactic, "row 1" as Coverage
+| replace "*_*" with "* *" in Tactic
+| sort - Coverage</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+    <panel>
+      <title>x</title>
+      <chart>
+        <title>x</title>
+        <search>
+          <query>| makeresults | eval host="WKSTN-FINANCE-01", alert_count=14
+| append [| makeresults | eval host="WKSTN-HR-05", alert_count=8]
+| append [| makeresults | eval host="SRV-DC-01", alert_count=3]
+| append [| makeresults | eval host="SRV-WEB-02", alert_count=2]
+| table host, alert_count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.drilldown">none</option>
+        <option name="height">394</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>x</title>
+      <chart>
+        <title>x</title>
+        <search>
+          <query>| makeresults count=24
+| streamstats count as offset
+| eval _time=now()-(offset*3600)
+| eval "High Alerts"=random()%5+1
+| eval "Critical Alerts"=if(random()%10&gt;7, random()%2+1, 0)
+| timechart span=1h sum("High Alerts") as "High Alerts", sum("Critical Alerts") as "Critical Alerts"</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+</dashboard>
