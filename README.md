@@ -29,7 +29,7 @@ Ho organizzato il progetto in moduli chiari per facilitare la navigazione. Clicc
 
 ---
 
-## ⚔️ Le Minacce Simulate
+## ⚔️ Le Minacce Simulate - Singole
 Durante il laboratorio, ho simulato e rilevato con successo le seguenti attività malevole:
 1. Esecuzione di **PowerShell Offuscato** (Base64).
 2. Creazione di **Utenti Locali** per persistenza.
@@ -41,6 +41,16 @@ Durante il laboratorio, ho simulato e rilevato con successo le seguenti attivit�
 8. Manipolazione delle regole del **Firewall** (Netsh).
 9. **Log Clearing** (Cancellazione tracce / EventCode 1102).
 10. **RDP Session Hijacking** tramite utility `tscon`.
+
+---
+
+## 🛡️Le Minacce Simulate - Chain/Correlation
+Oltre alle detection singole ho eseguito delle vere **correlation**:
+1. Correlation Domain Compromise
+2. Correlation Credential Theft
+3. Correlation Lateral Persistence
+4. Correlation Ransomware Exfiltration
+5. Correlation Phishing InitialAccess
 
 ---
 
