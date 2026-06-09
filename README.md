@@ -25,6 +25,8 @@ Ho organizzato il progetto in moduli chiari per facilitare la navigazione. Clicc
 * [**`/infrastructure`**](./infrastructure/): Contiene la documentazione sull'infrastruttura di rete, il flusso dei log e il diagramma dell'ambiente Vagrant/VirtualBox utilizzato per i test.
 * [**`/sigma`**](./sigma/): Contiene 5 detection tradotte in formato SIGMA per uso generale e didattico.
 * [**`/kql`**](./kql/): Contiene 5 detection tradotte in formato KQL per uso generale e didattico.
+* [**`/validation`**](./validation/): Contiene i report di validazione delle detection. Ho integrato Atomic Red Team nel laboratorio per lanciare attacchi simulati (es. T1003.001 LSASS Memory Dump), catturare la telemetria reale generata da Sysmon e dimostrare l'effettivo trigger degli allarmi in Splunk senza falsi positivi.
+
 
 
 ---
