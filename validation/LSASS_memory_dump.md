@@ -7,6 +7,7 @@
 * **Strumento:** Atomic Red Team
 * **Test Eseguito:** Test 1 - Dump LSASS.exe using comsvcs.dll
 * **Comando Lanciato:**
+  
   ```powershell
   Invoke-AtomicTest T1003.001 -TestNumbers 1 -PathToAtomicsFolder "C:\AtomicRedTeam\atomics"
   ```
