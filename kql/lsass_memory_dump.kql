@@ -1,0 +1,5 @@
+Event
+| where EventLog == "Microsoft-Windows-PowerShell/Operational"
+| where EventID == 4104
+| where EventData has "comsvcs.dll" and (EventData has "MiniDump" or EventData has "#24")
+| project TimeGenerated, Computer, EventID, EventData
