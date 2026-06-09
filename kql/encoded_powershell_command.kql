@@ -1,0 +1,5 @@
+Event
+| where EventLog == "Security"
+| where EventID == 4688
+| where EventData has "powershell.exe" and (EventData has "encodedcommand" or EventData has "-enc" or EventData has "-e ")
+| project TimeGenerated, Computer, EventID, EventData
