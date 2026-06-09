@@ -23,6 +23,9 @@ Ho organizzato il progetto in moduli chiari per facilitare la navigazione. Clicc
 * [**`/alerts`**](./alerts/): Contiene il file `savedsearches.conf` che automatizza le detections in Splunk (Detection as Code), trasformando le query in allarmi schedulati con azioni specifiche.
 * [**`/dashboards`**](./dashboards/): Contiene il codice sorgente XML (`SOC_Overview.xml`) del cruscotto operativo creato per gli analisti L1, con metriche, grafici a torta e timeline degli attacchi.
 * [**`/infrastructure`**](./infrastructure/): Contiene la documentazione sull'infrastruttura di rete, il flusso dei log e il diagramma dell'ambiente Vagrant/VirtualBox utilizzato per i test.
+* [**`/sigma`**](./sigma/): Contiene 5 detection tradotte in formato SIGMA per uso generale e didattico.
+* [**`/kql`**](./kql/): Contiene 5 detection tradotte in formato KQL per uso generale e didattico.
+
 
 ---
 
