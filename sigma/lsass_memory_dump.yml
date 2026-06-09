@@ -1,0 +1,20 @@
+title: LSASS Memory Dump 
+description: Rileva l'esecuzione di comandi PowerShell mirati a fare il dump (copia) delle credenziali tramite la funzione MiniDump di comsvcs.dll.
+status: experimental
+author: Mattia
+logsource:
+  product: windows
+  service: sysmon
+  category: ps_script
+detection:
+  selection:
+    EventID: 1
+    ScriptBlockText|contains:
+      - 'comsvcs.dll'
+      - 'MiniDump'
+      - '#24'
+  condition: selection
+level: high
+tags:
+  - attack.lsass_dumping
+  - attack.t1003.001
