@@ -1,0 +1,6 @@
+PowerShellEvent
+| where EventID in (4103, 4104) and ScriptBlockText has "Set-MpPreference"
+| extend Script_Content = coalesce(RenderedDescription, ScriptBlockText, EventData)
+
+| where Script_Content matches regex @"(?i)-DisableR(ealtimeMonitoring)?\s+(1|\$true)"
+| project TimeGenerated, Computer, EventID, Script_Content
