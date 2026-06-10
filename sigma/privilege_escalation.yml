@@ -1,0 +1,18 @@
+title: Escalazione dei Privilegi in Locale
+id: 3c9b1a55-8901-4def-bcda-e765432103df  # Ti ho generato un nuovo ID unico!
+status: experimental
+description: Identifica l'aggiunta di utenti al gruppo locale Administrators per Privilege Escalation o persistenza.
+author: Mattia
+date: 2026/06/10
+logsource:
+    product: windows
+    service: security
+detection:
+    selection_event_4732:
+        EventID: 4732
+        TargetUserName: 'Administrators'
+    condition: selection_event_4732
+falsepositives:
+    - Promozione di account legittimi da parte degli amministratori.
+    - Attività automatiche di strumenti di gestione dei privilegi (es. LAPS).
+level: high
