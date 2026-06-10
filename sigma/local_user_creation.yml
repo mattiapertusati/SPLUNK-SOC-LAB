@@ -1,1 +1,23 @@
-ds
+title: Creazione Account Locale per Persistenza
+id: 8f3b2a14-5678-4abc-9012-d8765432102c
+status: experimental
+description: Identifica la creazione di account locali tramite l'evento nativo 4720 o l'esecuzione di comandi legati alla gestione utenti.
+author: Mattia
+date: 2026/06/10
+logsource:
+    product: windows
+    service: security
+detection:
+    selection_event_4720:
+        EventID: 4720
+    selection_process_4688:
+        EventID: 4688
+        CommandLine|contains:
+            - 'net user /add'
+            - 'net1 user /add'
+            - 'New-LocalUser'
+    condition: selection_event_4720 or selection_process_4688
+falsepositives:
+    - Creazione di account legittimi (Onboarding).
+    - Creazioni di account temporanei con privilegi massimi e con data di scadenza breve per manutenzione e/o aggiornamenti urgenti.
+level: medium
