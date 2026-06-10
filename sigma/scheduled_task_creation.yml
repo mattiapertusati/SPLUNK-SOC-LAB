@@ -1,0 +1,23 @@
+title: Detection of Scheduled Task Creation for Persistence
+id: e73f3cce-4b6d-433c-a43f-a450aa7e20db
+status: experimental
+description: Rilevamento della creazione di una task programmata per garantire persistenza all'attaccante.
+references:
+    - https://github.com/mattiapertusati/SPLUNK-SOC-LAB/blob/main/detections/05-Scheduled-Task-Persistence.md
+author: Mattia
+date: 2026/06/10
+modified: 2026/06/10
+tags:
+    - attack.persistence
+    - attack.t1053.005
+logsource:
+     product: windows
+     service: security
+detection:
+    selection:
+        EventID: 4698
+    condition: selection
+falsepositives:
+    - Installazione o aggiornamenti che richiedono una pianificazione.
+    - Script di manutenzione e/o controllo che richiedono una ripetizione.
+level: medium
