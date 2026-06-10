@@ -5,11 +5,11 @@
 
 ### 1. Attack Execution
 * **Strumento:** Atomic Red Team
-* **Test Eseguito:** Test 1 - Dump LSASS.exe using comsvcs.dll
+* **Test Eseguito:** Test 2 - Dump LSASS.exe using comsvcs.dll
 * **Comando Lanciato:**
   
   ```powershell
-  Invoke-AtomicTest T1003.001 -TestNumbers 1 -PathToAtomicsFolder "C:\AtomicRedTeam\atomics"
+  Invoke-AtomicTest T1003.001 -TestNumbers 2 -PathToAtomicsFolder "C:\AtomicRedTeam\atomics"
   ```
   
 <img width="1259" height="762" alt="Screenshot 2026-06-09 172303" src="https://github.com/user-attachments/assets/5c61bde9-679d-41a1-a38f-3e29ea1fec3c" />
