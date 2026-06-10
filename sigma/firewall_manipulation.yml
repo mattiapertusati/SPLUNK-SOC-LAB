@@ -1,0 +1,28 @@
+title: Windows Firewall Disabling via Netsh or PowerShell
+id: d88f34de-c3ea-448f-889d-156204abcdef
+status: experimental
+description: Rileva i tentativi di disattivazione o di alterazione dei profili del Windows Firewall effettuati tramite l'utility netsh o moduli PowerShell.
+author: Mattia Pertusati
+date: 2026/06/10
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_netsh:
+        CommandLine|contains:
+            - 'advfirewall'
+        CommandLine|contains:
+            - 'state off'
+            - 'firewall set'
+    selection_pwsh:
+        CommandLine|contains:
+            - 'Set-NetFirewallProfile'
+        CommandLine|contains:
+            - '-Enabled False'
+    condition: selection_netsh or selection_pwsh
+falsepositives:
+    - Modifiche manuali d'emergenza eseguite da amministratori di sistema durante attività diagnostiche documentate.
+level: high
+tags:
+    - attack.defense_evasion
+    - attack.t1562.004
