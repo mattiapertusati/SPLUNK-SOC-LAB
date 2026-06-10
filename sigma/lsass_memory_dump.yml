@@ -1,0 +1,24 @@
+title: LSASS Memory Dumping via Comsvcs.dll
+id: a7e3f8cc-1b2d-4f33-b45a-102030a0b0c0 
+status: experimental
+description: Rileva il tentativo di dumping della memoria del processo LSASS utilizzando la funzione MiniDump di comsvcs.dll per estrarre credenziali.
+author: Mattia
+date: 2026/06/10
+modified: 2026/06/10
+tags:
+    - attack.credential_access
+    - attack.t1003.001
+logsource:
+    product: windows 
+    services: process_creation
+detection:
+    selezione_comsvcs:
+        CommandLine|contains: 'comsvcs.dll'
+    selezione_metodo:
+        CommandLine|contains:
+            - 'MiniDump'
+            - '#24'
+    condition: selezione_comsvcs and selezione_metodo
+falsepositives:
+    - Script di troubleshooting legittimi o tool di diagnostica usati dagli amministratori (molto rari per LSASS)
+level: critical
