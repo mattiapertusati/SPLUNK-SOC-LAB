@@ -17,7 +17,7 @@
 ### 2. Telemetry & Logs
 
 * Sorgente Dati: Sysmon / PowerShell Operational
-* EventID Attesi: 10 (Sysmon) o 4104 (PowerShell)
+* EventID Attesi: 1 (Sysmon) o 4104 (PowerShell)
 
 <img width="956" height="1176" alt="Screenshot 2026-06-09 220145" src="https://github.com/user-attachments/assets/5d7941f9-78fa-43b6-a57b-049ff151627e" />
 
