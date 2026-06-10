@@ -10,14 +10,14 @@
   wevtutil cl Security
   ```
 
-SCREENSHOT 1
+<img width="790" height="102" alt="Screenshot 2026-06-09 220921" src="https://github.com/user-attachments/assets/193d38cf-ba69-49ee-ac2a-e088e3c9fdf0" />
 
 ### 2. Telemetry & Logs
 
 * **Sorgente Dati:** Windows Security Event Log
 * **EventID Atteso:** 1102 (The audit log was cleared)
 
-SCREENSHOT 2
+<img width="899" height="879" alt="Screenshot 2026-06-10 103243" src="https://github.com/user-attachments/assets/e8443fdc-51d8-4aca-bd10-1998f61e068b" />
 
 ### 3. Detection & Validation
 
@@ -51,4 +51,4 @@ Vedi il file **log_clearing.yml** nel repository per la regola completa.
 * **Detection Triggered:** YES
 * **False Positives:** Bassi.
 
-SCREENSHOT 3
+<img width="1192" height="714" alt="Screenshot 2026-06-10 103302" src="https://github.com/user-attachments/assets/d78363ea-f625-4188-99ed-de80a3b203f2" />
