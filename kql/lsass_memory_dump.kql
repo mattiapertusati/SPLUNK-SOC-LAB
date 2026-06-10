@@ -1,0 +1,4 @@
+Event
+| where EventID == 1 
+| where RenderedDescription has "comsvcs.dll" and (RenderedDescription has "MiniDump" or RenderedDescription has "#24")
+| project TimeGenerated, Computer, UserName=UserName, ProcessCommandLine=RenderedDescription
