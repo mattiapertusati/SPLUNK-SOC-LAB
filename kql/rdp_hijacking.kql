@@ -1,0 +1,3 @@
+DeviceProcessEvents
+| where FileName =~ "tscon.exe" and (ProcessCommandLine has "dest" or ProcessCommandLine matches regex @"/dest:rdp-tcp\S*")
+| project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
