@@ -1,0 +1,21 @@
+title: Cancellazione dei Registri Eventi di Windows
+id: b3c4d5e6-7f8a-9b0c-1d2e-3f4a5b6c7d8e # Nuovo UUID unico generato per te
+status: experimental
+description: Rileva il tentativo di cancellazione dei log di Sicurezza (1102) o di Sistema (104) per nascondere attività malevole.
+author: Mattia
+date: 2026/06/10
+tags:
+    - attack.defense_evasion
+    - attack.t1070.001 # Indicator Removal: Clear Windows Event Logs
+logsource:
+    product: windows
+    service: security
+detection:
+    sezione_EventoID:
+        EventID:
+            - 1102
+            - 104
+    condition: sezione_EventoID
+falsepositives:
+    - Attività di manutenzione legittima da parte degli amministratori di sistema (es. prima di creare una nuova immagine ISO o durante i test).
+level: high
