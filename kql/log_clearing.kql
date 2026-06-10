@@ -1,4 +1,0 @@
-Event
-| where EventLog in ("Security", "System")
-| where EventID in (1102, 104)
-| project TimeGenerated, Computer, EventID, EventData
