@@ -1,0 +1,4 @@
+SecurityEvent
+| where EventID in (4688, 4720)
+| extend Creator_Account = coalesce(SubjectAccount, Account)
+| project TimeGenerated, Computer, Creator_Account, TargetAccount
