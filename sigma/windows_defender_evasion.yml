@@ -1,0 +1,21 @@
+title: Disattivazione di Windows Defender
+id: 5e6f7a8b-1234-4567-89ab-cdef12345678  # Nuovo ID unico generato per te
+status: experimental
+description: Identifica la disattivazione del tool di sicurezza nativo di Windows tramite PowerShell.
+author: Mattia
+date: 2026/06/10
+logsource:
+    product: windows
+    service: powershell
+detection:
+    selection_event:
+        EventID:
+            - 4103
+            - 4104
+        ScriptBlockText|contains: 'Set-MpPreference'
+    selection_regex:
+        ScriptBlockText|re: '(?i)-DisableR(ealtimeMonitoring)?\s+(1|\$true)'
+    condition: selection_event and selection_regex
+falsepositives:
+    - Interventi legittimi da parte di amministratori IT per test o risoluzione problemi.
+level: high
