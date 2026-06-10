@@ -1,5 +1,0 @@
-Event
-| where EventLog == "Microsoft-Windows-PowerShell/Operational"
-| where EventID == 4104
-| where EventData has "DisableRealtimeMonitoring"
-| project TimeGenerated, Computer, EventID, EventData
