@@ -1,0 +1,4 @@
+SecurityEvent
+| where EventID in (7045, 4697)
+| where EventData has "PSEXESVC" or EventData has "PsExec execution service"
+| project TimeGenerated, Computer, EventID, Account, EventData
