@@ -1,0 +1,20 @@
+title: Rilevamento PowerShell con Comando Codificato
+id: 4a2e5b81-1234-4567-abcd-e98765432101
+status: experimental
+description: Identifica l'esecuzione di PowerShell che utilizza il parametro di codifica per nascondere il comando vero.
+author: Mattia
+date: 2026/06/10
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_process:
+        - Image|endswith: '\powershell.exe'
+        - OriginalFileName: 'PowerShell.EXE'
+    selection_regex:
+        CommandLine|re: '(?i)[\/\-–—]e(n(c(o(d(e(d(c(o(m(m(a(n(d)? )? )? )? )? )? )? )? )? )? )? )?\b'
+    condition: selection_process and selection_regex
+falsepositives:
+    - Script di amministrazione IT legittimi
+    - Software di monitoraggio di terze parti che utilizzano la codifica Base64 per evitare problemi di formattazione
+level: high
