@@ -1,0 +1,3 @@
+DeviceProcessEvents
+| where (ProcessCommandLine has "advfirewall" and ProcessCommandLine has "state off") or (ProcessCommandLine has "Set-NetFirewallProfile" and ProcessCommandLine has "False")
+| project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
