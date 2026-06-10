@@ -1,0 +1,4 @@
+SecurityEvent
+| where EventID in (1102, 104)
+| extend User_Responsible = coalesce(SubjectAccount, Account, "SYSTEM/Unknown")
+| project TimeGenerated, Computer, EventID, User_Responsible, Activity
