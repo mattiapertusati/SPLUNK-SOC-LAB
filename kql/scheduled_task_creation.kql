@@ -1,0 +1,5 @@
+SecurityEvent
+| where EventID == 4698 
+| extend Task_Command = extract("<Command>([^<]+)</Command>", 1, EventData)
+| extend Task_Arguments = extract("<Arguments>([^<]+)</Arguments>", 1, EventData)
+| project TimeGenerated, Computer, Account, TaskName=TargetUserName, Task_Command, Task_Arguments
