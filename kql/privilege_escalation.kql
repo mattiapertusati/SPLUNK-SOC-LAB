@@ -1,0 +1,6 @@
+SecurityEvent
+| where EventID == 4732 and TargetUserName == "Administrators"
+| extend Group_Target = TargetUserName
+| extend Creator_Account = SubjectAccount
+| extend Added_Account_SID = TargetSid
+| project TimeGenerated, Computer, Creator_Account, Group_Target, Added_Account_SID
