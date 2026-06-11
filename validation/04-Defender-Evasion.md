@@ -58,6 +58,3 @@ Vedi il file **windows_defender_evasion.yml** nel repository per la regola compl
 4. **False Positives:** Bassi.
 
 <img width="1174" height="445" alt="Screenshot 2026-06-11 114202" src="https://github.com/user-attachments/assets/a8af5b78-e5d6-4af9-93c2-5f827556f2f8" />
-
-  
-<img width="1180" height="353" alt="Screenshot 2026-06-11 112253" src="https://github.com/user-attachments/assets/334717ea-81be-4473-8d83-47b1fab421fc" />
