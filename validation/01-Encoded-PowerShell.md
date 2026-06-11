@@ -13,7 +13,7 @@
 
 ### 2. Telemetry & Logs
 
-* Sorgente Dati: PowerShell Operational
+* Sorgente Dati: Windows Security Event Log
 * EventID Attesi: 4688 (Powershell)
 
 <img width="903" height="728" alt="Screenshot 2026-06-10 223926" src="https://github.com/user-attachments/assets/1deb1c42-4d37-4d49-b23e-d062b8f8986a" />
@@ -39,10 +39,10 @@ index=wineventlog EventCode=4688 (New_Process_Name="*powershell.exe" OR Image="*
 
 ```kql
 SecurityEvent
-| where EventID == 4688 and (NewProcessName andswith "powershell.exe" or Process endswith "powershell.exe")
+| where EventID == 4688 and (NewProcessName endswith "powershell.exe" or Process endswith "powershell.exe")
 | extend Command_Line = coalesce(ProcessCommandLine, CommandLine, Activity)
 | where Command_Line matches regex @"(?i)[\/\-–—]e(n(c(o(d(e(d(c(o(m(m(a(n(d)? )? )? )? )? )? )? )? )? )? )? )?\b"
-| extend User_Creation = Account
+| extend User_Creator = Account
 | project TimeGenerated, Computer, User_Creator, NewProcessName, Command_Line
 ```
 
