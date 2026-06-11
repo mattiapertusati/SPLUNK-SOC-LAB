@@ -13,9 +13,9 @@
 
 ### 2. Telemetry & Logs
 
-* Sorgente Dati: PowerShell Operational
-* EventID Attesi: 4720 (PowerShell)
-
+* Sorgente Dati: Windows Security Event Log
+* EventID Attesi: 4720
+  
 <img width="901" height="1237" alt="Screenshot 2026-06-11 112052" src="https://github.com/user-attachments/assets/39072216-1440-46f1-9bdd-b0537fa29532" />
 
 ### 3. Detection & Validation
