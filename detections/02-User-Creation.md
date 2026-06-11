@@ -17,10 +17,10 @@ Rileva la creazione di un nuovo account utente locale sul sistema. Gli attaccant
 
 ### Query SPL
 ```splunk
-index=wineventlog EventCode=4688 OR EventCode=4720
-
-| eval Creator_Account=coalesce(SubjectUserName, mvindex(Account_Name, 0))
-| table _time, host, Creator_Account, SAM_Account_Name
+index=wineventlog EventCode=4720 
+| eval Creator_Account = mvindex(Account_Name, 0)
+| eval Created_Account = mvindex(Account_Name, 1)
+| table _time host Creator_Account Created_Account
 ```
 
 ### ⚠️ Possibili Falsi Positivi
