@@ -1,16 +1,15 @@
 <dashboard version="1.1" theme="dark">
   <label>Detection Engineering &amp; SOC Metrics</label>
-  <description>Executive overview of active detections, MITRE ATT&amp;CK coverage, and alert metrics.</description>
+  <description>Executive overview of active detections, MITRE ATT&amp;CK coverage, and live alert metrics based on lab telemetry.</description>
   <row>
     <panel>
-      <title>x</title>
+      <title>Indicatori di Copertura</title>
       <single>
-        <title>Detection Attive</title>
+        <title>Detections Validate (Live)</title>
         <search>
-          <query>| makeresults 
-| eval count=15 
-| fields count</query>
-          <earliest>-24h@h</earliest>
+          <query>index=wineventlog OR index=sysmon (EventCode=4698 OR EventCode=1102 OR EventCode=4720 OR EventCode=4732 OR EventCode=4697 OR EventCode=4688 OR EventCode=1 OR EventCode=4104)
+| stats dc(EventCode)</query>
+          <earliest>0</earliest>
           <latest>now</latest>
         </search>
         <option name="drilldown">none</option>
@@ -19,14 +18,13 @@
       </single>
     </panel>
     <panel>
-      <title>x</title>
+      <title>Volume Allarmi</title>
       <single>
-        <title>Alert High (Ultime 24h)</title>
+        <title>Alert High (Live)</title>
         <search>
-          <query>| makeresults 
-| eval count=4 
-| fields count</query>
-          <earliest>-24h@h</earliest>
+          <query>index=wineventlog OR index=sysmon (EventCode=4688 OR EventCode=4104 OR EventCode=4698 OR EventCode=4720) 
+| stats count</query>
+          <earliest>0</earliest>
           <latest>now</latest>
         </search>
         <option name="colorBy">value</option>
@@ -36,14 +34,13 @@
       </single>
     </panel>
     <panel>
-      <title>x</title>
+      <title>Allarmi Severi</title>
       <single>
-        <title>Alert Critical (Ultime 24h)</title>
+        <title>Alert Critical (Live)</title>
         <search>
-          <query>| makeresults 
-| eval count=5 
-| fields count</query>
-          <earliest>-24h@h</earliest>
+          <query>index=wineventlog OR index=sysmon (EventCode=1102 OR EventCode=4732 OR EventCode=4697 OR EventCode=1) 
+| stats count</query>
+          <earliest>0</earliest>
           <latest>now</latest>
         </search>
         <option name="drilldown">none</option>
@@ -54,33 +51,28 @@
   </row>
   <row>
     <panel>
-      <title>x</title>
+      <title>Analisi Tattiche (MITRE ATT&amp;CK)</title>
       <table>
-        <title>x</title>
+        <title>Copertura Tattiche Osservate</title>
         <search>
-          <query>| makeresults 
-| eval Initial_Access=1, Execution=4, Persistence=3, Privilege_Escalation=1, Defense_Evasion=5, Credential_Access=1, Lateral_Movement=1, Collection=1, Exfiltration=1, Impact=1, Command_and_Control=1
-| transpose
-| rename column as Tactic, "row 1" as Coverage
-| replace "*_*" with "* *" in Tactic
+          <query>index=wineventlog OR index=sysmon (EventCode=4698 OR EventCode=1102 OR EventCode=4720 OR EventCode=4732 OR EventCode=4697 OR EventCode=4688 OR EventCode=1 OR EventCode=4104)
+| eval Tactic=case(EventCode==1102, "Defense Evasion", EventCode==4104, "Defense Evasion", EventCode==4698, "Persistence", EventCode==4720, "Persistence", EventCode==4732, "Privilege Escalation", EventCode==4697, "Lateral Movement", EventCode==4688, "Execution", EventCode==1, "Credential Access", 1=1, "Unknown")
+| stats count as Coverage by Tactic
 | sort - Coverage</query>
-          <earliest>-24h@h</earliest>
+          <earliest>0</earliest>
           <latest>now</latest>
         </search>
         <option name="drilldown">none</option>
       </table>
     </panel>
     <panel>
-      <title>x</title>
+      <title>Distribuzione Endpoint</title>
       <chart>
-        <title>x</title>
+        <title>Host Maggiormente Colpiti</title>
         <search>
-          <query>| makeresults | eval host="WKSTN-FINANCE-01", alert_count=14
-| append [| makeresults | eval host="WKSTN-HR-05", alert_count=8]
-| append [| makeresults | eval host="SRV-DC-01", alert_count=3]
-| append [| makeresults | eval host="SRV-WEB-02", alert_count=2]
-| table host, alert_count</query>
-          <earliest>-24h@h</earliest>
+          <query>index=wineventlog OR index=sysmon (EventCode=4698 OR EventCode=1102 OR EventCode=4720 OR EventCode=4732 OR EventCode=4697 OR EventCode=4688 OR EventCode=1 OR EventCode=4104)
+| stats count as alert_count by host</query>
+          <earliest>0</earliest>
           <latest>now</latest>
         </search>
         <option name="charting.chart">pie</option>
@@ -91,25 +83,21 @@
   </row>
   <row>
     <panel>
-      <title>x</title>
+      <title>Timeline Eventi</title>
       <chart>
-        <title>x</title>
+        <title>Andamento Alert High vs Critical</title>
         <search>
-          <query>| makeresults count=24
-| streamstats count as offset
-| eval _time=now()-(offset*3600)
-| eval "High Alerts"=random()%5+1
-| eval "Critical Alerts"=if(random()%10&gt;7, random()%2+1, 0)
-| timechart span=1h sum("High Alerts") as "High Alerts", sum("Critical Alerts") as "Critical Alerts"</query>
-          <earliest>-24h@h</earliest>
+          <query>index=wineventlog OR index=sysmon (EventCode=4698 OR EventCode=1102 OR EventCode=4720 OR EventCode=4732 OR EventCode=4697 OR EventCode=4688 OR EventCode=1 OR EventCode=4104)
+| eval Severity=case(EventCode IN (1102, 4732, 4697, 1), "Critical Alerts", EventCode IN (4688, 4104, 4698, 4720), "High Alerts")
+| timechart span=1h count(eval(Severity=="High Alerts")) as "High Alerts", count(eval(Severity=="Critical Alerts")) as "Critical Alerts"</query>
+          <earliest>0</earliest>
           <latest>now</latest>
         </search>
         <option name="charting.chart">column</option>
+        <option name="charting.chart.stackMode">stacked</option>
         <option name="charting.drilldown">none</option>
+        <option name="charting.fieldColors">{"High Alerts": 0xcba700, "Critical Alerts": 0xd41f1f}</option>
       </chart>
     </panel>
   </row>
 </dashboard>
-
-
-
