@@ -1,6 +1,6 @@
 SecurityEvent
-| where EventID == 4688 and (NewProcessName andswith "powershell.exe" or Process endswith "powershell.exe")
+| where EventID == 4688 and (NewProcessName endswith "powershell.exe" or Process endswith "powershell.exe")
 | extend Command_Line = coalesce(ProcessCommandLine, CommandLine, Activity)
 | where Command_Line matches regex @"(?i)[\/\-–—]e(n(c(o(d(e(d(c(o(m(m(a(n(d)? )? )? )? )? )? )? )? )? )? )? )?\b"
-| extend User_Creation = Account
+| extend User_Creator = Account
 | project TimeGenerated, Computer, User_Creator, NewProcessName, Command_Line
