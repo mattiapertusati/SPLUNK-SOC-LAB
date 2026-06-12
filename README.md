@@ -1,3 +1,7 @@
+![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-FF0000?style=flat&logo=comptia)
+![Splunk](https://img.shields.io/badge/Splunk-SIEM-black?style=flat&logo=splunk)
+![MITRE ATT&CK](https://img.shields.io/badge/MITRE-ATT%26CK-red?style=flat)
+
 # 🛡️ Advanced Detection Engineering & Threat Hunting Portfolio
 
 Benvenuto nel mio portfolio aziendale di Detection Engineering. Questo repository dimostra un ciclo di vita completo di una detection: dalla simulazione dell'attacco (Red Teaming) alla raccolta della telemetria, fino alla scrittura e validazione della regola di rilevamento in configurazioni multi-vendor (Splunk SPL, Microsoft Sentinel KQL, e Sigma).
