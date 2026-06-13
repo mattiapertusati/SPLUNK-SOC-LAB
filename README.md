@@ -1,6 +1,8 @@
 ![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-FF0000?style=flat&logo=comptia)
 ![Splunk](https://img.shields.io/badge/Splunk-SIEM-black?style=flat&logo=splunk)
 ![MITRE ATT&CK](https://img.shields.io/badge/MITRE-ATT%26CK-red?style=flat)
+![Python](https://img.shields.io/badge/Python-3.x-blue?style=flat&logo=python)
+![Microsoft Sentinel](https://img.shields.io/badge/Microsoft-Sentinel-0078D4?style=flat&logo=microsoft)
 
 # 🛡️ Advanced Detection Engineering & Threat Hunting Portfolio
 
