@@ -7,7 +7,7 @@
 * **Obiettivo:** Validare il tracciamento di un attaccante che crea un utente, scala i privilegi e cancella i log per nascondere le tracce.
 
 ## 🎯 The Attack Chain (Kill Chain Simulata)
-I seguenti comandi sono stati eseguiti in rapida successione (entro 30 minuti) sul prompt dei comandi amministrativo dell'endpoint Windows 10.
+I seguenti comandi sono stati eseguiti in rapida successione (entro 24 ore) sul prompt dei comandi amministrativo dell'endpoint Windows 10.
 
 **Fase 1: Persistence (Creazione Account Locale)**
 ```cmd
