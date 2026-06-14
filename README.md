@@ -1,8 +1,9 @@
-![CompTIA Security+](https://img.shields.io/badge/CompTIA-Security%2B-FF0000?style=flat&logo=comptia)
-![Splunk](https://img.shields.io/badge/Splunk-SIEM-black?style=flat&logo=splunk)
-![MITRE ATT&CK](https://img.shields.io/badge/MITRE-ATT%26CK-red?style=flat)
-![Python](https://img.shields.io/badge/Python-3.x-blue?style=flat&logo=python)
-![Microsoft Sentinel](https://img.shields.io/badge/Microsoft-Sentinel-0078D4?style=flat&logo=microsoft)
+![MITRE ATT&CK](https://img.shields.io/badge/MITRE-ATT%26CK-F66151?style=flat)
+![Splunk](https://img.shields.io/badge/Splunk-Enterprise_SIEM-000000?style=flat&logo=splunk&logoColor=white)
+![Sigma](https://img.shields.io/badge/Sigma-Generic_Rules-00B2A9?style=flat)
+![KQL](https://img.shields.io/badge/KQL-Microsoft_Sentinel-0078D4?style=flat&logo=microsoft&logoColor=white)
+![Atomic Red Team](https://img.shields.io/badge/Atomic_Red_Team-Attack_Simulation-FF9800?style=flat)
+![DetectionLab](https://img.shields.io/badge/DetectionLab-Enterprise_Environment-333333?style=flat)
 
 # 🛡️ Advanced Detection Engineering & Threat Hunting Portfolio
 
