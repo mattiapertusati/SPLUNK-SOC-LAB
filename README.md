@@ -42,6 +42,29 @@ I dati seguenti rappresentano i risultati quantitativi ricavati dalle sessioni d
 
 ---
 
+## 🗺️ MITRE ATT&CK Coverage Matrix
+
+La seguente matrice illustra la copertura tattica delle 15 regole di rilevamento (e delle 5 chain-detections) sviluppate all'interno del laboratorio. Mappare le detection sull'Enterprise MITRE ATT&CK Framework permette di avere una visione olistica della *Security Posture* e di identificare le priorità per i futuri cicli di sviluppo.
+
+| MITRE ID | Tattica (Tactic) | Regole Sviluppate (Coverage) | Stato Copertura |
+| :--- | :--- | :---: | :---: |
+| **TA0001** | Initial Access | 1 | 🟡 |
+| **TA0002** | Execution | 4 | 🟢 |
+| **TA0003** | Persistence | 3 | 🟢 |
+| **TA0004** | Privilege Escalation | 1 | 🟡 |
+| **TA0005** | Defense Evasion | 5 | 🟢 |
+| **TA0006** | Credential Access | 1 | 🟡 |
+| **TA0007** | Discovery | 0 | ⚪ (Blind Spot) |
+| **TA0008** | Lateral Movement | 2 | 🟢 |
+| **TA0009** | Collection | 1 | 🟡 |
+| **TA0011** | Command and Control | 1 | 🟡 |
+| **TA0010** | Exfiltration | 1 | 🟡 |
+| **TA0040** | Impact | 1 | 🟡 |
+
+*(Nota: La presenza di "Blind Spots" come la tattica Discovery è stata intenzionalmente mantenuta per riflettere un ambiente in continua evoluzione, dove il focus del primo ciclo di Detection Engineering è stato posto sulle tecniche post-exploitation ad alto impatto (Defense Evasion, Execution e Persistence).*
+
+---
+
 ## 🏗️ Architettura del Laboratorio di Validazione
 
 Il flusso dei dati segue un'architettura rigorosa e centralizzata per garantire che nessuna telemetria venga persa durante le fasi di attacco:
@@ -60,3 +83,4 @@ $$\text{Atomic Red Team / Attaccante} \longrightarrow \text{Windows Endpoint (Sy
 * `kql/`: Repository delle regole convertite e ottimizzate per **Microsoft Sentinel**.
 * `sigma/`: Regole in formato standard **Sigma (YAML)** per la massima portabilità.
 * `validation_reports/`: I 10 report dettagliati contenenti i comandi eseguiti, l'analisi degli Event ID e gli screenshot di validazione presi direttamente dal SIEM.
+* `THREAT_MODEL.md`: Analisi dei profili di rischio, della superficie di attacco e della strategia difensiva adottata per la stesura delle detection.
