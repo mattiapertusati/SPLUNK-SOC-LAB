@@ -78,6 +78,34 @@ La seguente matrice illustra la copertura tattica delle 15 regole di rilevamento
 
 ---
 
+## ⚙️ The Detection Engineering Lifecycle
+
+Ogni singola regola presente in questo repository è stata sviluppata e testata seguendo un rigoroso ciclo di vita operativo. Questo garantisce che le detection non siano solo teoriche, ma applicabili in un reale contesto aziendale (SOC).
+
+```mermaid
+graph LR
+    A[🔴 1. Attack] -->|Atomic Red Team| B[📡 2. Telemetry]
+    B -->|Sysmon / Event Logs| C[🛠️ 3. Detection]
+    C -->|SPL / KQL / Sigma| D[🚨 4. Alert]
+    D -->|SIEM Dashboard| E[🛡️ 5. Triage]
+    E -->|Playbooks / CyberChef| F[✅ 6. Validation]
+    
+    style A fill:#3b1c1c,stroke:#d41f1f,stroke-width:2px,color:#fff
+    style B fill:#1c2b3b,stroke:#0877a6,stroke-width:2px,color:#fff
+    style C fill:#3b321c,stroke:#f8be34,stroke-width:2px,color:#fff
+    style D fill:#3b231c,stroke:#f1813f,stroke-width:2px,color:#fff
+    style E fill:#1c3b24,stroke:#53a051,stroke-width:2px,color:#fff
+    style F fill:#1c3b3b,stroke:#00a6a6,stroke-width:2px,color:#fff
+```
+1. **Attack:** Simulazione controllata dell'avversario tramite script o esecuzione manuale di tecniche MITRE.
+2. **Telemetry:** Verifica che l'infrastruttura (WEF/Sysmon) abbia effettivamente generato e inoltrato i log (EventID).
+3. **Detection:** Scrittura e ottimizzazione della query per isolare il comportamento malevolo minimizzando i falsi positivi.
+4. **Alert:** Configurazione dei parametri di allarme (Severity, Confidence, MITRE Mapping).
+5. **Triage:** Stesura del playbook operativo con le istruzioni per l'analista di primo livello (L1).
+6. **Validation:** Stress-test della regola contro il traffico di baseline per calcolare metriche come Precision e Recall.
+
+---
+
 ## 🏗️ Architettura del Laboratorio di Validazione
 
 Il flusso dei dati segue un'architettura rigorosa e centralizzata per garantire che nessuna telemetria venga persa durante le fasi di attacco:
