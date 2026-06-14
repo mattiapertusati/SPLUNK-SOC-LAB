@@ -1,0 +1,137 @@
+{
+  "name": "SPLUNK-SOC-LAB Detection Coverage",
+  "versions": {
+    "attack": "14",
+    "navigator": "4.9.1",
+    "layer": "4.5"
+  },
+  "domain": "enterprise-attack",
+  "description": "MITRE ATT&CK Coverage Map per il progetto di Detection Engineering. Le tecniche evidenziate in verde rappresentano gli scenari validati in laboratorio con telemetria reale.",
+  "filters": {
+    "platforms": [
+      "Windows"
+    ]
+  },
+  "sorting": 0,
+  "layout": {
+    "layout": "side",
+    "aggregateFunction": "average",
+    "showID": false,
+    "showName": true,
+    "showAggregateScores": false,
+    "countUnscored": false
+  },
+  "hideDisabled": false,
+  "techniques": [
+    {
+      "techniqueID": "T1059.001",
+      "color": "#53a051",
+      "comment": "Validated: Encoded PowerShell Command (EventID 4688)",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1136.001",
+      "color": "#53a051",
+      "comment": "Validated: Local User Creation (EventID 4720)",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1548.002",
+      "color": "#53a051",
+      "comment": "Validated: Local Privilege Escalation UAC (EventID 4732)",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1562.001",
+      "color": "#53a051",
+      "comment": "Validated: Windows Defender Evasion (EventCode 4104)",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1053.005",
+      "color": "#53a051",
+      "comment": "Validated: Scheduled Task Persistence (EventID 4698)",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1003.001",
+      "color": "#53a051",
+      "comment": "Validated: OS Credential Dumping LSASS (EventCode 1)",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1569.002",
+      "color": "#53a051",
+      "comment": "Validated: Lateral Movement via PsExec (EventID 4697/7045)",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1562.004",
+      "color": "#53a051",
+      "comment": "Validated: Firewall Manipulation Netsh (EventCode 1/4688)",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1070.001",
+      "color": "#53a051",
+      "comment": "Validated: Clearing Event Logs (EventID 1102)",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1563.002",
+      "color": "#53a051",
+      "comment": "Validated: RDP Session Hijacking (EventID 4688)",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true
+    }
+  ],
+  "gradient": {
+    "colors": [
+      "#ffffff",
+      "#53a051"
+    ],
+    "minValue": 0,
+    "maxValue": 1
+  },
+  "legendItems": [
+    {
+      "label": "Detection Validata in Laboratorio",
+      "color": "#53a051"
+    }
+  ],
+  "metadata": [],
+  "links": [],
+  "showTacticRowBackground": false,
+  "tacticRowBackground": "#dddddd",
+  "selectTechniquesAcrossTactics": true,
+  "selectSubtechniquesWithParent": false
+}
