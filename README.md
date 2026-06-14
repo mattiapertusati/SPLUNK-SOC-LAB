@@ -12,6 +12,19 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 
 ---
 
+## 🎯 Project Metrics (At a Glance)
+
+* **15** SPL Detections (Splunk)
+* **15** KQL Detections (Microsoft Sentinel)
+* **15** Vendor-Agnostic SIGMA Rules
+* **5** Advanced Correlation Rules (Chain Detections)
+* **10** Attack Validations (Atomic Red Team & Native OS)
+* **1** Threat Model Framework Enterprise
+* **1** Live SOC Executive Dashboard (Splunk XML)
+* **1** DetectionLab Environment (Active Directory, WEF, Sysmon)
+
+---
+
 ## 📊 Sezione Numerica sui Risultati & Performance Metrics
 
 I dati seguenti rappresentano i risultati quantitativi ricavati dalle sessioni di validazione e stress-test eseguiti in laboratorio tramite **Atomic Red Team** e comandi OS nativi. Le metriche di performance sono calcolate sulla base di una baseline di traffico ordinario misurato in 48 ore di attività simulata della rete (circa 150.000 eventi totali).
