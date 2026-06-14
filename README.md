@@ -14,9 +14,9 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 
 ## 🎯 Project Metrics (At a Glance)
 
-* **15** SPL Detections (Splunk)
-* **15** KQL Detections (Microsoft Sentinel)
-* **15** Vendor-Agnostic SIGMA Rules
+* **10** SPL Detections (Splunk)
+* **10** KQL Detections (Microsoft Sentinel)
+* **10** Vendor-Agnostic SIGMA Rules
 * **5** Advanced Correlation Rules (Chain Detections)
 * **10** Attack Validations (Atomic Red Team & Native OS)
 * **1** Threat Model Framework Enterprise
