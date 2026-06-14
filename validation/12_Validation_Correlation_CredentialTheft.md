@@ -7,7 +7,7 @@
 * **Obiettivo:** Validare il rilevamento dell'esfiltrazione della memoria LSASS successiva alla disattivazione dell'antivirus tramite PowerShell.
 
 ## 🎯 The Attack Chain (Kill Chain Simulata)
-I seguenti comandi sono stati eseguiti (entro 60 minuti) sulla postazione bersaglio.
+I seguenti comandi sono stati eseguiti (entro 24 ore) sulla postazione bersaglio.
 
 **Fase 1: Defense Evasion (Disattivazione Defender)**
 ```powershell
@@ -44,7 +44,7 @@ rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump 624 C:\Temp\lsass.dmp ful
 ) OR ( 
   EventCode=10 TargetImage="*\\lsass.exe" 
 )
-| transaction host maxspan=60m
+| transaction host maxspan=24h
 | search "lsass.exe" AND ("-enc" OR "-encodedcommand") AND ("DisableRealtimeMonitoring" OR "Set-MpPreference")
 | eval Attack_Chain="ALLARME CRITICO: Esecuzione Powershell Encoded -> Disattivazione Defender -> Accesso e Dumping di LSASS"
 | table _time, host, duration, Attack_Chain
