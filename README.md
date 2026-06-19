@@ -32,11 +32,12 @@ I dati seguenti rappresentano i risultati quantitativi ricavati dalle sessioni d
 
 ### 📈 KPI di Efficacia della Rilevazione
 
-* **Tecniche Rilevate e Validate:** 10 / 10 Scenari Critici
-* **True Positives (TP) generati in Lab:** 26 (attacchi lanciati con varianti diverse)
+* **Tecniche Rilevate e Validate:** 11 / 11 Scenari Critici
+* **True Positives (TP) generati in Lab:** 27 (attacchi lanciati con varianti diverse)
 * **False Positives (FP) intercettati in Baseline:** 1 (script di monitoraggio IT legittimo)
-* **Precisione Globale (Precision):** **96.2%** $$\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{26}{26 + 1} = 96.2\%$$
-* **Sensibilità Stimata (Recall):** **92.8%** *(Calcolata testando 28 varianti totali di attacco, di cui 26 hanno attivato la regola).*
+* **Precisione Globale (Precision):** **96.4%** 
+  $$\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{27}{27 + 1} = 96.4\%$$
+* **Sensibilità Stimata (Recall):** **93.1%** *(Calcolata testando 29 varianti totali di attacco, di cui 27 hanno attivato la regola).*
 * **Tasso di Falsi Positivi (False Positive Rate - FPR):** **< 0.01%** rispetto al volume totale della telemetria analizzata.
 
 ### 📋 Detection Validation Matrix
@@ -53,6 +54,7 @@ I dati seguenti rappresentano i risultati quantitativi ricavati dalle sessioni d
 | **T1562.004** | Firewall Manipulation (Netsh) | ✅ | ✅ | ✅ | ✅ | Triggered (EventCode 1/4688) |
 | **T1070.001** | Clearing Event Logs (wevtutil) | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 1102) |
 | **T1563.002** | RDP Session Hijacking (tscon) | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4688) |
+| **TA0007** | Local & Domain Reconnaissance | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 1) |
 
 ---
 
