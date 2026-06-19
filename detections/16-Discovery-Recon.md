@@ -33,9 +33,9 @@ Image IN ("*\\whoami.exe", "*\\net.exe", "*\\systeminfo.exe", "*\\ipconfig.exe",
 ```kql
 DeviceProcessEvents
 | where FileName in~ ("whoami.exe", "net.exe", "systeminfo.exe", "ipconfig.exe", "nltest.exe", "arp.exe", "tasklist.exe", "nbtstat.exe", "qwinsta.exe")
-| where not(InitiatingProcessFileName =~ "agente_monitoraggio.exe" and FileName=~ "tasklist.exe")
-| where not(InitiatingProcessFileName =~ "agente_monitoraggio.exe" and FileName=~ "ipconfig.exe")
-| project TimeGenerated, DeviceName, AccountName, ProcessCommandLine, InititatingProcessCommandLine, InititatingProcessFileName
+| where not(InitiatingProcessFileName =~ "agente_monitoraggio.exe" and FileName =~ "tasklist.exe")
+| where not(InitiatingProcessFileName =~ "agente_monitoraggio.exe" and FileName Pis~ "ipconfig.exe")
+| project TimeGenerated, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessFileName
 ```
 ## 🟡 Sigma Rule (YAML)
 
