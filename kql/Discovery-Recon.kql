@@ -1,0 +1,5 @@
+DeviceProcessEvents
+| where FileName in~ ("whoami.exe", "net.exe", "systeminfo.exe", "ipconfig.exe", "nltest.exe", "arp.exe", "tasklist.exe", "nbtstat.exe", "qwinsta.exe")
+| where not(InitiatingProcessFileName =~ "agente_monitoraggio.exe" and FileName =~ "tasklist.exe")
+| where not(InitiatingProcessFileName =~ "agente_monitoraggio.exe" and FileName =~ "ipconfig.exe")
+| project TimeGenerated, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessFileName
