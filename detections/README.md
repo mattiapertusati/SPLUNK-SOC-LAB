@@ -26,6 +26,7 @@ Ogni file `.md` elencato qui sotto contiene non solo la logica di ricerca, ma un
 * 🔗 [14 - Correlation Ransomware Exfiltration](14-Correlation-Ransomware-Exfiltration.md)
 * 🔗 [15 - Correlation Phishing InitialAccess](15-Correlation-Phishing-InitialAccess.md)
 * 📄 [16 - Discovery Recon](16-Discovery-Recon.md)
+* 📄 [17 - Kerberoasting CredentialAccess](17-Kerberoasting-CredentialAccess.md)
 
 ---
 **Nota per l'Auditor/Recruiter:** Clicca su uno qualsiasi dei link sopra per navigare direttamente alla logica di rilevamento e al relativo playbook operativo.
