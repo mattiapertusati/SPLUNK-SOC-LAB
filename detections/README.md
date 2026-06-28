@@ -27,6 +27,6 @@ Ogni file `.md` elencato qui sotto contiene non solo la logica di ricerca, ma un
 * 🔗 [15 - Correlation Phishing InitialAccess](15-Correlation-Phishing-InitialAccess.md)
 * 📄 [16 - Discovery Recon](16-Discovery-Recon.md)
 * 📄 [17 - Kerberoasting CredentialAccess](17-Kerberoasting-CredentialAccess.md)
-
+* 📄 [18 - Linux SUID PrivEsc](18-Linux-SUID-PrivEsc.md)
 ---
 **Nota per l'Auditor/Recruiter:** Clicca su uno qualsiasi dei link sopra per navigare direttamente alla logica di rilevamento e al relativo playbook operativo.
