@@ -1,0 +1,40 @@
+title: Linux SUID Discovery and Privilege Escalation
+id: 8c1b92a3-f570-4d56-a9bb-12a83bd78e51
+status: experimental
+description: Rileva l'esecuzione di comandi utilizzati per scoprire file SUID esistenti o per assegnare il bit SUID a nuovi file, filtrando path di deployment noti.
+references:
+    - [https://mitre.org](https://mitre.org)
+author: Mattia
+date: 2026/06/28
+tags:
+    - attack.discovery
+    - attack.privilege_escalation
+    - attack.t1083
+    - attack.t1082
+    - attack.t1548.001
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection_sudo:
+        CommandLine|contains|all:
+            - 'sudo'
+            - '-l'
+    selection_find:
+        CommandLine|contains|all:
+            - 'find'
+            - '-perm'
+            - '-4000'
+    selection_chmod:
+        CommandLine|contains: 'chmod'
+    selection_chmod_suid:
+        CommandLine|contains:
+            - '+s'
+            - '47'
+    filter_deploy:
+        CommandLine|contains: '/opt/scripts/deploy.sh'
+    condition: (selection_sudo or selection_find or (selection_chmod and selection_chmod_suid)) and not filter_deploy
+falsepositives:
+    - Amministratori di sistema durante sessioni di troubleshooting.
+    - Script di provisioning pre-approvati (es. Ansible).
+level: high
