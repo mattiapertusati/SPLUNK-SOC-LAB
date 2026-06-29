@@ -9,28 +9,44 @@ Rilevare l'attività di un attaccante su un sistema Linux mirata all'escalation 
 ## 🎯 MITRE ATT&CK Mapping
 * **Tactic:** Discovery (TA0007), Privilege Escalation (TA0004)
 * **Technique:** * File and Directory Discovery (T1083)
-  * System Information Discovery (T1082)
   * Abuse Elevation Control Mechanism: Setuid and Setgid (T1548.001)
 
 ## 🚦 Alert Metadata
 * **Severity:** HIGH
-* **Confidence:** High
+* **Confidence:** High (Pending Linux Endpoint validation)
 * **False Positives:** Script di deployment legittimi che assegnano privilegi specifici o amministratori di sistema che eseguono manutenzione straordinaria.
 
+---
+
+## 🟢 Splunk Query (SPL)
+*Ricerca tramite operatori logici annidati per intercettare i tre vettori di attacco, con filtro di esclusione per script noti posizionato all'esterno del blocco principale per ottimizzare le performance.*
+
+```splunk
+index=linux_logs
+(
+  (CommandLine="*sudo*" AND CommandLine="*-l*") OR
+  (CommandLine="*find*" AND CommandLine="*-perm*" AND CommandLine="*-4000*") OR
+  CommandLine="*chmod*" NOT CommandLine="*/opt/scripts/deploy.sh*"
+| where (like(CommandLine, "%sudo %-l%")) OR (like(CommandLine, "%find %-perm %-4000%")) OR (like(CommandLine, "%chmod %") AND (like(CommandLine, "%+s%") OR match(CommandLine, "\\b4[0-7]{3}\\b")))
+| table _time, host, User, CommandLine
+
+# Pending Linux Endpoint validation
 ---
 
 ## 🟢 Splunk Query (SPL)
 *Ricerca tramite operatori logici annidati per intercettare i tre vettori di attacco, con filtro di esclusione per script noti.*
 
 ```splunk
-index=linux_logs EventCode=1
+index=linux_logs
 (
-  (CommandLine="*sudo*" AND CommandLine="*-l*") OR 
-  (CommandLine="*find*" AND CommandLine="*-perm*" AND CommandLine="*-4000*") OR 
-  (CommandLine="*chmod*" AND (CommandLine="*+s*" OR CommandLine="*47*"))
+  (CommandLine="*sudo*" AND CommandLine="*-l*") OR
+  (CommandLine="*find*" AND CommandLine="*-perm*" AND CommandLine="*-4000*") OR
+  (CommandLine="*chmod*") NOT CommandLine="*/opt/scripts/deploy.sh*"
 )
-NOT CommandLine="*/opt/scripts/deploy.sh*"
+| where (like(CommandLine, "%sudo %-l%")) OR (like(CommandLine, "%find %-perm %-4000%")) OR (like(CommandLine, "%chmod %") AND (like(CommandLine, "%+s%") OR match(CommandLine, "\b4[0-7]{3}\b")))
 | table _time, host, User, CommandLine
+
+# Pending Linux Endpoint validation
 ```
 
 ## 🔵 Microsoft Sentinel Query (KQL)
@@ -39,7 +55,7 @@ NOT CommandLine="*/opt/scripts/deploy.sh*"
 DeviceProcessEvents
 | where (ProcessCommandLine contains "sudo" and ProcessCommandLine contains "-l") or
         (ProcessCommandLine contains "find" and ProcessCommandLine contains "-perm" and ProcessCommandLine contains "-4000") or 
-        (ProcessCommandLine contains "chmod" and (ProcessCommandLine contains "+s" or ProcessCommandLine contains "47"))
+        (ProcessCommandLine contains "chmod" and (ProcessCommandLine contains "+s" or ProcessCommandLine matches regex @"\b4[0-7]{3}\b"))
 | where ProcessCommandLine !contains "/opt/scripts/deploy.sh"
 | project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
 ```
@@ -49,17 +65,16 @@ DeviceProcessEvents
 ```sigma
 title: Linux SUID Discovery and Privilege Escalation
 id: 8c1b92a3-f570-4d56-a9bb-12a83bd78e51
-status: experimental
-description: Rileva l'esecuzione di comandi utilizzati per scoprire file SUID esistenti o per assegnare il bit SUID a nuovi file, filtrando path di deployment noti.
+status: experimental # Pending Linux Endpoint validation
+description: Rileva comandi utilizzati per scoprire o creare file SUID, utilizzando regex strict sui permessi ottali.
 references:
     - [https://mitre.org](https://mitre.org)
 author: Mattia
-date: 2026/06/28
+date: 2026/06/29
 tags:
     - attack.discovery
     - attack.privilege_escalation
     - attack.t1083
-    - attack.t1082
     - attack.t1548.001
 logsource:
     category: process_creation
@@ -77,14 +92,12 @@ detection:
     selection_chmod:
         CommandLine|contains: 'chmod'
     selection_chmod_suid:
-        CommandLine|contains:
-            - '+s'
-            - '47'
+        - CommandLine|contains: '+s'
+        - CommandLine|re: '\b4[0-7]{3}\b'
     filter_deploy:
         CommandLine|contains: '/opt/scripts/deploy.sh'
     condition: (selection_sudo or selection_find or (selection_chmod and selection_chmod_suid)) and not filter_deploy
 falsepositives:
     - Amministratori di sistema durante sessioni di troubleshooting.
-    - Script di provisioning pre-approvati (es. Ansible).
 level: high
 ```
