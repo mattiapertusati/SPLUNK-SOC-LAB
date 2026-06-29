@@ -31,23 +31,9 @@ index=linux_logs
 | table _time, host, User, CommandLine
 
 # Pending Linux Endpoint validation
----
-
-## 🟢 Splunk Query (SPL)
-*Ricerca tramite operatori logici annidati per intercettare i tre vettori di attacco, con filtro di esclusione per script noti.*
-
-```splunk
-index=linux_logs
-(
-  (CommandLine="*sudo*" AND CommandLine="*-l*") OR
-  (CommandLine="*find*" AND CommandLine="*-perm*" AND CommandLine="*-4000*") OR
-  (CommandLine="*chmod*") NOT CommandLine="*/opt/scripts/deploy.sh*"
-)
-| where (like(CommandLine, "%sudo %-l%")) OR (like(CommandLine, "%find %-perm %-4000%")) OR (like(CommandLine, "%chmod %") AND (like(CommandLine, "%+s%") OR match(CommandLine, "\b4[0-7]{3}\b")))
-| table _time, host, User, CommandLine
-
-# Pending Linux Endpoint validation
 ```
+
+---
 
 ## 🔵 Microsoft Sentinel Query (KQL)
 
