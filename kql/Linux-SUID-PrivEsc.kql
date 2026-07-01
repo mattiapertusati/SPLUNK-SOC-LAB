@@ -1,6 +1,6 @@
 DeviceProcessEvents
 | where (ProcessCommandLine contains "sudo" and ProcessCommandLine contains "-l") or
         (ProcessCommandLine contains "find" and ProcessCommandLine contains "-perm" and ProcessCommandLine contains "-4000") or 
-        (ProcessCommandLine contains "chmod" and (ProcessCommandLine contains "+s" or ProcessCommandLine matches regex @"\b4[0-7]{3}\b"))
+        (ProcessCommandLine contains "chmod" and (ProcessCommandLine contains "+s" or ProcessCommandLine matches regex @"\b[4-7][0-7]{3}\b"))
 | where ProcessCommandLine !contains "/opt/scripts/deploy.sh"
 | project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
