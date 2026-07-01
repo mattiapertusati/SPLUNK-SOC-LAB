@@ -28,7 +28,7 @@ detection:
         CommandLine|contains: 'chmod'
     selection_chmod_suid:
         - CommandLine|contains: '+s'
-        - CommandLine|re: '\b4[0-7]{3}\b'
+        - CommandLine|re: '\b[4-7][0-7]{3}\b'
     filter_deploy:
         CommandLine|contains: '/opt/scripts/deploy.sh'
     condition: (selection_sudo or selection_find or (selection_chmod and selection_chmod_suid)) and not filter_deploy
