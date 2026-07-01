@@ -23,11 +23,10 @@ Rilevare l'attività di un attaccante su un sistema Linux mirata all'escalation 
 
 ```splunk
 index=linux_logs
-(
-  (CommandLine="*sudo*" AND CommandLine="*-l*") OR
-  (CommandLine="*find*" AND CommandLine="*-perm*" AND CommandLine="*-4000*") OR
-  CommandLine="*chmod*" NOT CommandLine="*/opt/scripts/deploy.sh*"
-| where (like(CommandLine, "%sudo %-l%")) OR (like(CommandLine, "%find %-perm %-4000%")) OR (like(CommandLine, "%chmod %") AND (like(CommandLine, "%+s%") OR match(CommandLine, "\\b4[0-7]{3}\\b")))
+| where (like(CommandLine, "%sudo%") AND like(CommandLine, "%-l%"))
+     OR (like(CommandLine, "%find%") AND like(CommandLine, "%-perm%") AND like(CommandLine, "%-4000%"))
+     OR (like(CommandLine, "%chmod%") AND (like(CommandLine, "%+s%") OR match(CommandLine, "\\b[4-7][0-7]{3}\\b")))
+| where NOT like(CommandLine, "%/opt/scripts/deploy.sh%")
 | table _time, host, User, CommandLine
 
 # Pending Linux Endpoint validation
@@ -41,7 +40,7 @@ index=linux_logs
 DeviceProcessEvents
 | where (ProcessCommandLine contains "sudo" and ProcessCommandLine contains "-l") or
         (ProcessCommandLine contains "find" and ProcessCommandLine contains "-perm" and ProcessCommandLine contains "-4000") or 
-        (ProcessCommandLine contains "chmod" and (ProcessCommandLine contains "+s" or ProcessCommandLine matches regex @"\b4[0-7]{3}\b"))
+        (ProcessCommandLine contains "chmod" and (ProcessCommandLine contains "+s" or ProcessCommandLine matches regex @"\b[4-7][0-7]{3}\b"))
 | where ProcessCommandLine !contains "/opt/scripts/deploy.sh"
 | project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
 ```
@@ -79,7 +78,7 @@ detection:
         CommandLine|contains: 'chmod'
     selection_chmod_suid:
         - CommandLine|contains: '+s'
-        - CommandLine|re: '\b4[0-7]{3}\b'
+        - CommandLine|re: '\b[4-7][0-7]{3}\b'
     filter_deploy:
         CommandLine|contains: '/opt/scripts/deploy.sh'
     condition: (selection_sudo or selection_find or (selection_chmod and selection_chmod_suid)) and not filter_deploy
