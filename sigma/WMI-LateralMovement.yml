@@ -1,0 +1,31 @@
+title: Rilevamento di Processi Sospetti Generati da WMI
+id: 6099d595-71c5-4095-b544-7868e7519921
+status: experimental
+description: Identifica la creazione di processi insoliti avviati dal servizio WMI escludendo l'attività legittima di sistema.
+author: Mattia
+date: 2026/07/09
+tags:
+    - attack.execution
+    - attack.lateral_movement
+    - attack.t1047
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4688
+        ParentProcessName|endswith: '\Windows\System32\wbem\WmiPrvSE.exe'
+    filter_legitimate:
+        NewProcessName|endswith:
+            - '\System32\svchost.exe'
+            - '\Program Files\Windows Defender\MsMpEng.exe'
+    condition: selection and not filter_legitimate
+fields:
+    - Computer
+    - User
+    - CommandLine
+    - ParentProcessName
+    - TokenElevationType
+falsepositives:
+    - Attività amministrativa legittima tramite WMI
+level: medium
