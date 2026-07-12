@@ -69,3 +69,44 @@ falsepositives:
     - Attività amministrativa legittima tramite WMI
 level: medium
 ```
+
+## SOP-SEC-042: Incident Response Playbook – Rilevamento Attività WMI / Esecuzione Sospetta
+
+Segui questa guida nello specifico caso di Rilevamento Attività WMI / Esecuzione Sospetta e possibile lateral movement
+
+**Fase 1 - Triage e Qualificazione**
+
+L'obiettivo di questa fase è capire se l'attività segnalata sia effettivamente malevola oppure riconducibile ad una manutenzione ordinaria (False Positive)
+
+- Analisi della CommandLine: Esaminare l'intera stringa di comando del log per trovare dettagli utili alla nostra ricerca, elementi come l'uso di encoding, offuscamento, download esterni ecc
+- Verifica delle linee guida di Amministrazione: Verificare se il processo che ha generato l'attività fa parte delle task di automazione legittime.
+- Check con altri Team: Se l'attività proviene da un account noto, chiedere direttamente al Team convolto informazioni su apertura di **ticket** per manutenzione o altro
+
+**Fase 2 - Identificare la sorgente**
+
+WMI viene spesso usata per attacchi laterali guidati da remoto. E' necessario identificare il cuore di tale attacco.
+
+- Verificare se sono avvenuti login esterni da remoto (Type 3) nell'intervallo simile a quello del log.
+- Cercare l'IP sorgente è la sua presenza nella mappa della rete, per comprenderne percorso e possibile punto d'ingresso/uscita.
+
+**Fase 3 - Analisi dell'impatto**
+
+Dobbiamo determinare le azione eseguite dall'attaccante sul target
+
+- Monitorare l'intero albero del programma, come sottoprocessi, servizi o qualsiasi altro collegamento utile all'attaccante. Ogni singola opzione può essere quella decisiva.
+- Verificare se sono avvenute creazioni di account o processi nuovi, modifiche alle chiavi di registro o alla schedulazione di task
+
+**Fase 4 - Isolamento degli Indicatori**
+
+Definire il perimetro dell'attacco all'interno dell'infrastruttura aziendale, cosi da capire in che zona operare.
+
+- Estrazione degli IoC, ovvero le tracce lasciate dall'hacker durante l'esecuzione dell'attacco. Ogni traccia deve essere isolata, come hash dei file, indirizzi IP esterni C2, domini malevoli o stringhe di comando codificate.
+- Verificare la presenza di IoC simili magari anche su dispositivi che fanno parte dello stesso gruppo o team, per verificare se è avvenuto o meno un spostamento laterale.
+
+**Fase 5 - Contenimento ed Escalation**
+
+Questa ultima fase mira a mitigare la minaccia prima che si espanda in modo irreversibile.
+
+- Contenere l'host tramite EDR/XDR isolandolo dalla rete aziendale, cosi da bloccare la comunicazione verso l'esterno. Togliamo le mani e gli occhi dell'hacker.
+- Contenere anche l'identità, ovvero, bloccare gli account compromessi coinvolti nell'attacco
+- Includere gli IoC trovati nella documentazione di escalation in precedenza, la timeline degli eventi e l'impatto di ognuno ed effettuare un escalation al Team Incident Response **L2** specificando tutte le informazioni accumulate come, possibile lateral movement, host target isolato, account compromessi ecc.
