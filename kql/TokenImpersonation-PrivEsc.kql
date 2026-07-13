@@ -1,0 +1,5 @@
+SecurityEvent
+| where EventID == 4672 and TimeGenerated > ago(24h)
+| where SubjectUserName != "SYSTEM" and SubjectUserName !endswith "$"
+| where (PrivilegeList has "SeImpersonatePrivilege" or PrivilegeList has "SeAssignPrimaryTokenPrivilege" or PrivilegeList has "SeDebugPrivilege" or PrivilegeList has "SeTcbPrivilege")
+| project TimeGenerated, Computer, SubjectUserName, PrivilegeList
