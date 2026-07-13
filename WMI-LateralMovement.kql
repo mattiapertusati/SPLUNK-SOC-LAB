@@ -1,5 +1,0 @@
-SecurityEvent
-| where EventID == 4688
-| where ParentProcessName endswith @"\Windows\System32\wbem\WmiPrvSE.exe"
-| where NewProcessName !endswith @"\System32\svchost.exe" and NewProcessName !endswith @"\Program Files\Windows Defender\MsMpEng.exe"
-| project TimeGenerated, Computer, Account, CommandLine, ParentProcessName, TokenElevationType
