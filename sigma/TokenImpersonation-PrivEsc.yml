@@ -1,0 +1,32 @@
+title: Rilevamento Token Impersonation - Privilegi Speciali
+id: 4a2b3c4d-e5f6-7a8b-9c0d-1e2f3a4b5c6d
+status: experimental
+description: Rileva l'assegnazione di privilegi speciali (SeImpersonate, SeDebug, ecc.) a utenti non standard per identificare tentativi di Token Impersonation.
+author: Mattia
+date: 2026/07/13
+references:
+    - [https://mitre.org](https://mitre.org)
+tags:
+    - attack.privilege_escalation
+    - attack.defense_evasion
+    - attack.t1134.001
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4672
+        PrivilegeList|contains:
+            - 'SeImpersonatePrivilege'
+            - 'SeAssignPrimaryTokenPrivilege'
+            - 'SeDebugPrivilege'
+            - 'SeTcbPrivilege'
+    filter_system:
+        SubjectUserName: 'SYSTEM'
+    filter_machine:
+        SubjectUserName|endswith: '$'
+    condition: selection and not 1 of filter_*
+falsepositives:
+    - Software di backup e ripristino di sistema.
+    - Amministratori di dominio che eseguono task di manutenzione avanzata.
+level: high
