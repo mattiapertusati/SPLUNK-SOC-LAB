@@ -1,0 +1,26 @@
+title: Inhibit System Recovery - Volume Shadow Copy Deletion
+id: a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d
+status: experimental
+description: Rileva l'esecuzione di comandi per eliminare le copie shadow del volume, un comportamento tipico dei ransomware.
+author: Mattia
+date: 2026/07/14
+tags:
+    - attack.impact
+    - attack.t1490
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_process:
+        Image|endswith:
+            - '\vssadmin.exe'
+            - '\wmic.exe'
+            - '\wbadmin.exe'
+    selection_cli:
+        CommandLine|contains|all:
+            - 'delete'
+            - 'shadow'
+    condition: selection_process and selection_cli
+falsepositives:
+    - Task programmati di pulizia disco o amministratori di sistema (richiede investigazione immediata).
+level: critical
