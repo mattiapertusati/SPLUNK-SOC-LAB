@@ -1,0 +1,5 @@
+SecurityEvent
+| where EventID == 4688 and TimeGenerated > ago(24h)
+| where NewProcessName endswith "vssadmin.exe" or NewProcessName endswith "wmic.exe" or NewProcessName endswith "wbadmin.exe"
+| where CommandLine contains "delete" and CommandLine contains "shadow"
+| project TimeGenerated, Computer, Account, NewProcessName, CommandLine
