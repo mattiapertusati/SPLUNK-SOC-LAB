@@ -15,11 +15,11 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 
 ## 🎯 Project Metrics (At a Glance)
 
-* **15** SPL Detections (Splunk)
-* **15** KQL Detections (Microsoft Sentinel)
-* **15** Vendor-Agnostic SIGMA Rules
+* **16** SPL Detections (Splunk)
+* **16** KQL Detections (Microsoft Sentinel)
+* **16** Vendor-Agnostic SIGMA Rules
 * **5** Advanced Correlation Rules (Chain Detections)
-* **15** Attack Validations (Atomic Red Team & Native OS)
+* **16** Attack Validations (Atomic Red Team & Native OS)
 * **1** Threat Model Framework Enterprise
 * **1** Live SOC Executive Dashboard (Splunk XML)
 * **1** DetectionLab Environment (Active Directory, WEF, Sysmon, Linux Auditd)
@@ -28,15 +28,13 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 
 ## 📊 Sezione Numerica sui Risultati & Performance Metrics
 
-I dati seguenti rappresentano i risultati quantitativi ricavati dalle sessioni di validazione e stress-test eseguiti in laboratorio tramite **Atomic Red Team** e comandi OS nativi (Windows e Linux). Le metriche di performance sono calcolate sulla base di una baseline di traffico ordinario misurato in 48 ore di attività simulata della rete (circa 180.000 eventi totali).
-
 ### 📈 KPI di Efficacia della Rilevazione
 
-* **Tecniche Rilevate e Validate:** 15 / 15 Scenari Critici
-* **True Positives (TP) generati in Lab:** 33 (attacchi lanciati con varianti diverse)
+* **Tecniche Rilevate e Validate:** 16 / 16 Scenari Critici
+* **True Positives (TP) generati in Lab:** 34 (attacchi lanciati con varianti diverse)
 * **False Positives (FP) intercettati in Baseline:** 1 (script di monitoraggio IT legittimo)
-* **Precisione Globale (Precision):** **97.1%** $$\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{33}{33 + 1} = 97.1\%$$
-* **Sensibilità Stimata (Recall):** **94.3%** *(Calcolata testando 35 varianti totali di attacco, di cui 33 hanno attivato la regola).*
+* **Precisione Globale (Precision):** **97.1%** $$\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{34}{34 + 1} = 97.1\%$$
+* **Sensibilità Stimata (Recall):** **94.4%** *(Calcolata testando 36 varianti totali di attacco, di cui 34 hanno attivato la regola).*
 * **Tasso di Falsi Positivi (False Positive Rate - FPR):** **< 0.01%** rispetto al volume totale della telemetria analizzata.
 
 ### 📋 Detection Validation Matrix
@@ -58,12 +56,11 @@ I dati seguenti rappresentano i risultati quantitativi ricavati dalle sessioni d
 | **T1548.001** | Linux SUID Discovery & PrivEsc | ✅ | ✅ | ✅ | ✅ | Triggered (DeviceProcessEvents) |
 | **T1047** | WMI Lateral Movement & Execution | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4688) |
 | **T1134.001** | Token Impersonation (Special Logon) | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4672) |
+| **T1490** | Inhibit System Recovery (VSS Deletion) | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4688) |
 
 ---
 
 ## 🗺️ MITRE ATT&CK Coverage Matrix
-
-La seguente matrice illustra la copertura tattica delle 15 regole di rilevamento (e delle 5 chain-detections) sviluppate all'interno del laboratorio. Mappare le detection sull'Enterprise MITRE ATT&CK Framework permette di avere una visione olistica della *Security Posture* e di identificare le priorità per i futuri cicli di sviluppo.
 
 | MITRE ID | Tattica (Tactic) | Regole Sviluppate (Coverage) | Stato Copertura |
 | :--- | :--- | :---: | :---: |
@@ -78,8 +75,7 @@ La seguente matrice illustra la copertura tattica delle 15 regole di rilevamento
 | **TA0009** | Collection | 1 | 🟡 |
 | **TA0011** | Command and Control | 1 | 🟡 |
 | **TA0010** | Exfiltration | 1 | 🟡 |
-| **TA0040** | Impact | 1 | 🟡 |
-
+| **TA0040** | Impact | 2 | 🟢 |
 ---
 
 ## ⚙️ The Detection Engineering Lifecycle
