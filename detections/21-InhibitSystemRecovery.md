@@ -62,3 +62,23 @@ falsepositives:
     - Task programmati di pulizia disco o amministratori di sistema (richiede investigazione immediata).
 level: critical
 ```
+
+---
+
+## 📖 L1 Triage Playbook (Analyst Response Steps)
+
+Quando questo allarme si attiva sul SIEM, indicando un potenziale attacco Ransomware in corso (fase di distruzione dei backup locali), l'analista L1 deve eseguire immediatamente i seguenti step operativi:
+
+### 1. Verifica attività del processo (Live Response)
+Utilizzare la console Live Terminal dell'EDR per connettersi all'host compromesso. Verificare se il processo malevolo è ancora in esecuzione. Analizzare le metriche di sistema in tempo reale: un utilizzo prolungato e anomalo di CPU e Disco (100%) indica una probabile cifratura dei file in corso. Terminare (kill) immediatamente eventuali processi anomali o non riconosciuti.
+
+### 2. Verifica di backup alternativi e offline
+Interfacciarsi con il team IT o controllare le dashboard degli strumenti di backup aziendali (es. Veeam, server NAS isolati) per verificare l'esistenza di copie fisiche o immagini di sistema recenti e intatte. Controllare inoltre il versioning in Cloud (es. OneDrive/SharePoint) per i file utente. Prepararsi al ripristino, consapevoli della potenziale perdita del delta di dati generato dopo l'ultimo salvataggio utile.
+
+### 3. Isolamento di rete del dispositivo
+Procedere in parallelo con l'isolamento logico dell'host tramite la funzione "Isolate Host" della console EDR. Questo bloccherà ogni tipo di comunicazione di rete in entrata e in uscita (incluso l'accesso a share di rete condivise), impedendo il Lateral Movement del ransomware, ma manterrà attivo il canale cifrato di gestione dell'EDR per consentire al SOC di proseguire le indagini in sicurezza.
+
+### 4. Escalation a L2 con lista IOC e Report
+Aprire un ticket di Incident Response per il livello L2 (Escalation) includendo un riepilogo operativo e tecnico strutturato:
+* **Contesto e Azioni (Summary):** Segnalare l'host isolato, lo stato delle metriche (CPU/Disco), eventuali processi terminati manualmente e il resoconto sui backup offline disponibili.
+* **IOC per Threat Hunting:** Fornire i dati tecnici per la ricerca su larga scala, includendo: Hostname e IP della macchina infetta, account utente compromesso, timestamp esatto dell'evento, la riga di comando malevola rilevata e l'hash (SHA256) del processo che ha invocato l'eliminazione delle Shadow Copies.
