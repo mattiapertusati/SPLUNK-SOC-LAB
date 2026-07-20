@@ -15,11 +15,11 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 
 ## 🎯 Project Metrics (At a Glance)
 
-* **16** SPL Detections (Splunk)
-* **16** KQL Detections (Microsoft Sentinel)
-* **16** Vendor-Agnostic SIGMA Rules
+* **17** SPL Detections (Splunk)
+* **17** KQL Detections (Microsoft Sentinel)
+* **17** Vendor-Agnostic SIGMA Rules
 * **5** Advanced Correlation Rules (Chain Detections)
-* **16** Attack Validations (Atomic Red Team & Native OS)
+* **17** Attack Validations (Atomic Red Team & Native OS)
 * **1** Threat Model Framework Enterprise
 * **1** Live SOC Executive Dashboard (Splunk XML)
 * **1** DetectionLab Environment (Active Directory, WEF, Sysmon, Linux Auditd)
@@ -30,11 +30,11 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 
 ### 📈 KPI di Efficacia della Rilevazione
 
-* **Tecniche Rilevate e Validate:** 16 / 16 Scenari Critici
-* **True Positives (TP) generati in Lab:** 34 (attacchi lanciati con varianti diverse)
+* **Tecniche Rilevate e Validate:** 17 / 17 Scenari Critici
+* **True Positives (TP) generati in Lab:** 35 (attacchi lanciati con varianti diverse)
 * **False Positives (FP) intercettati in Baseline:** 1 (script di monitoraggio IT legittimo)
-* **Precisione Globale (Precision):** **97.1%** $$\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{34}{34 + 1} = 97.1\%$$
-* **Sensibilità Stimata (Recall):** **94.4%** *(Calcolata testando 36 varianti totali di attacco, di cui 34 hanno attivato la regola).*
+* **Precisione Globale (Precision):** **97.2%**
+* **Sensibilità Stimata (Recall):** **94.5%**
 * **Tasso di Falsi Positivi (False Positive Rate - FPR):** **< 0.01%** rispetto al volume totale della telemetria analizzata.
 
 ### 📋 Detection Validation Matrix
@@ -57,6 +57,7 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 | **T1047** | WMI Lateral Movement & Execution | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4688) |
 | **T1134.001** | Token Impersonation (Special Logon) | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4672) |
 | **T1490** | Inhibit System Recovery (VSS Deletion) | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4688) |
+| **T1218.011** | Rundll32 Proxy Execution (Droppers) | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 1) |
 
 ---
 
@@ -68,7 +69,7 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 | **TA0002** | Execution | 5 | 🟢 |
 | **TA0003** | Persistence | 3 | 🟢 |
 | **TA0004** | Privilege Escalation | 3 | 🟢 |
-| **TA0005** | Defense Evasion | 6 | 🟢 |
+| **TA0005** | Defense Evasion | 7 | 🟢 |
 | **TA0006** | Credential Access | 2 | 🟢 |
 | **TA0007** | Discovery | 2 | 🟢 |
 | **TA0008** | Lateral Movement | 3 | 🟢 |
