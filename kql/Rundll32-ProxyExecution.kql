@@ -1,0 +1,10 @@
+DeviceProcessEvents
+| where TimeGenerated >= ago(24h)
+| where FileName =~ "rundll32.exe"
+| where InitiatingProcessFileName !endswith @"\svchost.exe" 
+    and InitiatingProcessFileName !endswith @"\msiexec.exe" 
+    and InitiatingProcessFileName !endswith @"\explorer.exe"
+| where ProcessCommandLine contains @"\Users\" 
+     or ProcessCommandLine contains @"\Temp\" 
+     or ProcessCommandLine contains @"\ProgramData\"
+| project TimeGenerated, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
