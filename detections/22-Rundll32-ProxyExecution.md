@@ -76,3 +76,32 @@ falsepositives:
     - Attività amministrative legittime o installazioni software.
 level: medium
 ```
+
+---
+
+## 📖 L1 Triage Playbook (Analyst Response Steps)
+
+Quando si attiva questo alert, indica il potenziale abuso di un binario di sistema (Living off the Land) per nascondere l'esecuzione di codice malevolo o scaricare payload secondari. L'analista L1 deve seguire questi step:
+
+### 1. Analisi della Catena di Esecuzione e del Payload (Triage Iniziale)
+Analizzare i log del processo per ricostruire il contesto dell'esecuzione:
+* **Verificare il `ParentImage`:** Determinare l'origine dell'attacco. Se il processo padre è un'applicazione di Office (es. `winword.exe`) o un browser, indica probabile Phishing o drive-by download.
+* **Esaminare la `CommandLine`:** Identificare il percorso esatto della DLL caricata. Confermare se risiede in cartelle anomale per le librerie di sistema (es. `C:\Users\`, `C:\Temp\`, `C:\ProgramData\`).
+* **Analisi OSINT:** Estrarre l'hash (SHA256) della DLL o analizzare il nome del file e verificarne la reputazione su piattaforme di threat intelligence (es. VirusTotal).
+
+### 2. Analisi del Comportamento da Dropper (Network & File System)
+Verificare se `rundll32.exe` sta agendo come downloader/dropper analizzando gli eventi successivi:
+* **Eventi di Rete:** Controllare la telemetria EDR per rilevare connessioni in uscita sospette initiate da `rundll32.exe` verso IP o domini non noti (potenziale contatto con un server Command & Control).
+* **Eventi sui File:** Ricercare eventi di creazione file (*DeviceFileEvents*), prestando attenzione a nuovi eseguibili o script rilasciati sul disco subito dopo la connessione di rete.
+
+### 3. Contenimento e Isolamento (Host Isolation)
+Se il comportamento malevolo è confermato (True Positive), procedere immediatamente con l'isolamento di rete logico dell'host tramite la console EDR. Questo impedirà al processo di contattare il server C2 o di effettuare movimenti laterali, mantenendo intatto il canale investigativo remoto. Accedere in Live Response e terminare l'albero dei processi coinvolti (genitore e figli).
+
+### 4. Escalation a L2 con lista IOC e Report
+Aprire un ticket di Incident Response per il livello L2 (Escalation) strutturato in questo modo:
+* **Contesto e Azioni:** Segnalare l'host isolato, il processo infetto bloccato e confermare se l'attacco è derivato da un file Office/Email.
+* **IOC per Threat Hunting:** Fornire i dati tecnici per la ricerca su larga scala, includendo: 
+  * Indirizzi IP / Domini esterni contattati (C2).
+  * Hash (SHA256) dei file droppati (DLL malevola, payload secondari).
+  * La riga di comando esatta utilizzata per bypassare i controlli.
+  * Il percorso dei file scritti sul disco.
