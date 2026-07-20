@@ -30,5 +30,6 @@ Ogni file `.md` elencato qui sotto contiene non solo la logica di ricerca, ma un
 * 📄 [18 - Linux SUID PrivEsc](18-Linux-SUID-PrivEsc.md)
 * 📄 [19 - WMI LateralMovement](19-WMI-LateralMovement.md)
 * 📄 [20 - TokenImpersonation PrivEsc](20-TokenImpersonation-PrivEsc.md)
+* 📄 [22 - Rundll32-ProxyExecution](22-Rundll32-ProxyExecution.md)
 ---
 **Nota per l'Auditor/Recruiter:** Clicca su uno qualsiasi dei link sopra per navigare direttamente alla logica di rilevamento e al relativo playbook operativo.
