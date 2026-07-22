@@ -15,11 +15,11 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 
 ## 🎯 Project Metrics (At a Glance)
 
-* **17** SPL Detections (Splunk)
-* **17** KQL Detections (Microsoft Sentinel)
-* **17** Vendor-Agnostic SIGMA Rules
+* **18** SPL Detections (Splunk)
+* **18** KQL Detections (Microsoft Sentinel)
+* **18** Vendor-Agnostic SIGMA Rules
 * **5** Advanced Correlation Rules (Chain Detections)
-* **17** Attack Validations (Atomic Red Team & Native OS)
+* **18** Attack Validations (Atomic Red Team & Native OS)
 * **1** Threat Model Framework Enterprise
 * **1** Live SOC Executive Dashboard (Splunk XML)
 * **1** DetectionLab Environment (Active Directory, WEF, Sysmon, Linux Auditd)
@@ -63,20 +63,20 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 
 ## 🗺️ MITRE ATT&CK Coverage Matrix
 
-| MITRE ID | Tattica (Tactic) | Regole Sviluppate (Coverage) | Stato Copertura |
+| MITRE ID | Tattica (Tactic) | Regole Sviluppate (Primary) | Stato Copertura |
 | :--- | :--- | :---: | :---: |
-| **TA0001** | Initial Access | 1 | 🟡 |
-| **TA0002** | Execution | 5 | 🟢 |
-| **TA0003** | Persistence | 3 | 🟢 |
+| **TA0001** | Initial Access | 0 | ⚪ |
+| **TA0002** | Execution | 4 | 🟢 |
+| **TA0003** | Persistence | 1 | 🟡 |
 | **TA0004** | Privilege Escalation | 3 | 🟢 |
-| **TA0005** | Defense Evasion | 7 | 🟢 |
+| **TA0005** | Defense Evasion | 4 | 🟢 |
 | **TA0006** | Credential Access | 2 | 🟢 |
-| **TA0007** | Discovery | 2 | 🟢 |
-| **TA0008** | Lateral Movement | 3 | 🟢 |
-| **TA0009** | Collection | 1 | 🟡 |
+| **TA0007** | Discovery | 1 | 🟡 |
+| **TA0008** | Lateral Movement | 1 | 🟡 |
+| **TA0009** | Collection | 0 | ⚪ |
 | **TA0011** | Command and Control | 1 | 🟡 |
-| **TA0010** | Exfiltration | 1 | 🟡 |
-| **TA0040** | Impact | 2 | 🟢 |
+| **TA0010** | Exfiltration | 0 | ⚪ |
+| **TA0040** | Impact | 1 | 🟡 |
 ---
 
 ## ⚙️ The Detection Engineering Lifecycle
