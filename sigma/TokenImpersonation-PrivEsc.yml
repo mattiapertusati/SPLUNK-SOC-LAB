@@ -1,5 +1,5 @@
 title: Rilevamento Token Impersonation - Privilegi Speciali
-id: 4a2b3c4d-e5f6-7a8b-9c0d-1e2f3a4b5c6d
+id: 4709e6d1-3ff9-48d3-83d7-8c67d8c0cacb
 status: experimental
 description: Rileva l'assegnazione di privilegi speciali (SeImpersonate, SeDebug, ecc.) a utenti non standard per identificare tentativi di Token Impersonation.
 author: Mattia
