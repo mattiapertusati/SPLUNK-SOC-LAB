@@ -5,7 +5,7 @@ description: Rileva l'assegnazione di privilegi speciali (SeImpersonate, SeDebug
 author: Mattia
 date: 2026/07/13
 references:
-    - [https://mitre.org](https://mitre.org)
+    - https://mitre.org
 tags:
     - attack.privilege_escalation
     - attack.defense_evasion
