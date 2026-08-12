@@ -1,5 +1,5 @@
 title: Inhibit System Recovery - Volume Shadow Copy Deletion
-id: a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d
+id: 78305a2e-defb-4109-9cdf-f6c17f86f2ff
 status: experimental
 description: Rileva l'esecuzione di comandi per eliminare le copie shadow del volume, un comportamento tipico dei ransomware.
 author: Mattia
