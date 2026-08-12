@@ -1,5 +1,5 @@
 title: Detection of Scheduled Task Creation for Persistence
-id: e73f3cce-4b6d-433c-a43f-a450aa7e20db
+id: 5189402e-733c-4c4c-85e4-8a703053dc58
 status: experimental
 description: Rilevamento della creazione di una task programmata per garantire persistenza all'attaccante.
 references:
