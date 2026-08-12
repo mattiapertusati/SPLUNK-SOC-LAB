@@ -1,12 +1,12 @@
 title: Cancellazione dei Registri Eventi di Windows
-id: b3c4d5e6-7f8a-9b0c-1d2e-3f4a5b6c7d8e # Nuovo UUID unico generato per te
+id: b3c4d5e6-7f8a-9b0c-1d2e-3f4a5b6c7d8e 
 status: experimental
 description: Rileva il tentativo di cancellazione dei log di Sicurezza (1102) o di Sistema (104) per nascondere attività malevole.
 author: Mattia
 date: 2026/06/10
 tags:
     - attack.defense_evasion
-    - attack.t1070.001 # Indicator Removal: Clear Windows Event Logs
+    - attack.t1070.001 
 logsource:
     product: windows
     service: security
