@@ -1,5 +1,5 @@
 title: Windows Firewall Disabling via Netsh or PowerShell
-id: d88f34de-c3ea-448f-889d-156204abcdef
+id: 71c283f3-508f-4e33-8671-c0e6f7482b3d
 status: experimental
 description: Rileva i tentativi di disattivazione o di alterazione dei profili del Windows Firewall effettuati tramite l'utility netsh o moduli PowerShell.
 author: Mattia Pertusati
