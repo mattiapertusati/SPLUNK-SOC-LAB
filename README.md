@@ -58,34 +58,35 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 
 ### 📋 Detection Validation Matrix
 
-| File / MITRE | Nome Tecnica / Scenario | SPL | KQL | Sigma | 
+| File / MITRE | Nome Tecnica / Scenario | SPL | KQL | Sigma | Playbook L1 |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| **01 (T1059.001)** | Encoded PowerShell Command | ✅ | ✅ | ✅ | 
-| **02 (T1136.001)** | Local User Creation | ✅ | ✅ | ✅ | 
-| **03 (T1548.002)** | Local Privilege Escalation (UAC) | ✅ | ✅ | ✅ |
-| **04 (T1562.001)** | Windows Defender Evasion | ✅ | ✅ | ✅ | 
-| **05 (T1053.005)** | Scheduled Task Persistence | ✅ | ✅ | ✅ | 
-| **06 (T1003.001)** | OS Credential Dumping: LSASS | ✅ | ✅ | ✅ | 
-| **07 (T1569.002)** | Lateral Movement via PsExec | ✅ | ✅ | ✅ | 
-| **08 (T1562.004)** | Firewall Manipulation (Netsh) | ✅ | ✅ | ✅ | 
-| **09 (T1070.001)** | Clearing Event Logs (wevtutil) | ✅ | ✅ | ✅ | 
-| **10 (T1563.002)** | RDP Session Hijacking (tscon) | ✅ | ✅ | ✅ | 
-| **16 (TA0007)** | Local & Domain Reconnaissance | ✅ | ✅ | ✅ | 
-| **17 (T1558.003)** | Kerberoasting (RC4 TGS Request) | ✅ | ✅ | ✅ | 
-| **18 (T1548.001)** | Linux SUID Discovery & PrivEsc | ✅ | ✅ | ✅ | 
-| **19 (T1047)** | WMI Lateral Movement & Execution | ✅ | ✅ | ✅ | 
-| **20 (T1134.001)** | Token Impersonation (Special Logon)| ✅ | ✅ | ✅ | 
-| **21 (T1490)** | Inhibit System Recovery (VSS Deletion) | ✅ | ✅ | ✅ | 
-| **22 (T1218.011)** | Rundll32 Proxy Execution (Droppers) | ✅ | ✅ | ⚪ | 
+| **01 (T1059.001)** | Encoded PowerShell Command | ✅ | ✅ | ✅ | ✅ |
+| **02 (T1136.001)** | Local User Creation | ✅ | ✅ | ✅ | ✅ |
+| **03 (T1548.002)** | Local Privilege Escalation (UAC) | ✅ | ✅ | ✅ | ✅ |
+| **04 (T1562.001)** | Windows Defender Evasion | ✅ | ✅ | ✅ | ✅ |
+| **05 (T1053.005)** | Scheduled Task Persistence | ✅ | ✅ | ✅ | ✅ |
+| **06 (T1003.001)** | OS Credential Dumping: LSASS | ✅ | ✅ | ✅ | ✅ |
+| **07 (T1569.002)** | Lateral Movement via PsExec | ✅ | ✅ | ✅ | ✅ |
+| **08 (T1562.004)** | Firewall Manipulation (Netsh) | ✅ | ✅ | ✅ | ✅ |
+| **09 (T1070.001)** | Clearing Event Logs (wevtutil) | ✅ | ✅ | ✅ | ✅ |
+| **10 (T1563.002)** | RDP Session Hijacking (tscon) | ✅ | ✅ | ✅ | ✅ |
+| **16 (TA0007)** | Local & Domain Reconnaissance | ✅ | ✅ | ✅ | ✅ |
+| **17 (T1558.003)** | Kerberoasting (RC4 TGS Request) | ✅ | ✅ | ✅ | ✅ |
+| **18 (T1548.001)** | Linux SUID Discovery & PrivEsc | ✅ | ✅ | ✅ | ✅ |
+| **19 (T1047)** | WMI Lateral Movement & Execution | ✅ | ✅ | ✅ | ✅ |
+| **20 (T1134.001)** | Token Impersonation (Special Logon)| ✅ | ✅ | ✅ | ✅ |
+| **21 (T1490)** | Inhibit System Recovery (VSS Deletion) | ✅ | ✅ | ✅ | ✅ |
+| **22 (T1218.011)** | Rundll32 Proxy Execution (Droppers) | ✅ | ✅ | ⚪ | ✅ |
 
 ### 🔗 Advanced Correlation Rules
-
 Oltre alle detection di base, sono state sviluppate 5 regole di correlazione avanzata in SPL per tracciare attacchi complessi (Kill Chain):
 * `11` - Domain Compromise Correlation
 * `12` - Credential Theft Correlation
 * `13` - Lateral Persistence Correlation
 * `14` - Ransomware & Exfiltration Correlation
 * `15` - Phishing & Initial Access Correlation
+
+---
 
 ## ⚙️ The Detection Engineering Lifecycle
 
