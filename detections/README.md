@@ -10,7 +10,7 @@ Ogni file `.md` elencato qui sotto contiene non solo la logica di ricerca, ma un
 
 ## 🗂️ Indice delle Detection
 
-* 📄 [01 - Encoded PowerShell Command Execution](01-Encoded-Powershell.md)
+* 📄 [01 - Encoded PowerShell Command Execution](01-Encoded-PowerShell.md)
 * 📄 [02 - Local User Creation](02-User-Creation.md)
 * 📄 [03 - Local Privilege Escalation (UAC)](03-Privilege-Escalation.md)
 * 📄 [04 - Windows Defender Evasion](04-Defender-Evasion.md)
