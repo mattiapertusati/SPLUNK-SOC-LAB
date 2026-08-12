@@ -1,5 +1,5 @@
 title: Creazione Account Locale per Persistenza
-id: 8f3b2a14-5678-4abc-9012-d8765432102c
+id: 75e4d9cd-ea95-4bd8-a9a9-3d1813c269dc
 status: experimental
 description: Identifica la creazione di account locali tramite l'evento nativo 4720 o l'esecuzione di comandi legati alla gestione utenti.
 author: Mattia
