@@ -1,5 +1,5 @@
 title: Rilevamento Esecuzioni Anomale di Rundll32
-id: 550e8400-e29b-41d4-a716-446655440000
+id: f389f672-a38e-4f86-89de-c8d9f084987f
 status: experimental
 description: Identifica l'esecuzione di rundll32.exe da percorsi insoliti o con genitori sospetti (possibile esecuzione di DLL malevole o dropper).
 author: Mattia
