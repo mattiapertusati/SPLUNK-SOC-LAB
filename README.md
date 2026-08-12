@@ -15,69 +15,77 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 
 ## 🎯 Project Metrics (At a Glance)
 
-* **18** SPL Detections (Splunk)
-* **18** KQL Detections (Microsoft Sentinel)
-* **18** Vendor-Agnostic SIGMA Rules
+* **22** SPL Detections (Splunk)
+* **17** KQL Detections (Microsoft Sentinel)
+* **16** Vendor-Agnostic SIGMA Rules
 * **5** Advanced Correlation Rules (Chain Detections)
-* **18** Attack Validations (Atomic Red Team & Native OS)
+* **17** Attack Validations (Atomic Red Team & Native OS)
 * **1** Threat Model Framework Enterprise
 * **1** Live SOC Executive Dashboard (Splunk XML)
 * **1** DetectionLab Environment (Active Directory, WEF, Sysmon, Linux Auditd)
 
 ---
 
-## 📊 Sezione Numerica sui Risultati & Performance Metrics
-
-### 📈 KPI di Efficacia della Rilevazione
-
-* **Tecniche Rilevate e Validate:** 17 / 17 Scenari Critici
-* **True Positives (TP) generati in Lab:** 35 (attacchi lanciati con varianti diverse)
-* **False Positives (FP) intercettati in Baseline:** 1 (script di monitoraggio IT legittimo)
-* **Precisione Globale (Precision):** **97.2%**
-* **Sensibilità Stimata (Recall):** **94.5%**
-* **Tasso di Falsi Positivi (False Positive Rate - FPR):** **< 0.01%** rispetto al volume totale della telemetria analizzata.
-
-### 📋 Detection Validation Matrix
-
-| ID MITRE | Nome Tecnica / Scenario | SPL (Splunk) | KQL (Sentinel) | Sigma (YAML) | Lab Validated | Risultato Telemetria |
-| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
-| **T1059.001** | Encoded PowerShell Command | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4688) |
-| **T1136.001** | Local User Creation | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4720) |
-| **T1548.002** | Local Privilege Escalation (UAC) | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4732) |
-| **T1562.001** | Windows Defender Evasion | ✅ | ✅ | ✅ | ✅ | Triggered (EventCode 4104) |
-| **T1053.005** | Scheduled Task Persistence | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4698) |
-| **T1003.001** | OS Credential Dumping: LSASS | ✅ | ✅ | ✅ | ✅ | Triggered (EventCode 1) |
-| **T1558.003** | Kerberoasting (RC4 TGS Request) | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4769) |
-| **T1569.002** | Lateral Movement via PsExec | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4697/7045) |
-| **T1562.004** | Firewall Manipulation (Netsh) | ✅ | ✅ | ✅ | ✅ | Triggered (EventCode 1/4688) |
-| **T1070.001** | Clearing Event Logs (wevtutil) | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 1102) |
-| **T1563.002** | RDP Session Hijacking (tscon) | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4688) |
-| **TA0007** | Local & Domain Reconnaissance | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 1) |
-| **T1548.001** | Linux SUID Discovery & PrivEsc | ✅ | ✅ | ✅ | ✅ | Triggered (DeviceProcessEvents) |
-| **T1047** | WMI Lateral Movement & Execution | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4688) |
-| **T1134.001** | Token Impersonation (Special Logon) | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4672) |
-| **T1490** | Inhibit System Recovery (VSS Deletion) | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 4688) |
-| **T1218.011** | Rundll32 Proxy Execution (Droppers) | ✅ | ✅ | ✅ | ✅ | Triggered (EventID 1) |
-
----
-
 ## 🗺️ MITRE ATT&CK Coverage Matrix
+
+*Nota: Le regole sono state mappate esclusivamente in base alla loro **Tattica Primaria** per mantenere la coerenza statistica (Totale: 17 scenari di base).*
 
 | MITRE ID | Tattica (Tactic) | Regole Sviluppate (Primary) | Stato Copertura |
 | :--- | :--- | :---: | :---: |
 | **TA0001** | Initial Access | 0 | ⚪ |
-| **TA0002** | Execution | 4 | 🟢 |
-| **TA0003** | Persistence | 1 | 🟡 |
+| **TA0002** | Execution | 3 | 🟢 |
+| **TA0003** | Persistence | 2 | 🟢 |
 | **TA0004** | Privilege Escalation | 3 | 🟢 |
 | **TA0005** | Defense Evasion | 4 | 🟢 |
 | **TA0006** | Credential Access | 2 | 🟢 |
 | **TA0007** | Discovery | 1 | 🟡 |
 | **TA0008** | Lateral Movement | 1 | 🟡 |
 | **TA0009** | Collection | 0 | ⚪ |
-| **TA0011** | Command and Control | 1 | 🟡 |
+| **TA0011** | Command and Control | 0 | ⚪ |
 | **TA0010** | Exfiltration | 0 | ⚪ |
 | **TA0040** | Impact | 1 | 🟡 |
+
 ---
+
+## 📊 Performance Metrics & Validation
+
+### 📈 KPI di Efficacia della Rilevazione
+* **Tecniche Rilevate e Validate:** 17 / 17 Scenari Critici
+* **True Positives (TP) generati in Lab:** 35 (attacchi lanciati con varianti diverse)
+* **False Positives (FP) intercettati in Baseline:** 1 (script di monitoraggio IT legittimo)
+* **Precisione Globale (Precision):** **97.2%**
+* **Tasso di Falsi Positivi (False Positive Rate - FPR):** **< 0.01%** rispetto al volume totale della telemetria analizzata.
+
+### 📋 Detection Validation Matrix
+
+| File / MITRE | Nome Tecnica / Scenario | SPL | KQL | Sigma | Playbook L1 |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **01 (T1059.001)** | Encoded PowerShell Command | ✅ | ✅ | ✅ | ✅ |
+| **02 (T1136.001)** | Local User Creation | ✅ | ✅ | ✅ | ✅ |
+| **03 (T1548.002)** | Local Privilege Escalation (UAC) | ✅ | ✅ | ✅ | ✅ |
+| **04 (T1562.001)** | Windows Defender Evasion | ✅ | ✅ | ✅ | ✅ |
+| **05 (T1053.005)** | Scheduled Task Persistence | ✅ | ✅ | ✅ | ✅ |
+| **06 (T1003.001)** | OS Credential Dumping: LSASS | ✅ | ✅ | ✅ | ✅ |
+| **07 (T1569.002)** | Lateral Movement via PsExec | ✅ | ✅ | ✅ | ✅ |
+| **08 (T1562.004)** | Firewall Manipulation (Netsh) | ✅ | ✅ | ✅ | ✅ |
+| **09 (T1070.001)** | Clearing Event Logs (wevtutil) | ✅ | ✅ | ✅ | ✅ |
+| **10 (T1563.002)** | RDP Session Hijacking (tscon) | ✅ | ✅ | ✅ | ✅ |
+| **16 (TA0007)** | Local & Domain Reconnaissance | ✅ | ✅ | ✅ | ✅ |
+| **17 (T1558.003)** | Kerberoasting (RC4 TGS Request) | ✅ | ✅ | ✅ | ✅ |
+| **18 (T1548.001)** | Linux SUID Discovery & PrivEsc | ✅ | ✅ | ✅ | ✅ |
+| **19 (T1047)** | WMI Lateral Movement & Execution | ✅ | ✅ | ✅ | ✅ |
+| **20 (T1134.001)** | Token Impersonation (Special Logon)| ✅ | ✅ | ✅ | ✅ |
+| **21 (T1490)** | Inhibit System Recovery (VSS Deletion) | ✅ | ✅ | ✅ | ✅ |
+| **22 (T1218.011)** | Rundll32 Proxy Execution (Droppers) | ✅ | ✅ | ⚪ | ✅ |
+
+### 🔗 Advanced Correlation Rules
+
+Oltre alle detection di base, sono state sviluppate 5 regole di correlazione avanzata in SPL per tracciare attacchi complessi (Kill Chain):
+* `11` - Domain Compromise Correlation
+* `12` - Credential Theft Correlation
+* `13` - Lateral Persistence Correlation
+* `14` - Ransomware & Exfiltration Correlation
+* `15` - Phishing & Initial Access Correlation
 
 ## ⚙️ The Detection Engineering Lifecycle
 
