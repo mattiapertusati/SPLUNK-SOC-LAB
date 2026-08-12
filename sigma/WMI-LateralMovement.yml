@@ -1,5 +1,5 @@
 title: Rilevamento di Processi Sospetti Generati da WMI
-id: 6099d595-71c5-4095-b544-7868e7519921
+id: fa62d227-7361-4530-a513-541c8adbbabc
 status: experimental
 description: Identifica la creazione di processi insoliti avviati dal servizio WMI escludendo l'attività legittima di sistema.
 author: Mattia
