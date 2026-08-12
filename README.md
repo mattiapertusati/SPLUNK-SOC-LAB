@@ -62,7 +62,7 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | **01 (T1059.001)** | Encoded PowerShell Command | ✅ | ✅ | ✅ | 
 | **02 (T1136.001)** | Local User Creation | ✅ | ✅ | ✅ | 
-| **03 (T1548.002)** | Local Privilege Escalation (UAC) | ✅ | ✅ | ✅ | 
+| **03 (T1548.002)** | Local Privilege Escalation (UAC) | ✅ | ✅ | ✅ |
 | **04 (T1562.001)** | Windows Defender Evasion | ✅ | ✅ | ✅ | 
 | **05 (T1053.005)** | Scheduled Task Persistence | ✅ | ✅ | ✅ | 
 | **06 (T1003.001)** | OS Credential Dumping: LSASS | ✅ | ✅ | ✅ | 
