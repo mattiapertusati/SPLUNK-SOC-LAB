@@ -1,5 +1,5 @@
 title: Rilevamento PowerShell con Comando Codificato
-id: 4a2e5b81-1234-4567-abcd-e98765432101
+id: d956cc48-354c-4eca-b186-3d839f27939a
 status: experimental
 description: Identifica l'esecuzione di PowerShell che utilizza il parametro di codifica per nascondere il comando vero.
 author: Mattia
