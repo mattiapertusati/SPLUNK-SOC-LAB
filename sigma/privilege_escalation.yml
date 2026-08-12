@@ -1,5 +1,5 @@
 title: Escalazione dei Privilegi in Locale
-id: 3c9b1a55-8901-4def-bcda-e765432103df 
+id: 52f71eb1-da22-4c5d-9073-eb52c9d4850d
 status: experimental
 description: Identifica l'aggiunta di utenti al gruppo locale Administrators per Privilege Escalation o persistenza.
 author: Mattia
