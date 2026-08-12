@@ -1,5 +1,5 @@
 title: Detection of Lateral Movement via PsExec
-id: d8d92a14-2c3d-4e5f-8a9b-cdef01234567 
+id: ffb972cc-73db-4e16-8bff-6cc2a39d2b8a
 status: experimental
 description: Rileva l'installazione di un nuovo servizio di sistema associato a PsExec, una utility legittima della suite Sysinternals di Microsoft
 author: Mattia
