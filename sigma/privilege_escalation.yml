@@ -1,5 +1,5 @@
 title: Escalazione dei Privilegi in Locale
-id: 3c9b1a55-8901-4def-bcda-e765432103df  # Ti ho generato un nuovo ID unico!
+id: 3c9b1a55-8901-4def-bcda-e765432103df 
 status: experimental
 description: Identifica l'aggiunta di utenti al gruppo locale Administrators per Privilege Escalation o persistenza.
 author: Mattia
