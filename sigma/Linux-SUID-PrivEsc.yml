@@ -1,6 +1,6 @@
 title: Linux SUID Discovery and Privilege Escalation
 id: 8c1b92a3-f570-4d56-a9bb-12a83bd78e51
-status: experimental # Pending Linux Endpoint validation
+status: experimental 
 description: Rileva comandi utilizzati per scoprire o creare file SUID, utilizzando regex strict sui permessi ottali.
 references:
     - [https://mitre.org](https://mitre.org)
