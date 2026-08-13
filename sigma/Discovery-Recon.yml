@@ -1,0 +1,28 @@
+title: Local and Domain Reconnaissance (Discovery)
+id: c42a8b38-201a-4710-9c1b-4f7f6a0901e3
+status: experimental
+description: Intercetta l'esecuzione di comandi multipli tipicamente utilizzati per la fase di Discovery e ricognizione del dominio (es. whoami, net user, nltest).
+author: Mattia
+date: 2026/08/13
+tags:
+  - attack.discovery
+  - attack.ta0007
+logsource:
+  category: process_creation
+  product: windows
+detection: 
+  selection: 
+    CommandLine|Contains:
+      - 'net user'
+      - 'net group'
+      - 'net localgroup'
+      - 'whoami /all'
+      - 'nltest /domain_trusts'
+      - 'systeminfo'
+  condition:
+fields:
+  - CommandLine
+  - ParentCommandLine
+  - User
+  - Image
+level: medium
