@@ -15,33 +15,33 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 
 ## 🎯 Project Metrics (At a Glance)
 
-* **22** SPL Detections (Splunk)
+* **22** SPL Detections Totali (Splunk)
+  * *17 Regole di base atomiche*
+  * *5 Regole di correlazione (Kill Chain)*
 * **17** KQL Detections (Microsoft Sentinel)
 * **16** Vendor-Agnostic SIGMA Rules
-* **5** Advanced Correlation Rules (Chain Detections)
-* **17** Attack Validations (Atomic Red Team & Native OS)
+* **17** Attack Validations in Lab
 * **1** Threat Model Framework Enterprise
 * **1** Live SOC Executive Dashboard (Splunk XML)
-* **1** DetectionLab Environment (Active Directory, WEF, Sysmon, Linux Auditd)
+* **1** DetectionLab Environment (Active Directory, Sysmon, Windows Event Logs)
 
 ---
 
 ## 🗺️ MITRE ATT&CK Coverage Matrix
 
-*Nota: Le regole sono state mappate esclusivamente in base alla loro **Tattica Primaria** per mantenere la coerenza statistica (Totale: 17 scenari di base).*
+*Nota: Le 17 regole di base sono state mappate in base all'intento operativo e alla tattica primaria effettiva sfruttata nell'ambiente.*
 
 | MITRE ID | Tattica (Tactic) | Regole Sviluppate (Primary) | Stato Copertura |
 | :--- | :--- | :---: | :---: |
 | **TA0001** | Initial Access | 0 | ⚪ |
-| **TA0002** | Execution | 3 | 🟢 |
+| **TA0002** | Execution | 1 | 🟡 |
 | **TA0003** | Persistence | 2 | 🟢 |
 | **TA0004** | Privilege Escalation | 3 | 🟢 |
 | **TA0005** | Defense Evasion | 4 | 🟢 |
 | **TA0006** | Credential Access | 2 | 🟢 |
 | **TA0007** | Discovery | 1 | 🟡 |
-| **TA0008** | Lateral Movement | 1 | 🟡 |
+| **TA0008** | Lateral Movement | 3 | 🟢 |
 | **TA0009** | Collection | 0 | ⚪ |
-| **TA0011** | Command and Control | 0 | ⚪ |
 | **TA0010** | Exfiltration | 0 | ⚪ |
 | **TA0040** | Impact | 1 | 🟡 |
 
@@ -49,12 +49,11 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
 
 ## 📊 Performance Metrics & Validation
 
-### 📈 KPI di Efficacia della Rilevazione
-* **Tecniche Rilevate e Validate:** 17 / 17 Scenari Critici
-* **True Positives (TP) generati in Lab:** 35 (attacchi lanciati con varianti diverse)
-* **False Positives (FP) intercettati in Baseline:** 1 (script di monitoraggio IT legittimo)
-* **Precisione Globale (Precision):** **97.2%**
-* **Tasso di Falsi Positivi (False Positive Rate - FPR):** **< 0.01%** rispetto al volume totale della telemetria analizzata.
+### 📈 Metodologia di Testing (Lab Verification)
+Invece di affidarmi a metriche teoriche, ogni regola presente in questo repository è stata testata empiricamente in un ambiente isolato:
+
+* **True Positives (TP):** Generati simulando attacchi reali tramite script custom e moduli di **Atomic Red Team**. Tutte le 17 regole atomiche hanno triggerato con successo i relativi alert.
+* **False Positives (FP) e Tuning:** Durante la fase di baseline, regole come la `T1070.001` (Clearing Event Logs) hanno generato alert dovuti a script di manutenzione IT legittimi. La query è stata affinata (tuning) escludendo l'account di servizio specifico per azzerare il rumore.
 
 ### 📋 Detection Validation Matrix
 
