@@ -18,7 +18,7 @@ L'intero progetto è stato sviluppato all'interno di un ambiente controllato (**
   * *17 Regole di base atomiche*
   * *5 Regole di correlazione (Kill Chain)*
 * **17** KQL Detections (Microsoft Sentinel)
-* **16** Vendor-Agnostic SIGMA Rules
+* **17** Vendor-Agnostic SIGMA Rules
 * **17** Attack Validations in Lab
 * **1** Threat Model Framework Enterprise
 * **1** Live SOC Executive Dashboard (Splunk XML)
@@ -73,7 +73,7 @@ Invece di affidarmi a metriche teoriche, ogni regola presente in questo reposito
 | **13** | Lateral Persistence Correlation | ✅ | ⚪ | ⚪ |
 | **14** | Ransomware & Exfiltration Correlation | ✅ | ⚪ | ⚪ |
 | **15** | Phishing & Initial Access Correlation | ✅ | ⚪ | ⚪ |
-| **16** | Local & Domain Reconnaissance (TA0007) | ✅ | ✅ | ⚪ |
+| **16** | Local & Domain Reconnaissance (TA0007) | ✅ | ✅ | ✅ |
 | **17** | Kerberoasting (RC4 TGS Request) (T1558.003) | ✅ | ✅ | ✅ |
 | **18** | Linux SUID Discovery & PrivEsc (T1548.001) | ✅ | ✅ | ✅ |
 | **19** | WMI Lateral Movement & Execution (T1047) | ✅ | ✅ | ✅ |
