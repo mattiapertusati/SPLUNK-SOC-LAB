@@ -1,18 +1,18 @@
-# 🚨 Multi-Stage Attack: Lateral Movement & Persistence
+# Multi-Stage Attack: Lateral Movement & Persistence
 
-### Descrizione
-Questa regola di **Correlazione Avanzata** traccia una manovra tipica di post-compromissione. L'allarme scatta se, entro 45 minuti sulla stessa macchina, un attaccante si muove lateralmente installando il servizio PsExec, crea un'operazione pianificata per garantirsi la persistenza al riavvio e altera le regole del firewall di Windows per facilitare le comunicazioni di Comando e Controllo (C2).
+### Description
+This **Advanced Correlation** rule tracks a typical post-compromise maneuver. The alert triggers if, within 45 minutes on the same machine, an attacker moves laterally by installing the PsExec service, creates a scheduled task to ensure persistence upon reboot, and alters the Windows firewall rules to facilitate Command and Control (C2) communications.
 
-## 🎯 MITRE ATT&CK
+## MITRE ATT&CK
 * **Tactic:** Lateral Movement (TA0008), Persistence (TA0003), Defense Evasion (TA0005)
 * **Technique:** SMB/Windows Admin Shares (T1021.002), Scheduled Task (T1053.005), Impair Defenses: Disable or Modify System Firewall (T1562.004)
 
-## 🚦 Alert Metadata
+## Alert Metadata
 * **Severity:** CRITICAL
 * **Confidence:** High
 * **Impact:** Critical
 
-### Query SPL (Correlation Engine)
+### SPL Query (Correlation Engine)
 ```splunk
 (index=wineventlog OR index=sysmon) 
 ( 
@@ -24,16 +24,16 @@ Questa regola di **Correlazione Avanzata** traccia una manovra tipica di post-co
 )
 | transaction host maxspan=45m
 | search "*PSEXESVC*" AND EventCode=4698 AND "*netsh*"
-| eval Attack_Chain="ALLARME CRITICO: Esecuzione di Lateral Movement -> Persistenza tramite Operazione Pianificata -> Modifica al Firewall"
+| eval Attack_Chain="CRITICAL ALERT: Lateral Movement Execution -> Persistence via Scheduled Task -> Firewall Modification"
 | table _time, host, duration, Attack_Chain
 ```
 
-### Triage & Azioni Consigliate
+### Triage & Recommended Actions
 
-Questo è un forte indicatore che l'attaccante ha già superato le difese perimetrali e si sta diffondendo nella rete.
+This is a strong indicator that the attacker has already bypassed perimeter defenses and is spreading through the network.
 
-1. **Contenimento:** Isolare immediatamente l'host infetto per bloccare ulteriori movimenti laterali.
+1. **Containment:** Isolate the infected host immediately to block further lateral movements.
 
-2. **Reverse Tracking:** Identificare da quale IP è partita la connessione PsExec per trovare il "Paziente Zero" (l'host da cui l'attaccante è saltato).
+2. **Reverse Tracking:** Identify which IP address initiated the PsExec connection to find "Patient Zero" (the host from which the attacker jumped).
 
-3. **Bonifica:** Rimuovere l'operazione pianificata anomala e ripristinare le policy originali del firewall.
+3. **Remediation:** Remove the unusual scheduled task and restore the original firewall policies.
