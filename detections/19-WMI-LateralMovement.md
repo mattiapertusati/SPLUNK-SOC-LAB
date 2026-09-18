@@ -1,21 +1,21 @@
-# 🚨 Detection Rule: Lateral Movement & Execution via WMI
+# Detection Rule: Lateral Movement & Execution via WMI
 
-## 📋 Obiettivo
-Rilevare l'esecuzione di processi generati tramite Windows Management Instrumentation (WMI). Gli attaccanti abusano spesso del servizio WMI (`WmiPrvSE.exe`) per eseguire comandi da remoto (Lateral Movement) o per scopi di esecuzione locale (Execution), bypassando le difese tradizionali. La regola esclude i processi di sistema legittimi verificando i percorsi assoluti.
+## Objective
+Detect the execution of processes generated via Windows Management Instrumentation (WMI). Attackers often abuse the WMI service (`WmiPrvSE.exe`) to execute remote commands (Lateral Movement) or for local execution purposes (Execution), bypassing traditional defenses. The rule excludes legitimate system processes by verifying absolute paths.
 
-## 🎯 MITRE ATT&CK Mapping
+## MITRE ATT&CK Mapping
 * **Tactic:** Execution (TA0002), Lateral Movement (TA0008)
 * **Technique:** Windows Management Instrumentation (T1047)
 
-## 🚦 Alert Metadata
+## Alert Metadata
 * **Severity:** HIGH
 * **Confidence:** Medium
-* **False Positives:** Software di inventory management aziendale, script di amministrazione IT legittimi che usano WMI per task di manutenzione.
+* **False Positives:** Corporate inventory management software, legitimate IT administration scripts using WMI for maintenance tasks.
 
 ---
 
-## 🟢 Splunk Query (SPL)
-*Ottimizzazione: Uso di `like` per forzare la validazione dell'intero percorso, prevenendo evasioni basate su rinominazione di file, e inclusione del `TokenElevationType` per contestualizzare i privilegi del processo figlio.*
+## Splunk Query (SPL)
+*Optimization: Use of `like` to force full-path validation, preventing evasions based on file renaming, and inclusion of the `TokenElevationType` to contextualize child process privileges.*
 
 ```splunk
 index=wineventlog EventCode=4688
@@ -24,7 +24,7 @@ index=wineventlog EventCode=4688
 | table _time, host, User, CommandLine, ParentProcessName, TokenElevationType
 ```
 
-## 🔵 Microsoft Sentinel Query (KQL)
+## Microsoft Sentinel Query (KQL)
 
 ```kql
 SecurityEvent
@@ -34,13 +34,13 @@ SecurityEvent
 | project TimeGenerated, Computer, Account, CommandLine, ParentProcessName, TokenElevationType
 ```
 
-## 🟡 Sigma Rule (YAML)
+## Sigma Rule (YAML)
 
 ```sigma
-title: Rilevamento di Processi Sospetti Generati da WMI
+title: Suspicious Process Creation via WMI
 id: 6099d595-71c5-4095-b544-7868e7519921
 status: experimental
-description: Identifica la creazione di processi insoliti avviati dal servizio WMI escludendo l'attività legittima di sistema.
+description: Identifies the creation of unusual processes started by the WMI service, excluding legitimate system activity.
 author: Mattia
 date: 2026/07/09
 tags:
@@ -66,47 +66,47 @@ fields:
     - ParentProcessName
     - TokenElevationType
 falsepositives:
-    - Attività amministrativa legittima tramite WMI
+    - Legitimate administrative activity via WMI
 level: medium
 ```
 
-## SOP-SEC-042: Incident Response Playbook – Rilevamento Attività WMI / Esecuzione Sospetta
+## SOP-SEC-042: Incident Response Playbook – WMI Activity / Suspicious Execution Detection
 
-Segui questa guida nello specifico caso di Rilevamento Attività WMI / Esecuzione Sospetta e possibile lateral movement
+Follow this guide specifically for WMI Activity / Suspicious Execution Detection and possible lateral movement.
 
-**Fase 1 - Triage e Qualificazione**
+**Phase 1 - Triage and Qualification**
 
-L'obiettivo di questa fase è capire se l'attività segnalata sia effettivamente malevola oppure riconducibile ad una manutenzione ordinaria (False Positive)
+The objective of this phase is to understand if the reported activity is actually malicious or if it can be traced back to ordinary maintenance (False Positive).
 
-- Analisi della CommandLine: Esaminare l'intera stringa di comando del log per trovare dettagli utili alla nostra ricerca, elementi come l'uso di encoding, offuscamento, download esterni ecc
-- Verifica delle linee guida di Amministrazione: Verificare se il processo che ha generato l'attività fa parte delle task di automazione legittime.
-- Check con altri Team: Se l'attività proviene da un account noto, chiedere direttamente al Team convolto informazioni su apertura di **ticket** per manutenzione o altro
+- CommandLine Analysis: Examine the entire command string of the log to find useful details for our research, elements such as the use of encoding, obfuscation, external downloads, etc.
+- Administration Guidelines Verification: Verify if the process that generated the activity is part of legitimate automation tasks.
+- Check with other Teams: If the activity comes from a known account, directly ask the involved Team for information regarding an open maintenance ticket or other reasons.
 
-**Fase 2 - Identificare la sorgente**
+**Phase 2 - Identify the Source**
 
-WMI viene spesso usata per attacchi laterali guidati da remoto. E' necessario identificare il cuore di tale attacco.
+WMI is often used for remote lateral attacks. It is necessary to identify the core of this attack.
 
-- Verificare se sono avvenuti login esterni da remoto (Type 3) nell'intervallo simile a quello del log.
-- Cercare l'IP sorgente è la sua presenza nella mappa della rete, per comprenderne percorso e possibile punto d'ingresso/uscita.
+- Verify if external remote logins (Type 3) occurred within a similar timeframe as the log.
+- Search for the source IP address and its presence on the network map to understand its path and possible entry/exit point.
 
-**Fase 3 - Analisi dell'impatto**
+**Phase 3 - Impact Analysis**
 
-Dobbiamo determinare le azione eseguite dall'attaccante sul target
+We must determine the actions executed by the attacker on the target.
 
-- Monitorare l'intero albero del programma, come sottoprocessi, servizi o qualsiasi altro collegamento utile all'attaccante. Ogni singola opzione può essere quella decisiva.
-- Verificare se sono avvenute creazioni di account o processi nuovi, modifiche alle chiavi di registro o alla schedulazione di task
+- Monitor the entire program tree, such as subprocesses, services, or any other useful connection to the attacker. Every single option can be the decisive one.
+- Verify if any user account creations, new processes, registry key modifications, or task scheduling have occurred.
 
-**Fase 4 - Isolamento degli Indicatori**
+**Phase 4 - Indicator Isolation**
 
-Definire il perimetro dell'attacco all'interno dell'infrastruttura aziendale, cosi da capire in che zona operare.
+Define the perimeter of the attack within the corporate infrastructure to understand which zone to operate in.
 
-- Estrazione degli IoC, ovvero le tracce lasciate dall'hacker durante l'esecuzione dell'attacco. Ogni traccia deve essere isolata, come hash dei file, indirizzi IP esterni C2, domini malevoli o stringhe di comando codificate.
-- Verificare la presenza di IoC simili magari anche su dispositivi che fanno parte dello stesso gruppo o team, per verificare se è avvenuto o meno un spostamento laterale.
+- IoC Extraction, meaning the traces left by the hacker during the execution of the attack. Every trace must be isolated, such as file hashes, external C2 IP addresses, malicious domains, or encoded command strings.
+- Verify the presence of similar IoCs on devices belonging to the same group or team to check whether lateral movement has occurred.
 
-**Fase 5 - Contenimento ed Escalation**
+**Phase 5 - Containment and Escalation**
 
-Questa ultima fase mira a mitigare la minaccia prima che si espanda in modo irreversibile.
+This final phase aims to mitigate the threat before it expands irreversibly.
 
-- Contenere l'host tramite EDR/XDR isolandolo dalla rete aziendale, cosi da bloccare la comunicazione verso l'esterno. Togliamo le mani e gli occhi dell'hacker.
-- Contenere anche l'identità, ovvero, bloccare gli account compromessi coinvolti nell'attacco
-- Includere gli IoC trovati nella documentazione di escalation in precedenza, la timeline degli eventi e l'impatto di ognuno ed effettuare un escalation al Team Incident Response **L2** specificando tutte le informazioni accumulate come, possibile lateral movement, host target isolato, account compromessi ecc.
+- Contain the host via EDR/XDR by isolating it from the corporate network to block communication with the outside. We remove the hacker's hands and eyes.
+- Contain the identity as well, meaning block the compromised accounts involved in the attack.
+- Include the found IoCs in the previously created escalation documentation, along with the event timeline and the impact of each. Escalate to the Incident Response L2 Team, specifying all accumulated information such as possible lateral movement, isolated target host, compromised accounts, etc.
