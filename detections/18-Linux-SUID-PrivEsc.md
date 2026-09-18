@@ -1,26 +1,26 @@
-# 🚨 Detection Rule: Linux SUID Discovery & Privilege Escalation
+# Detection Rule: Linux SUID Discovery & Privilege Escalation
 
-## 📋 Obiettivo
-Rilevare l'attività di un attaccante su un sistema Linux mirata all'escalation dei privilegi tramite il bit SUID. La regola intercetta tre fasi distinte di questa catena di attacco:
-1. Verifica dei permessi correnti (`sudo -l`).
-2. Ricerca di file SUID preesistenti sfruttabili (`find / -perm -4000`).
-3. Creazione o modifica di un file per assegnargli il bit SUID tramite modalità simbolica o ottale (`chmod +s` / `chmod 4755`).
+## Objective
+Detect an attacker's activity on a Linux system aimed at privilege escalation using the SUID bit. The rule intercepts three distinct stages of this attack chain:
+1. Verification of current permissions (`sudo -l`).
+2. Search for pre-existing exploitable SUID files (`find / -perm -4000`).
+3. Creation or modification of a file to assign it the SUID bit via symbolic or octal mode (`chmod +s` / `chmod 4755`).
 
-## 🎯 MITRE ATT&CK Mapping
+## MITRE ATT&CK Mapping
 * **Tactic:** Discovery (TA0007), Privilege Escalation (TA0004)
 * **Technique:** * File and Directory Discovery (T1083)
   * Abuse Elevation Control Mechanism: Setuid and Setgid (T1548.001)
 
-## 🚦 Alert Metadata
+## Alert Metadata
 * **Severity:** HIGH
 * **Confidence:** High
 * **Validation Status:** Validated in Lab
-* **False Positives:** Script di deployment legittimi che assegnano privilegi specifici o amministratori di sistema che eseguono manutenzione straordinaria.
+* **False Positives:** Legitimate deployment scripts that assign specific privileges or system administrators performing extraordinary maintenance.
 
 ---
 
-## 🟢 Splunk Query (SPL)
-*Ricerca tramite operatori logici annidati per intercettare i tre vettori di attacco, con filtro di esclusione per script noti posizionato all'esterno del blocco principale per ottimizzare le performance.*
+## Splunk Query (SPL)
+*Search using nested logical operators to intercept the three attack vectors, with an exclusion filter for known scripts placed outside the main block to optimize performance.*
 
 ```splunk
 index=linux_logs
@@ -34,7 +34,7 @@ index=linux_logs
 
 ---
 
-## 🔵 Microsoft Sentinel Query (KQL)
+## Microsoft Sentinel Query (KQL)
 
 ```kql
 DeviceProcessEvents
@@ -45,13 +45,13 @@ DeviceProcessEvents
 | project TimeGenerated, DeviceName, AccountName, ProcessCommandLine
 ```
 
-## 🟡 Sigma Rule (YAML)
+## Sigma Rule (YAML)
 
 ```sigma
 title: Linux SUID Discovery and Privilege Escalation
 id: 8c1b92a3-f570-4d56-a9bb-12a83bd78e51
 status: experimental # Pending Linux Endpoint validation
-description: Rileva comandi utilizzati per scoprire o creare file SUID, utilizzando regex strict sui permessi ottali.
+description: Detects commands used to discover or create SUID files, using strict regex on octal permissions.
 references:
     - [https://mitre.org](https://mitre.org)
 author: Mattia
@@ -83,7 +83,7 @@ detection:
         CommandLine|contains: '/opt/scripts/deploy.sh'
     condition: (selection_sudo or selection_find or (selection_chmod and selection_chmod_suid)) and not filter_deploy
 falsepositives:
-    - Amministratori di sistema durante sessioni di troubleshooting.
+    - System administrators during troubleshooting sessions.
 level: high
 ```
 
