@@ -1,21 +1,21 @@
-# 🚨 Detection Rule: Kerberoasting Attack (Service Ticket Request)
+# Detection Rule: Kerberoasting Attack (Service Ticket Request)
 
-## 📋 Obiettivo
-Rilevare la richiesta di ticket Kerberos (TGS) che utilizzano la crittografia debole RC4 (0x17). Un attaccante richiede questo tipo di ticket per poterlo esportare e tentare il cracking della password offline. Vengono esclusi dalla ricerca gli account macchina legittimi.
+## Objective
+Detect requests for Kerberos Service Tickets (TGS) that use weak RC4 encryption (0x17). An attacker requests this type of ticket to export it and attempt offline password cracking. Legitimate machine accounts are excluded from this search.
 
-## 🎯 MITRE ATT&CK Mapping
+## MITRE ATT&CK Mapping
 * **Tactic:** Credential Access (TA0006)
 * **Technique:** Steal or Forge Kerberos Tickets: Kerberoasting (T1558.003)
 
-## 🚦 Alert Metadata
+## Alert Metadata
 * **Severity:** HIGH
 * **Confidence:** High
-* **False Positives:** Sistemi legacy che non supportano AES, configurazioni errate di dominio.
+* **False Positives:** Legacy systems that do not support AES, incorrect domain configurations.
 
 ---
 
-## 🟢 Splunk Query (SPL)
-*Ottimizzazione: L'uso esplicito del comando `fields` prima delle aggregazioni istruisce il SIEM a scartare immediatamente i dati inutili, abbattendo drasticamente l'uso di RAM e CPU durante la ricerca.*
+## Splunk Query (SPL)
+*Optimization: The explicit use of the `fields` command before aggregations instructs the SIEM to discard unnecessary data immediately, drastically reducing RAM and CPU usage during the search.*
 
 ```splunk
 index=wineventlog EventCode=4769 Ticket_Encryption_Type=0x17 NOT Account_Name="*$"
@@ -23,25 +23,25 @@ index=wineventlog EventCode=4769 Ticket_Encryption_Type=0x17 NOT Account_Name="*
 | stats count by Account_Name, Service_Name, Client_Address
 ```
 
-## 🔵 Microsoft Sentinel Query (KQL)
-Traduzione letterale della logica SPL. Utilizza `endswith` per isolare con precisione assoluta gli account macchina (che terminano sempre con il carattere $) evitando di escludere utenti legittimi che potrebbero avere un $ all'interno del nome.
+## Microsoft Sentinel Query (KQL)
+Literal translation of the SPL logic. It uses `endswith` to isolate machine accounts (which always end with the  character) with absolute precision, avoiding the exclusion of legitimate users who might have a  inside their name.
 
 ```kql
 SecurityEvent
 | where EventID == 4769
 | where TicketEncryptionType == "0x17"
-| where Account !endswith "$"
+| where Account !endswith "\$"
 | project Account, ServiceName, IpAddress
 | summarize count() by Account, ServiceName, IpAddress
 ```
 
-## 🟡 Sigma Rule (YAML)
+## Sigma Rule (YAML)
 
 ```sigma
-title: Rilevamento Ticket Kerberos con Crittografia Debole (RC4)
+title: Detection of Kerberos Tickets with Weak Encryption (RC4)
 id: 56bff535-49e2-4734-9f44-f76d7feaadeb
 status: experimental
-description: Rileva la richiesta di ticket Kerberos (TGS) che utilizzano la crittografia debole RC4 (0x17), escludendo gli account macchina.
+description: Detects requests for Kerberos service tickets (TGS) that use weak RC4 encryption (0x17), excluding machine accounts.
 references:
     - [https://mitre.org](https://mitre.org)
 author: Mattia
@@ -57,10 +57,10 @@ detection:
         EventID: 4769
         TicketEncryptionType: '0x17'
     filter_machine_accounts:
-        TargetUserName|endswith: '$'
+        TargetUserName|endswith: '\$'
     condition: selection and not filter_machine_accounts
 falsepositives:
-    - Sistemi legacy che non supportano AES
-    - Configurazioni errate di dominio
+    - Legacy systems that do not support AES
+    - Incorrect domain configurations
 level: medium
 ```
