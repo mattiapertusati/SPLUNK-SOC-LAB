@@ -1,21 +1,21 @@
-# 🚨 Detection of Local User Creation
+# Detection of Local User Creation
 
-### Descrizione
-Rileva la creazione di un nuovo account utente locale sul sistema. Gli attaccanti creano spesso account fittizi (`backdoor`) per garantirsi un accesso persistente all'infrastruttura, bypassando eventuali cambi di password dell'utente compromesso inizialmente.
+### Description
+This rule detects the creation of a new local user account on the system. Attackers often create fake accounts (`backdoor`) to ensure persistent access to the infrastructure, bypassing any password changes made by the initially compromised user.
 
-## 🎯 MITRE ATT&CK
+## MITRE ATT&CK
 * **Tactic:** Persistence (TA0003)
 * **Technique:** Create Account (T1136)
 * **Sub-technique:** Local Account (T1136.001)
 
-## 🚦 Alert Metadata
+## Alert Metadata
 * **Severity:** High
 * **Confidence:** Medium 
 * **Impact:** High
 
 ---
 
-### Query SPL
+### SPL Query
 ```splunk
 index=wineventlog EventCode=4720 
 | eval Creator_Account = mvindex(Account_Name, 0)
@@ -23,19 +23,19 @@ index=wineventlog EventCode=4720
 | table _time host Creator_Account Created_Account
 ```
 
-### ⚠️ Possibili Falsi Positivi
-* Creazione di account legittimi (Onboarding).
-* Creazioni di account temporanei con privilegi massimi e con data di scadenza breve per manutenzione e/o aggiornamenti urgenti.
+### Possible False Positives
+* Creation of legitimate accounts (Onboarding).
+* Creation of temporary accounts with maximum privileges and a short expiration date for urgent maintenance or updates.
 
 ---
 
-### Note di Triage / Azioni Consigliate
+### Triage Notes / Recommended Actions
 
-1. **Verifica dell'Origine (`Subject`)**
-   Analizzare il campo `SubjectUserName` per determinare chi ha generato l'account. Se l'utente non appartiene al reparto IT o se l'azione                  avviene fuori dal normale orario lavorativo, l'evento è critico.
+1. **Origin Verification (`Subject`)**
+   Analyze the `SubjectUserName` field to determine who created the account. If the user does not belong to the IT department or if the action happens outside normal working hours, the event is critical.
 
-2. **Contesto dell'Endpoint (`Host`)**
-   Valutare la macchina target (`host`). La creazione di un account locale su un laptop aziendale standard (Endpoint) è altamente sospetta rispetto alla creazione su un Domain Controller.
+2. **Endpoint Context (`Host`)**
+   Evaluate the target machine (`host`). The creation of a local account on a standard corporate laptop (Endpoint) is highly suspicious compared to creation on a Domain Controller.
 
-3. **Caccia ad attività correlate (`Escalation`)**
-   Cercare log successivi (es. EventCode 4732) per verificare se il nuovo account (`TargetUserName`) è stato immediatamente aggiunto a gruppi con privilegi elevati, come Administrators o Remote Desktop Users.
+3. **Hunting for Related Activities (`Escalation`)**
+   Look for subsequent logs (such as EventCode 4732) to check if the new account (`TargetUserName`) was immediately added to high-privilege groups, like Administrators or Remote Desktop Users.
