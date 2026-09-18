@@ -1,18 +1,18 @@
-# 🚨 Multi-Stage Attack: Phishing Initial Access & C2
+# Multi-Stage Attack: Phishing Initial Access & C2
 
-### Descrizione
-Questa regola di **Correlazione Avanzata** traccia il classico vettore di accesso iniziale tramite Spearphishing. L'allarme si attiva se, in una finestra massima di 15 minuti sulla stessa macchina, un applicativo della suite Office (Word o Excel) genera in modo anomalo un processo figlio a riga di comando (CMD o PowerShell), e successivamente quest'ultimo avvia una connessione di rete esterna per scaricare il payload di secondo livello (C2).
+### Description
+This **Advanced Correlation** rule tracks the classic initial access vector via Spearphishing. The alert triggers if, within a maximum window of 15 minutes on the same machine, an Office suite application (Word or Excel) abnormally generates a command-line child process (CMD or PowerShell), and the latter subsequently starts an external network connection to download the second-stage payload (C2).
 
-## 🎯 MITRE ATT&CK
+## MITRE ATT&CK
 * **Tactic:** Initial Access (TA0001), Execution (TA0002), Command and Control (TA0011)
 * **Technique:** Phishing: Spearphishing Attachment (T1566.001), Command and Scripting Interpreter (T1059), Application Layer Protocol (T1071)
 
-## 🚦 Alert Metadata
+## Alert Metadata
 * **Severity:** HIGH
-* **Confidence:** High (Office che lancia PowerShell e va su internet è quasi sempre un'attività malevola)
+* **Confidence:** High (Office launching PowerShell and connecting to the internet is almost always a malicious activity)
 * **Impact:** High
 
-### Query SPL (Correlation Engine)
+### SPL Query (Correlation Engine)
 ```splunk
 (index=wineventlog OR index=sysmon)
 (
@@ -22,15 +22,15 @@ Questa regola di **Correlazione Avanzata** traccia il classico vettore di access
 )
 | transaction host maxspan=15m
 | search ("*winword.exe*" OR "*excel.exe*") AND ("*cmd.exe*" OR "*powershell.exe*") AND EventCode=3
-| eval Attack_Chain="ALLARME CRITICO: Esecuzione Macro (Office) -> Lancio Shell -> Connessione C2"
+| eval Attack_Chain="CRITICAL ALERT: Macro Execution (Office) -> Shell Launch -> C2 Connection"
 | table _time, host, duration, Attack_Chain
 ```
 
-### Triage & Azioni Consigliate
-Questo evento indica il momento esatto del "Paziente Zero".
+### Triage & Recommended Actions
+This event indicates the exact moment of "Patient Zero".
 
-1. Recupero Evidenze: Individuare il file malevolo originale (.docx, .docm, .xlsx) aperto dall'utente e isolarlo.
+1. **Evidence Retrieval:** Locate the original malicious file (.docx, .docm, .xlsx) opened by the user and isolate it.
 
-2. Analisi di Rete: Estrarre l'IP o il dominio contattato al punto 2 dell'attacco (EventCode 3) e bloccarlo sul proxy/firewall aziendale per impedire ulteriori download di payload.
+2. **Network Analysis:** Extract the IP address or domain contacted during stage 2 of the attack (EventCode 3) and block it on the corporate proxy/firewall to prevent further payload downloads.
 
-3. Controllo a Tappeto: Cercare nei log della posta elettronica se lo stesso file allegato è stato inviato ad altri dipendenti dell'azienda.
+3. **Global Scan:** Search the email logs to check if the same attached file was sent to other employees in the company.
