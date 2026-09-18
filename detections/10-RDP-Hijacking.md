@@ -1,19 +1,19 @@
-# 🚨 Detection of RDP Session Hijacking via Tscon
+# Detection of RDP Session Hijacking via Tscon
 
-### Descrizione
-Rileva il tentativo di dirottare una sessione di Desktop Remoto (RDP) disconnessa o attiva utilizzando l'utility nativa di Windows `tscon.exe`. Gli attaccanti con privilegi di SYSTEM utilizzano questa tecnica per subentrare in sessioni appartenenti ad altri utenti (spesso amministratori di dominio) scavalcando completamente la necessità di conoscere o craccare la password della vittima. L'indicatore chiave è l'uso del parametro `/dest:` per reindirizzare la sessione bersaglio.
+### Description
+This rule detects attempts to hijack a disconnected or active Remote Desktop (RDP) session using the native Windows utility `tscon.exe`. Attackers with SYSTEM privileges use this technique to take over sessions belonging to other users (often domain administrators), completely bypassing the need to know or crack the victim's password. The key indicator is the use of the `/dest:` parameter to redirect the target session.
 
-## 🎯 MITRE ATT&CK
+## MITRE ATT&CK
 * **Tactic:** Lateral Movement (TA0008)
 * **Technique:** Remote Services (T1021)
 * **Sub-technique:** Remote Desktop Protocol (T1021.001)
 
-## 🚦 Alert Metadata
+## Alert Metadata
 * **Severity:** Critical
 * **Confidence:** High
 * **Impact:** High
 
-### Query SPL
+### SPL Query
 ```splunk
 index=wineventlog EventCode=4688 "tscon"
 
@@ -24,18 +24,18 @@ index=wineventlog EventCode=4688 "tscon"
 
 ```
 
-### ⚠️ Possibili Falsi Positivi
-* Software di gestione remota IT di terze parti che si appoggiano a `tscon.exe`.
+### Possible False Positives
+* Third-party remote IT management software that relies on `tscon.exe`.
   
 ---
 
-### Note di Triage / Azioni Consigliate
+### Triage Notes / Recommended Actions
 
-1. **Analisi dell'Utente (`Account_Name`)**
-    Per eseguire questo attacco con successo senza conoscere la password della vittima, l'attaccante deve lanciare il comando come `NT AUTHORITY\SYSTEM`. Se l'account sorgente è `SYSTEM`, l'allarme ha una gravità critica (Severity: Critical).
+1. **User Analysis (`Account_Name`)**
+    To perform this attack successfully without knowing the victim's password, the attacker must run the command as `NT AUTHORITY\SYSTEM`. If the source account is `SYSTEM`, the alert has a critical severity level (Severity: Critical).
 
-2. **Correlazione degli Accessi (EventCode 4778)**
-   Oltre alla riga di comando, cercare l'EventCode 4778 (Una sessione è stata ricollegata a una Window Station) nello stesso intervallo di tempo per confermare che l'hijacking ha avuto successo e determinare quale account è stato compromesso.
+2. **Logon Correlation (EventCode 4778)**
+   In addition to the command line, look for EventCode 4778 (A session was reconnected to a Window Station) within the same timeframe to confirm that the hijacking was successful and to determine which account was compromised.
 
-3. **Contenimento**
-   Isolare il server bersaglio. Disconnettere forzatamente l'utente dirottato e resettare immediatamente le sue credenziali, in quanto l'attaccante potrebbe averle estratte una volta ottenuto l'accesso al desktop.
+3. **Containment**
+   Isolate the target server. Forcibly disconnect the hijacked user and immediately reset their credentials, as the attacker might have extracted them once they gained access to the desktop.
