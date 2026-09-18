@@ -1,7 +1,7 @@
 # 🚨 Detection of Encoded PowerShell Command
 
-### Descrizione
-Rileva l'esecuzione di PowerShell con parametri di offuscamento e codifica in Base64 (`-enc`, `-e`, `-encodedcommand`). Questa tecnica è comunemente usata da malware e attaccanti per bypassare i controlli in chiaro e nascondere payload maligni.
+### Description
+This rule detects the execution of PowerShell with obfuscation and Base64 encoding parameters (`-enc`, `-e`, `-encodedcommand`). Attackers and malware commonly use this technique to bypass clear-text security controls and hide malicious payloads.
 
 ## 🎯 MITRE ATT&CK
 * **Tactic:** Execution (TA0002)
@@ -10,10 +10,10 @@ Rileva l'esecuzione di PowerShell con parametri di offuscamento e codifica in Ba
 
 ## 🚦 Alert Metadata
 * **Severity:** High
-* **Confidence:** Medium (Può generare falsi positivi se amministratori IT usano script offuscati legittimi)
+* **Confidence:** Medium (It can generate false positives if IT administrators use legitimate obfuscated scripts)
 * **Impact:** High
 
-### Query SPL
+### SPL Query
 ```splunk
 index=wineventlog EventCode=4688 (New_Process_Name="*powershell.exe" OR Image="*powershell.exe")
 
@@ -23,25 +23,25 @@ index=wineventlog EventCode=4688 (New_Process_Name="*powershell.exe" OR Image="*
 | table _time, host, User_Creator, New_Process_Name, Command_Line
 ```
 
-### ⚠️ Possibili Falsi Positivi
-* Script di amministrazione IT legittimi.
-* Software di monitoraggio di terze parti che utilizzano la codifica Base64 per evitare problemi di formattazione.
+### ⚠️ Possible False Positives
+* Legitimate IT administration scripts.
+* Third-party monitoring software that uses Base64 encoding to avoid formatting problems.
 
 ---
 
-### Note di Triage / Azioni Consigliate
+### Triage Notes / Recommended Actions
 
-1. **Ispezione del Payload**
-   Esaminare immediatamente il campo `Process_Command_Line` per isolare l'intera stringa codificata dopo il flag **-enc** (o simili).
+1. **Payload Inspection**
+   Immediately examine the `Process_Command_Line` field to isolate the whole encoded string after the **-enc** flag (or similar flags).
 
-2. **Decodifica Forense**
-   Copiare la stringa offuscata e utilizzare **CyberChef**.
+2. **Forensic Decoding**
+   Copy the obfuscated string and use **CyberChef**.
 
-   > Ricorda che PowerShell codifica nativamente in Base64 partendo da testo in formato **UTF-16LE** (o Unicode), non semplice ASCII.
-   > Su CyberChef la ricetta corretta è: `From Base64` → `Decode Text (UTF-16LE)`.
+   > Remember that PowerShell naturally encodes in Base64 using text in **UTF-16LE** (or Unicode) format, not simple ASCII.
+   > On CyberChef, the correct recipe is: `From Base64` → `Decode Text (UTF-16LE)`.
 
-3. **Analisi post-decodifica (Caccia agli IoC)**
-   Una volta ottenuto il testo in chiaro, analizzare il codice alla ricerca di:
-   * Indirizzi IP esterni o domini (potenziali server di Comando e Controllo C2).
-   * URL di download (es. `Invoke-WebRequest`, `rundll32`).
-   * Percorsi di file anomali (es. esecuzioni spostate dentro `C:\Windows\Temp\`).
+3. **Post-Decoding Analysis (Hunting for IoCs)**
+   Once you obtain the clear text, analyze the code to look for:
+   * External IP addresses or domains (potential Command and Control C2 servers).
+   * Download URLs (for example: `Invoke-WebRequest`, `rundll32`).
+   * Unusual file paths (for example: executions running inside `C:\Windows\Temp\`).
