@@ -13,7 +13,8 @@ Rilevare l'attività di un attaccante su un sistema Linux mirata all'escalation 
 
 ## 🚦 Alert Metadata
 * **Severity:** HIGH
-* **Confidence:** High (Pending Linux Endpoint validation)
+* **Confidence:** High
+* **Validation Status:** Validated in Lab
 * **False Positives:** Script di deployment legittimi che assegnano privilegi specifici o amministratori di sistema che eseguono manutenzione straordinaria.
 
 ---
@@ -29,7 +30,6 @@ index=linux_logs
 | where NOT like(CommandLine, "%/opt/scripts/deploy.sh%")
 | table _time, host, User, CommandLine
 
-# Pending Linux Endpoint validation
 ```
 
 ---
@@ -86,3 +86,5 @@ falsepositives:
     - Amministratori di sistema durante sessioni di troubleshooting.
 level: high
 ```
+
+The detection has been validated in the controlled laboratory environment. See `validation/18-Linux-SUID-PrivEsc-Validation.md` for validation evidence.
