@@ -1,21 +1,21 @@
-# 🚨 Detection of Scheduled Task Creation for Persistence
+# Detection of Scheduled Task Creation for Persistence
 
-### Descrizione
-Rileva la creazione di una nuova attività pianificata (Scheduled Task) sul sistema. Questa tecnica viene sfruttata regolarmente dagli attaccanti per garantire la persistenza all'interno dell'infrastruttura, consentendo al malware o alle backdoor di eseguirsi automaticamente a intervalli prestabiliti o al riavvio del computer, anche in caso di rimozione dell'accesso iniziale.
+### Description
+This rule detects the creation of a new scheduled task on the system. Attackers regularly exploit this technique to ensure persistence within the infrastructure, allowing malware or backdoors to run automatically at preset intervals or when the computer restarts, even if the initial access is removed.
 
-## 🎯 MITRE ATT&CK
+## MITRE ATT&CK
 * **Tactic:** Persistence (TA0003)
 * **Technique:** Scheduled Task/Job (T1053)
 * **Sub-technique:** Scheduled Task (T1053.005)
 * 
-## 🚦 Alert Metadata
+## Alert Metadata
 * **Severity:** Medium
 * **Confidence:** High
 * **Impact:** High
 
-(Nota: La Severity è impostata su Medium poiché la creazione di Scheduled Task è un'attività frequentissima del sistema operativo e dei software legittimi. L'Impact rimane High perché, se l'azione è malevola, garantisce all'attaccante l'accesso persistente o l'esecuzione di codice ad alti privilegi).
+(Note: The Severity is set to Medium because creating Scheduled Tasks is a very frequent activity of the operating system and legitimate software. The Impact remains High because, if the action is malicious, it guarantees the attacker persistent access or code execution with high privileges).
 
-### Query SPL
+### SPL Query
 ```splunk
 index=wineventlog EventCode=4698
 | rex field=_raw "<Command>(?<Task_Command>[^<]+)</Command>"
@@ -23,19 +23,19 @@ index=wineventlog EventCode=4698
 | table _time, host, Account_Name, Task_Name, Task_Command, Task_Arguments
 ```
 
-### ⚠️ Possibili Falsi Positivi
-* Installazione o aggiornamenti che richiedono una pianificazione.
-* Script di manutenzione e/o controllo che richiedono una ripetizione (pianificazione).
+### Possible False Positives
+* Installations or updates that require scheduling.
+* Maintenance and/or control scripts that require repetition (scheduling).
 
 ---
 
-### Note di Triage / Azioni Consigliate
+### Triage Notes / Recommended Actions
 
-1. **Analisi del Percorso dell'Eseguibile ('Task_Command')**
-Ispezionare attentamente il percorso del file avviato dalla task. L'esecuzione di binari posizionati in cartelle temporanee o scrivibili dagli utenti (es. 'C:\Windows\Temp\', 'C:\Users\...\AppData\') è un fortissimo indicatore di attività malevola.
+1. **Executable Path Analysis ('Task_Command')**
+Carefully inspect the path of the file started by the task. The execution of binaries located in temporary folders or folders writable by users (for example, 'C:\Windows\Temp\', 'C:\Users\...\AppData\') is a very strong indicator of malicious activity.
 
-2. **Verifica del Nome della Task ('Task_Name')**
-Gli attaccanti usano spesso tecniche di Masquerading nominando le attività in modo simile a servizi critici di Windows (es. 'Windows_Update_Helper', 'MfeSysFlt'). Confrontare il nome con la documentazione interna e verificare la presenza di anomalie nei caratteri o nel path.   
+2. **Task Name Verification ('Task_Name')**
+Attackers often use Masquerading techniques by naming tasks similarly to critical Windows services (for example, 'Windows_Update_Helper', 'MfeSysFlt'). Compare the name with internal documentation and check for anomalies in characters or the path.   
 
-3. **Investigazione dell'Autore (Account_Name)**
-   Verificare se l'account che ha generato l'attività ha l'autorizzazione per farlo. Se l'azione non corrisponde a una finestra di manutenzione o a un ticket approvato, procedere con l'isolamento dell'host per contenimento.
+3. **Author Investigation (Account_Name)**
+   Verify if the account that created the task is authorized to do so. If the action does not match a maintenance window or an approved ticket, proceed with isolating the host for containment.
