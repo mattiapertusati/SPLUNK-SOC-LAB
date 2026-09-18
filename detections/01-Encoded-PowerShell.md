@@ -1,14 +1,14 @@
-# 🚨 Detection of Encoded PowerShell Command
+# Detection of Encoded PowerShell Command
 
 ### Description
 This rule detects the execution of PowerShell with obfuscation and Base64 encoding parameters (`-enc`, `-e`, `-encodedcommand`). Attackers and malware commonly use this technique to bypass clear-text security controls and hide malicious payloads.
 
-## 🎯 MITRE ATT&CK
+## MITRE ATT&CK
 * **Tactic:** Execution (TA0002)
 * **Technique:** Command and Scripting Interpreter (T1059)
 * **Sub-technique:** PowerShell (T1059.001)
 
-## 🚦 Alert Metadata
+## Alert Metadata
 * **Severity:** High
 * **Confidence:** Medium (It can generate false positives if IT administrators use legitimate obfuscated scripts)
 * **Impact:** High
@@ -23,7 +23,7 @@ index=wineventlog EventCode=4688 (New_Process_Name="*powershell.exe" OR Image="*
 | table _time, host, User_Creator, New_Process_Name, Command_Line
 ```
 
-### ⚠️ Possible False Positives
+### Possible False Positives
 * Legitimate IT administration scripts.
 * Third-party monitoring software that uses Base64 encoding to avoid formatting problems.
 
