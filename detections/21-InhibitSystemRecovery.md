@@ -1,28 +1,28 @@
-# 🚨 Detection Rule: Inhibit System Recovery (Volume Shadow Copy Deletion)
+# Detection Rule: Inhibit System Recovery (Volume Shadow Copy Deletion)
 
-## 📋 Obiettivo
-Rilevare l'eliminazione delle copie di backup (Volume Shadow Copies) del sistema operativo. Questa è un'azione classificata come altamente sospetta, in quanto viene eseguita quasi sistematicamente dai Ransomware nelle prime fasi dell'infezione per impedire alla vittima di ripristinare i file originali dopo la cifratura.
+## Objective
+Detect the deletion of operating system backup copies (Volume Shadow Copies). This action is classified as highly suspicious, as it is performed almost systematically by Ransomware during the early stages of infection to prevent the victim from restoring original files after encryption.
 
-## 🎯 MITRE ATT&CK Mapping
+## MITRE ATT&CK Mapping
 * **Tactic:** Impact (TA0040)
 * **Technique:** Inhibit System Recovery (T1490)
 
-## 🚦 Alert Metadata
+## Alert Metadata
 * **Severity:** CRITICAL
 * **Confidence:** High
-* **False Positives:** Attività di manutenzione straordinaria dei dischi da parte di amministratori di sistema legittimi.
+* **False Positives:** Extraordinary disk maintenance activities performed by legitimate system administrators.
 
 ---
 
-## 🟢 Splunk Query (SPL)
-*Ricerca che copre non solo vssadmin, ma anche wmic e wbadmin, strumenti alternativi noti per ottenere lo stesso risultato malevolo.*
+## Splunk Query (SPL)
+*Search covering not only vssadmin, but also wmic and wbadmin, alternative tools known to achieve the same malicious result.*
 
 ```splunk
 index=wineventlog EventCode=4688 earliest=-24h (NewProcessName="*\\vssadmin.exe" OR NewProcessName="*\\wmic.exe" OR NewProcessName="*\\wbadmin.exe") CommandLine="*delete*" CommandLine="*shadow*"
 | table _time, host, User, NewProcessName, CommandLine
 ```
 
-## 🔵 Microsoft Sentinel Query (KQL)
+## Microsoft Sentinel Query (KQL)
 
 ```kql
 SecurityEvent
@@ -32,13 +32,13 @@ SecurityEvent
 | project TimeGenerated, Computer, Account, NewProcessName, CommandLine
 ```
 
-## 🟡 Sigma Rule (YAML)
+## Sigma Rule (YAML)
 
 ```sigma
 title: Inhibit System Recovery - Volume Shadow Copy Deletion
 id: a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d
 status: experimental
-description: Rileva l'esecuzione di comandi per eliminare le copie shadow del volume, un comportamento tipico dei ransomware.
+description: Detects the execution of commands to delete volume shadow copies, a typical behavior of ransomware.
 author: Mattia
 date: 2026/07/14
 tags:
@@ -59,26 +59,26 @@ detection:
             - 'shadow'
     condition: selection_process and selection_cli
 falsepositives:
-    - Task programmati di pulizia disco o amministratori di sistema (richiede investigazione immediata).
+    - Scheduled disk cleanup tasks or system administrators (requires immediate investigation).
 level: critical
 ```
 
 ---
 
-## 📖 L1 Triage Playbook (Analyst Response Steps)
+## L1 Triage Playbook (Analyst Response Steps)
 
-Quando questo allarme si attiva sul SIEM, indicando un potenziale attacco Ransomware in corso (fase di distruzione dei backup locali), l'analista L1 deve eseguire immediatamente i seguenti step operativi:
+When this alert triggers on the SIEM, indicating a potential active Ransomware attack (local backup destruction phase), the L1 analyst must immediately execute the following operational steps:
 
-### 1. Verifica attività del processo (Live Response)
-Utilizzare la console Live Terminal dell'EDR per connettersi all'host compromesso. Verificare se il processo malevolo è ancora in esecuzione. Analizzare le metriche di sistema in tempo reale: un utilizzo prolungato e anomalo di CPU e Disco (100%) indica una probabile cifratura dei file in corso. Terminare (kill) immediatamente eventuali processi anomali o non riconosciuti.
+### 1. Process Activity Verification (Live Response)
+Use the EDR Live Terminal console to connect to the compromised host. Verify if the malicious process is still running. Analyze real-time system metrics: a prolonged and unusual CPU and Disk utilization (100%) indicates a probable ongoing file encryption. Terminate (kill) any anomalous or unrecognized processes immediately.
 
-### 2. Verifica di backup alternativi e offline
-Interfacciarsi con il team IT o controllare le dashboard degli strumenti di backup aziendali (es. Veeam, server NAS isolati) per verificare l'esistenza di copie fisiche o immagini di sistema recenti e intatte. Controllare inoltre il versioning in Cloud (es. OneDrive/SharePoint) per i file utente. Prepararsi al ripristino, consapevoli della potenziale perdita del delta di dati generato dopo l'ultimo salvataggio utile.
+### 2. Alternative and Offline Backup Verification
+Interface with the IT team or check corporate backup tool dashboards (such as Veeam, isolated NAS servers) to verify the existence of recent, intact physical copies or system images. Additionally, check Cloud versioning (such as OneDrive/SharePoint) for user files. Prepare for recovery, keeping in mind the potential loss of the data delta generated after the last useful backup.
 
-### 3. Isolamento di rete del dispositivo
-Procedere in parallelo con l'isolamento logico dell'host tramite la funzione "Isolate Host" della console EDR. Questo bloccherà ogni tipo di comunicazione di rete in entrata e in uscita (incluso l'accesso a share di rete condivise), impedendo il Lateral Movement del ransomware, ma manterrà attivo il canale cifrato di gestione dell'EDR per consentire al SOC di proseguire le indagini in sicurezza.
+### 3. Network Isolation of the Device
+Proceed in parallel with the logical isolation of the host using the "Isolate Host" feature of the EDR console. This will block all incoming and outgoing network communications (including access to shared network drives), preventing ransomware Lateral Movement, while keeping the encrypted EDR management channel active to allow the SOC to safely continue investigations.
 
-### 4. Escalation a L2 con lista IOC e Report
-Aprire un ticket di Incident Response per il livello L2 (Escalation) includendo un riepilogo operativo e tecnico strutturato:
-* **Contesto e Azioni (Summary):** Segnalare l'host isolato, lo stato delle metriche (CPU/Disco), eventuali processi terminati manualmente e il resoconto sui backup offline disponibili.
-* **IOC per Threat Hunting:** Fornire i dati tecnici per la ricerca su larga scala, includendo: Hostname e IP della macchina infetta, account utente compromesso, timestamp esatto dell'evento, la riga di comando malevola rilevata e l'hash (SHA256) del processo che ha invocato l'eliminazione delle Shadow Copies.
+### 4. Escalation to L2 with IoC List and Report
+Open an Incident Response ticket for the L2 level (Escalation), including a structured operational and technical summary:
+* **Context and Actions (Summary):** Report the isolated host, metrics status (CPU/Disk), any manually terminated processes, and the status of available offline backups.
+* **IoCs for Threat Hunting:** Provide technical data for large-scale searching, including: Hostname and IP address of the infected machine, compromised user account, exact timestamp of the event, the detected malicious command line, and the hash (SHA256) of the process that invoked the Shadow Copies deletion.
