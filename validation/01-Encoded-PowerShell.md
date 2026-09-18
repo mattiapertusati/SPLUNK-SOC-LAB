@@ -9,14 +9,14 @@
   Invoke-AtomicTest T1059.001 -TestNumbers 1 -PathToAtomicsFolder "C:\AtomicRedTeam\atomics"
   ```
 
-<img width="838" height="228" alt="Screenshot 2026-06-10 223400" src="https://github.com" />
+<img width="838" height="228" alt="Screenshot 2026-06-10 223400" src="https://github.com/user-attachments/assets/fae8e2a3-9d33-4947-8169-ccbca1da2cf0" />
 
 ### 2. Telemetry & Logs
 
 * Data Source: Windows Security Event Log
 * Expected EventIDs: 4688 (Powershell)
 
-<img width="903" height="728" alt="Screenshot 2026-06-10 223926" src="https://github.com" />
+<img width="903" height="728" alt="Screenshot 2026-06-10 223926" src="https://github.com/user-attachments/assets/1deb1c42-4d37-4d49-b23e-d062b8f8986a" />
 
 ### 3. Detection & Validation
 
@@ -57,4 +57,4 @@ See the **encoded_powershell_command.yml** file in the repository for the comple
 3. **Detection Triggered:** YES
 4. **False Positives:** Low.
 
-<img width="1193" height="658" alt="Screenshot 2026-06-10 223940" src="https://github.com" />
+<img width="1193" height="658" alt="Screenshot 2026-06-10 223940" src="https://github.com/user-attachments/assets/7d838e05-725e-496d-8430-68ad264f0536" />
