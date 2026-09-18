@@ -1,41 +1,41 @@
-# 🚨 Detection of LSASS Memory Dumping via Comsvcs.dll
+# Detection of LSASS Memory Dumping via Comsvcs.dll
 
-### Descrizione
-Rileva il tentativo di estrarre le credenziali in chiaro e gli hash delle password dalla memoria del processo di sistema `LSASS` (Local Security Authority Subsystem Service). L'attacco utilizza una tecnica "Living off the Land", sfruttando il binario legittimo di Windows `rundll32.exe` per richiamare la funzione esportata MiniDump all'interno della libreria di sistema `comsvcs.dll`. Questo permette all'attaccante di aggirare le restrizioni di base e salvare un file di dump (solitamente `.dmp`) per l'estrazione offline delle password tramite tool come Mimikatz.
+### Description
+This rule detects attempts to extract clear-text credentials and password hashes from the memory of the `LSASS` (Local Security Authority Subsystem Service) system process. The attack uses a "Living off the Land" technique, exploiting the legitimate Windows binary `rundll32.exe` to call the exported MiniDump function inside the `comsvcs.dll` system library. This allows the attacker to bypass basic restrictions and save a dump file (usually `.dmp`) for offline password extraction using tools like Mimikatz.
 
-## 🎯 MITRE ATT&CK
+## MITRE ATT&CK
 * **Tactic:** Credential Access (TA0006)
 * **Technique:** OS Credential Dumping (T1003)
 * **Sub-technique:** LSASS Memory (T1003.001)
 * 
-## 🚦 Alert Metadata
+## Alert Metadata
 
-⚠️ Nota sulla Severity: Il dumping di LSASS è uno dei segnali più gravi in assoluto in una rete aziendale (spesso precede il ransomware). Se ha successo, l'attaccante ha le chiavi del regno. Per questo la Severity va alzata al massimo.
+Note on Severity: LSASS dumping is one of the most serious indicators in a corporate network (it often precedes ransomware). If successful, the attacker has the keys to the kingdom. For this reason, the Severity must be raised to the maximum level.
 
 * **Severity:** Critical
 * **Confidence:** High
 * **Impact:** Critical
 
-### Query SPL
+### SPL Query
 
 ```splunk
 index=sysmon EventCode=1 "comsvcs.dll" ("MiniDump" OR "#24")
 | table _time, host, User, CommandLine
 ```
 
-### ⚠️ Possibili Falsi Positivi
-* Presenza di EDR/Antivirus che effettuano dump di memoria per analisi.
-* Presenza di dump per risoluzione di problemi e/o crash di sistema.
+### Possible False Positives
+* EDR/Antivirus software performing memory dumps for analysis.
+* Dumps created for troubleshooting and/or system crashes.
 
 ---
 
-### Note di Triage / Azioni Consigliate
+### Triage Notes / Recommended Actions
 
-1. **Analisi della Riga di Comando (`CommandLine`)**
-   Verificare il percorso in cui viene salvato il file di dump. Se il file viene scritto in directory temporanee (es. `C:\Windows\Temp\`, `C:\Users\...\AppData\Local\Temp\`), l'attività è quasi certamente malevola.
+1. **Command Line Analysis (`CommandLine`)**
+   Verify the path where the dump file is saved. If the file is written to temporary directories (for example, `C:\Windows\Temp\`, `C:\Users\...\AppData\Local\Temp\`), the activity is almost certainly malicious.
 
-2. **Verifica dei Privilegi**
-   Questo attacco richiede privilegi di Amministratore (nello specifico `SeDebugPrivilege`). Investigare immediatamente quale account ha lanciato il comando: se è un account utente standard compromesso che ha effettuato una `Privilege Escalation`, o se è un account amministrativo legittimo di cui sono state rubate le credenziali.
+2. **Privilege Verification**
+   This attack requires Administrator privileges (specifically `SeDebugPrivilege`). Immediately investigate which account ran the command: check if it is a compromised standard user account that performed a `Privilege Escalation`, or a legitimate administrative account with stolen credentials.
    
-3. **Contenimento (Remediation)**
-   Considerare l'host come criticamente compromesso. Isolare immediatamente la macchina dalla rete. Poiché l'attaccante potrebbe aver già estratto e decifrato le password, è obbligatorio forzare il reset delle credenziali per tutti gli account che hanno effettuato l'accesso di recente su quell'endpoint.
+3. **Containment (Remediation)**
+   Consider the host as critically compromised. Isolate the machine from the network immediately. Since the attacker might have already extracted and decrypted the passwords, forcing a credential reset for all accounts that recently logged into that endpoint is mandatory.
