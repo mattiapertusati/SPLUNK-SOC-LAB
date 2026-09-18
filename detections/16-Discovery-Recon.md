@@ -1,9 +1,9 @@
-# 🚨 Detection Rule: Local & Domain Reconnaissance (Discovery)
+# Detection Rule: Local & Domain Reconnaissance (Discovery)
 
-## 📋 Obiettivo
-Identificare attività di ricognizione (Situational Awareness) condotta da un attaccante che ha appena ottenuto l'accesso iniziale a un endpoint. L'attaccante utilizza binari nativi del sistema operativo (Living off the Land) per mappare l'utente corrente, la configurazione di rete, i processi attivi e l'architettura del dominio.
+## Objective
+Identify reconnaissance activities (Situational Awareness) carried out by an attacker who has just gained initial access to an endpoint. The attacker uses native operating system binaries (Living off the Land) to map the current user, network configuration, active processes, and domain architecture.
 
-## 🎯 MITRE ATT&CK Mapping
+## MITRE ATT&CK Mapping
 * **Tactic:** Discovery (TA0007)
 * **Technique:** 
   * System Owner/User Discovery (T1033)
@@ -12,15 +12,15 @@ Identificare attività di ricognizione (Situational Awareness) condotta da un at
   * System Information Discovery (T1082)
   * System Network Connections Discovery (T1049)
 
-## 🚦 Alert Metadata
+## Alert Metadata
 * **Severity:** MEDIUM
 * **Confidence:** Medium 
-* **False Positives:** Script di logon/logoff aziendali, software di inventory management, amministratori IT che eseguono troubleshooting manuale.
+* **False Positives:** Corporate logon/logoff scripts, inventory management software, IT administrators performing manual troubleshooting.
 
 ---
 
-## 🟢 Splunk Query (SPL)
-*La query utilizza l'operatore IN per ottimizzare la ricerca e include filtri condizionali basati sulla relazione Parent-Child per ridurre i falsi positivi noti (es. agenti di monitoraggio legittimi).*
+## Splunk Query (SPL)
+*The query uses the IN operator to optimize the search and includes conditional filters based on the Parent-Child relationship to reduce known false positives (such as legitimate monitoring agents).*
 
 ```splunk
 index=sysmon EventCode=1
@@ -28,7 +28,7 @@ Image IN ("*\\whoami.exe", "*\\net.exe", "*\\systeminfo.exe", "*\\ipconfig.exe",
 | eval User = mvindex(User, 1)
 | table _time, host, User, CommandLine, ParentImage, ParentCommandLine
 ```
-## 🔵 Microsoft Sentinel Query (KQL)
+## Microsoft Sentinel Query (KQL)
 
 ```kql
 DeviceProcessEvents
@@ -37,13 +37,13 @@ DeviceProcessEvents
 | where not(InitiatingProcessFileName =~ "agente_monitoraggio.exe" and FileName Pis~ "ipconfig.exe")
 | project TimeGenerated, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessFileName
 ```
-## 🟡 Sigma Rule (YAML)
+## Sigma Rule (YAML)
 
 ```sigma
-title: Rilevamento Comandi di Ricognizione ed Enumerazione (Discovery)
+title: Detection of Reconnaissance and Enumeration Commands (Discovery)
 id:  7d6200b6-dc10-4aa4-b0d6-814b326796f8
 status: experimental
-description: Rileva l'esecuzione di tool nativi di Windows utilizzati per la ricognizione del sistema, filtrando i processi padre legittimi.
+description: Detects the execution of native Windows tools used for system reconnaissance, filtering out legitimate parent processes.
 references:
     - https://mitre.org
 author: Mattia
@@ -79,10 +79,7 @@ detection:
             - '\ipconfig.exe'  
     condition: selection and not filter_agente
 falsepositives:
-    - Script di inventario IT legittimi
-    - Agenti di monitoraggio aziendali
+    - Legitimate IT inventory scripts
+    - Corporate monitoring agents
 level: high
-
 ```
-
-
