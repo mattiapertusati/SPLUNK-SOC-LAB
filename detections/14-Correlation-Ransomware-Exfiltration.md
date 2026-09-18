@@ -1,18 +1,18 @@
-# 🚨 Multi-Stage Attack: Ransomware Data Staging & Impact
+# Multi-Stage Attack: Ransomware Data Staging & Impact
 
-### Descrizione
-Questa regola di **Correlazione Avanzata** traccia le fasi finali e più devastanti di un attacco Ransomware. L'allarme si attiva se, entro 60 minuti sulla stessa macchina, un attaccante comprime file sensibili in un archivio (Data Staging), utilizza utility di rete a riga di comando per esfiltrare l'archivio verso un server esterno e, infine, distrugge le copie di sicurezza locali (Shadow Copies) per impedire il ripristino dei dati.
+### Description
+This **Advanced Correlation** rule tracks the final and most devastating stages of a Ransomware attack. The alert triggers if, within 60 minutes on the same machine, an attacker compresses sensitive files into an archive (Data Staging), uses command-line network utilities to exfiltrate the archive to an external server, and finally, destroys local backups (Shadow Copies) to prevent data recovery.
 
-## 🎯 MITRE ATT&CK
+## MITRE ATT&CK
 * **Tactic:** Collection (TA0009), Exfiltration (TA0010), Impact (TA0040)
 * **Technique:** Archive Collected Data (T1560), Exfiltration Over Alternative Protocol (T1048), Inhibit System Recovery (T1490)
 
-## 🚦 Alert Metadata
+## Alert Metadata
 * **Severity:** CRITICAL
 * **Confidence:** High
 * **Impact:** Critical
 
-### Query SPL (Correlation Engine)
+### SPL Query (Correlation Engine)
 ```splunk
 (index=wineventlog OR index=sysmon)
 (
@@ -24,16 +24,16 @@ Questa regola di **Correlazione Avanzata** traccia le fasi finali e più devasta
 )
 | transaction host maxspan=60m
 | search ("*7z.exe*" OR "*WinRAR.exe*") AND ("*rclone.exe*" OR "*curl.exe*") AND "*vssadmin*" AND "*delete shadows*"
-| eval Attack_Chain = "ATTACCO CRITICO: Compressione Dati -> Esfiltrazione su Internet -> Distruzione Shadow Copies"
+| eval Attack_Chain = "CRITICAL ATTACK: Data Compression -> Internet Exfiltration -> Shadow Copies Destruction"
 | table _time, host, duration, Attack_Chain
 ```
 
-### Triage & Azioni Consigliate
+### Triage & Recommended Actions
 
-Questo è uno scenario di Crisi (P1 Incident). L'esfiltrazione e la distruzione dei backup indicano che il ransomware è a un passo dal cifrare l'intero disco.
+This is a Crisis scenario (P1 Incident). The exfiltration and destruction of backups indicate that the ransomware is one step away from encrypting the entire disk.
 
-1. **Isolamento Immediato:** Disconnettere fisicamente o logicamente la macchina dalla rete.
+1. **Immediate Isolation:** Physically or logically disconnect the machine from the network.
 
-2. **Ricerca IoC:** Identificare verso quale indirizzo IP o dominio stavano comunicando `curl.exe` o `rclone.exe` per bloccarlo a livello di firewall perimetrale.
+2. **IoC Search:** Identify which IP address or domain `curl.exe` or `rclone.exe` were communicating with to block it at the perimeter firewall level.
 
-3. **Controllo Danni:** Verificare tramite i log di rete quanti Mega/Giga di dati sono stati esfiltrati.
+3. **Damage Control:** Check network logs to verify how many Mega/Gigabytes of data were exfiltrated.
