@@ -1,21 +1,21 @@
-# 🚨 Detection of Local Privilege Escalation
+# Detection of Local Privilege Escalation
 
-### Descrizione
-Rileva l'aggiunta di un account utente a un gruppo locale privilegiato (es. `Administrators`). Gli attaccanti eseguono questa manovra per elevare i propri permessi (`Privilege Escalation`) o per garantire ampi diritti operativi a un account fittizio (`backdoor`) appena creato.
+### Description
+This rule detects the addition of a user account to a privileged local group (for example, `Administrators`). Attackers perform this maneuver to elevate their permissions (`Privilege Escalation`) or to grant broad operational rights to a newly created fake account (`backdoor`).
 
-## 🎯 MITRE ATT&CK
+## MITRE ATT&CK
 * **Tactic:** Privilege Escalation (TA0004) / Persistence (TA0003)
-* **Technique:** Permission Groups Discovery (T1069) oppure Account Manipulation (T1098)
+* **Technique:** Permission Groups Discovery (T1069) or Account Manipulation (T1098)
 * **Sub-technique:** Local Groups (T1069.001) / Dominant for this action: T1098 
 
-## 🚦 Alert Metadata
+## Alert Metadata
 * **Severity:** High
 * **Confidence:** Medium
 * **Impact:** High
 
 ---
 
-### Query SPL
+### SPL Query
 ```splunk
 index=wineventlog EventCode=4732 Group_Name=Administrators
 | eval Group_Target=coalesce(Group_Name, TargetUserName)
@@ -24,19 +24,19 @@ index=wineventlog EventCode=4732 Group_Name=Administrators
 | table _time, host, Creator_Account, Group_Target, Added_Account_SID
 ```
 
-### ⚠️ Possibili Falsi Positivi
-* Promozione di account legittimi.``
-* Creazioni di account temporali da Helpdesk oppure attività automatiche dell'assegnatore di ruoli (LAPS).
+### Possible False Positives
+* Promotion of legitimate accounts.
+* Creation of temporary accounts by the Helpdesk or automatic activities by the role assigner (LAPS).
 
 ---
 
-### Note di Triage / Azioni Consigliate
+### Triage Notes / Recommended Actions
 
-1. **Risoluzione del SID (`Security Identifier`)**
-   Il log nativo 4732 spesso non registra in chiaro il nome dell'utente aggiunto, ma solo il `Security_ID` (SID). L'analista deve prendere il valore estratto nel campo `Added_Account_SID` e cercare a ritroso (EventCode 4720 o 4624) per tradurre il SID nel nome dell'account in chiaro.
+1. **SID Resolution (`Security Identifier`)**
+   The native log 4732 often does not record the name of the added user in clear text, but only the `Security_ID` (SID). The analyst must take the value extracted in the `Added_Account_SID` field and look backward (using EventCode 4720 or 4624) to translate the SID into the clear text account name.
 
-2. **Validazione dell'Azione**
-   Controllare se l'aggiunta dell'utente al gruppo `Administrators` è documentata da un ticket di supporto. Se l'azione avviene in orari anomali o da parte di un account non IT (`Creator_Account`), isolare immediatamente l'host.
+2. **Action Validation**
+   Check if adding the user to the `Administrators` group is documented by a support ticket. If the action happens during unusual hours or is performed by a non-IT account (`Creator_Account`), isolate the host immediately.
 
-3. **Controllo a catena (`Kill Chain`)**
-   Cercare attività anomale eseguite da quel SID nei minuti successivi, come disattivazione di Windows Defender o creazione di regole del firewall.
+3. **Chain Control (`Kill Chain`)**
+   Look for unusual activities performed by that SID in the following minutes, such as disabling Windows Defender or creating firewall rules.
