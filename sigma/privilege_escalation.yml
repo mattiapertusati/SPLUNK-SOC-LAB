@@ -5,14 +5,14 @@ description: Identifies the addition of users to the local Administrators group 
 author: Mattia
 date: 2026/06/10
 logsource:
-product: windows
-service: security
+  product: windows
+  service: security
 detection:
-selection_event_4732:
-EventID: 4732
-TargetUserName: 'Administrators'
-condition: selection_event_4732
+  selection_event_4732:
+    EventID: 4732
+    TargetUserName: 'Administrators'
+  condition: selection_event_4732
 falsepositives:
-- Legitimate account elevation performed by administrators.
-- Automatic activity by privilege management tools (e.g., LAPS).
+  - Legitimate account elevation performed by administrators.
+  - Automatic activity by privilege management tools (e.g., LAPS).
 level: high
