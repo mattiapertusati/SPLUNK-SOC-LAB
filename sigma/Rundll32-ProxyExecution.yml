@@ -1,7 +1,7 @@
-title: Rilevamento Esecuzioni Anomale di Rundll32
+title: Detection of Anomalous Rundll32 Execution
 id: f389f672-a38e-4f86-89de-c8d9f084987f
 status: experimental
-description: Identifica l'esecuzione di rundll32.exe da percorsi insoliti o con genitori sospetti (possibile esecuzione di DLL malevole o dropper).
+description: Identifies the execution of rundll32.exe from unusual paths or with suspicious parent processes (possible execution of malicious DLLs or droppers).
 author: Mattia
 date: 2026/07/20
 tags:
@@ -31,5 +31,6 @@ fields:
     - ParentImage
     - ParentCommandLine
 falsepositives:
-    - Attività amministrative legittime o installazioni software.
+    - Legitimate administrative activities or software installations.
 level: medium
+
