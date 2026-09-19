@@ -5,19 +5,19 @@ description: Identifies the creation of local accounts through the native 4720 e
 author: Mattia
 date: 2026/06/10
 logsource:
-product: windows
-service: security
+  product: windows
+  service: security
 detection:
-selection_event_4720:
-EventID: 4720
-selection_process_4688:
-EventID: 4688
-CommandLine|contains:
-- 'net user /add'
-- 'net1 user /add'
-- 'New-LocalUser'
-condition: selection_event_4720 or selection_process_4688
+  selection_event_4720:
+    EventID: 4720
+  selection_process_4688:
+    EventID: 4688
+    CommandLine|contains:
+      - 'net user /add'
+      - 'net1 user /add'
+      - 'New-LocalUser'
+  condition: selection_event_4720 or selection_process_4688
 falsepositives:
-- Legitimate account creation (Onboarding).
-- Creation of temporary accounts with maximum privileges and a short expiration date for maintenance and/or urgent updates.
+  - Legitimate account creation (Onboarding).
+  - Creation of temporary accounts with maximum privileges and a short expiration date for maintenance and/or urgent updates.
 level: medium
