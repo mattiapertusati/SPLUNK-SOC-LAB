@@ -1,21 +1,22 @@
-# 🔵 Microsoft Sentinel KQL Detections
+# Microsoft Sentinel KQL Detections
 
-Questa cartella contiene le regole di rilevamento tradotte in **KQL (Kusto Query Language)**, pronte per essere implementate all'interno di un **Log Analytics Workspace** o come **Analytics Rules** in Microsoft Sentinel.
+This folder contains detection rules translated into **KQL (Kusto Query Language)**, ready to be implemented within a **Log Analytics Workspace** or as **Analytics Rules** in Microsoft Sentinel.
 
-## 🛠️ Come Utilizzare queste Regole
+## How to Use These Rules
 
-1.  Accedi al portale di **Microsoft Sentinel**.
-2.  Naviga su **Configuration > Analytics**.
-3.  Clicca su **Create > Scheduled query rule**.
-4.  Copia il codice contenuto nei file `.kql` di questa cartella e incollalo nel campo **Rule query**.
-5.  Configura il mapping delle entità utilizzando i campi proiettati (es. `Computer`, `Account`).
+1. Access the **Microsoft Sentinel** portal.
+2. Navigate to **Configuration > Analytics**.
+3. Click **Create > Scheduled query rule**.
+4. Copy the code contained in the `.kql` files in this folder and paste it into the **Rule query** field.
+5. Configure the entity mapping using the projected fields (e.g., `Computer`, `Account`).
 
-## 🗂️ Copertura delle Regole KQL
+## KQL Rule Coverage
 
-Le query incluse coprono l'intera Kill Chain simulata nel laboratorio, sfruttando le tabelle standard di Microsoft 365 Defender e Sentinel:
+The included queries cover the entire Kill Chain simulated in the lab, using standard Microsoft 365 Defender and Sentinel tables:
 
-* **`DeviceProcessEvents` / `SecurityEvent`**: Utilizzate per tracciare la creazione dei processi anomali (es. `tscon.exe` per RDP Hijacking, `schtasks.exe` per le persistente, o l'uso di parametri offuscati in PowerShell).
-* **`SecurityEvent` (EventID 4720, 4732, 4697)**: Dedicate al monitoraggio del Active Directory e degli account locali (creazione utenti malevoli o scalate di privilegi nel gruppo Administrators).
+* **`DeviceProcessEvents` / `SecurityEvent`**: Used to track anomalous process creation (e.g., `tscon.exe` for RDP Hijacking, `schtasks.exe` for persistence, or the use of obfuscated PowerShell parameters).
+* **`SecurityEvent` (EventID 4720, 4732, 4697)**: Used to monitor Active Directory and local accounts (malicious user creation or privilege escalation in the `Administrators` group).
 
-## 📌 Nota sulla Normalizzazione dei Campi
-Tutte le query sono state scritte per essere resilienti all'evasione. Nei casi in cui la riga di comando possa trovarsi in attributi differenti a seconda del tipo di agente di log (MDE o Log di Sicurezza classico), è stata implementata la funzione `coalesce()` per normalizzare i campi ed evitare falsi negativi.
+## Field Normalization Note
+
+All queries were written to be resilient to evasion techniques. When the command line may be stored in different attributes depending on the type of logging agent (MDE or classic Security Logs), the `coalesce()` function has been implemented to normalize the fields and avoid false negatives.
