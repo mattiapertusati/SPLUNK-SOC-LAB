@@ -1,21 +1,23 @@
-# 🟡 Vendor-Agnostic Sigma Rules
+# Vendor-Agnostic Sigma Rules
 
-Benvenuto nella sezione dedicata alle regole **Sigma**. Sigma rappresenta lo standard *de facto* per la scrittura di firme di sicurezza in formato aperto, leggibile e totalmente indipendente dal SIEM in uso.
+Welcome to the section dedicated to **Sigma** rules. Sigma represents the *de facto* standard for writing security signatures in an open, readable format that is fully independent of the SIEM in use.
 
-## 🚀 Portabilità e Compilazione
+## Portability and Compilation
 
-Le regole contenute in questa cartella sono scritte in formato **YAML**. Possono essere convertite istantaneamente nella query nativa di qualsiasi SIEM aziendale (Splunk, Elastic, Sentinel, QRadar, ArcSight) utilizzando i seguenti metodi:
+The rules contained in this folder are written in **YAML** format. They can be instantly converted into the native query language of any enterprise SIEM (Splunk, Elastic, Sentinel, QRadar, ArcSight) using the following methods:
 
-1.  **Uncoder.io (Interfaccia Web):** Copia il codice YAML del file e incollalo su [uncoder.io](https://uncoder.io) per ottenere la query nel formato desiderato.
-2.  **Sigma CLI (Automazione):** Installa il tool ufficiale e compila da riga di comando:
-    ```bash
-    sigma convert -t splunk -p windows_sysmon regola.yml
-    ```
+1. **Uncoder.io (Web Interface):** Copy the YAML code from the file and paste it into [uncoder.io](https://uncoder.io) to obtain the query in the desired format.
+2. **Sigma CLI (Automation):** Install the official tool and compile from the command line:
 
-## 🧠 Struttura di una Regola Sigma
+   ```bash
+   sigma convert -t splunk -p windows_sysmon regola.yml
+   ```
 
-Ogni file segue rigorosamente lo standard di sicurezza enterprise:
-* **`logsource`**: Definisce la categoria del log (es. `process_creation`) e il sistema operativo (`windows`).
-* **`detection`**: Contiene la logica booleana esatta dell'attacco, combinando stringhe, wildcard e percorsi di sistema.
-* **`falsepositives`**: Elenca i comportamenti legittimi noti da filtrare durante la fase di *tuning*.
-* **`level`**: Indica la severity dell'allarme (Low, Medium, High, Critical) mappata sul rischio reale.
+## Sigma Rule Structure
+
+Each file strictly follows the enterprise security standard:
+
+* **`logsource`**: Defines the log category (e.g., `process_creation`) and operating system (`windows`).
+* **`detection`**: Contains the exact Boolean logic of the attack, combining strings, wildcards, and system paths.
+* **`falsepositives`**: Lists known legitimate behaviors to filter during the *tuning* phase.
+* **`level`**: Indicates the alert severity (Low, Medium, High, Critical) mapped to the actual risk.
