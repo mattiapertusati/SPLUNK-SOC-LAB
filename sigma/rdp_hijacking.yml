@@ -5,16 +5,16 @@ description: Detects the abuse of the native tscon.exe utility to forcibly conne
 author: Mattia Pertusati
 date: 2026/06/10
 logsource:
-category: process_creation
-product: windows
+  category: process_creation
+  product: windows
 detection:
-selection:
-Image|endswith: '\tscon.exe'
-CommandLine|contains: '/dest:rdp-tcp'
-condition: selection
+  selection:
+    Image|endswith: '\tscon.exe'
+    CommandLine|contains: '/dest:rdp-tcp'
+  condition: selection
 falsepositives:
-- Helpdesk or sysadmins managing locked remote user sessions.
+  - Helpdesk or sysadmins managing locked remote user sessions.
 level: high
 tags:
-- attack.lateral_movement
-- attack.t1563.002
+  - attack.lateral_movement
+  - attack.t1563.002
