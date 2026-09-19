@@ -6,19 +6,19 @@ author: Mattia
 date: 2026/06/10
 modified: 2026/06/10
 tags:
-- attack.credential_access
-- attack.t1003.001
+  - attack.credential_access
+  - attack.t1003.001
 logsource:
-product: windows
-services: process_creation
+  product: windows
+  service: process_creation
 detection:
-selezione_comsvcs:
-CommandLine|contains: 'comsvcs.dll'
-selezione_metodo:
-CommandLine|contains:
-- 'MiniDump'
-- '#24'
-condition: selezione_comsvcs and selezione_metodo
+  selection_comsvcs:
+    CommandLine|contains: 'comsvcs.dll'
+  selection_method:
+    CommandLine|contains:
+      - 'MiniDump'
+      - '#24'
+  condition: selection_comsvcs and selection_method
 falsepositives:
-- Legitimate troubleshooting scripts or diagnostic tools used by administrators (very rare for LSASS)
+  - Legitimate troubleshooting scripts or diagnostic tools used by administrators (very rare for LSASS)
 level: critical
