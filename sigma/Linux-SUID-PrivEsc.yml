@@ -1,7 +1,7 @@
 title: Linux SUID Discovery and Privilege Escalation
 id: 2e389fde-74f1-46c1-9984-c8978da46ffe
-status: experimental 
-description: Rileva comandi utilizzati per scoprire o creare file SUID, utilizzando regex strict sui permessi ottali.
+status: experimental
+description: Detects commands used to discover or create SUID files, using strict regex patterns for octal permissions.
 references:
     - [https://mitre.org](https://mitre.org)
 author: Mattia
@@ -33,5 +33,6 @@ detection:
         CommandLine|contains: '/opt/scripts/deploy.sh'
     condition: (selection_sudo or selection_find or (selection_chmod and selection_chmod_suid)) and not filter_deploy
 falsepositives:
-    - Amministratori di sistema durante sessioni di troubleshooting.
+    - System administrators during troubleshooting sessions.
 level: high
+
