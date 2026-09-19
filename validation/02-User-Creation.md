@@ -1,10 +1,11 @@
-## 🧪 Validation Report: Local User Creation
+## Validation Report: Local User Creation
 
 ### 1. Attack Execution
-* **Strumento:** Powershell
-* **Test Eseguito:** Local User Creation
-* **Comando Lanciato:**
-  
+
+* **Tool:** PowerShell
+* **Test Performed:** Local User Creation
+* **Command Executed:**
+
   ```powershell
   net user EvilHacker Password123! /add
   ```
@@ -13,18 +14,18 @@
 
 ### 2. Telemetry & Logs
 
-* Sorgente Dati: Windows Security Event Log
-* EventID Attesi: 4720
-  
+* **Data Source:** Windows Security Event Log
+* **Expected EventID:** 4720
+
 <img width="901" height="1237" alt="Screenshot 2026-06-11 112052" src="https://github.com/user-attachments/assets/39072216-1440-46f1-9bdd-b0537fa29532" />
 
 ### 3. Detection & Validation
 
-* Nome Regola: Local User Creation via PowerShell
-* Risultato Test: ✅ Triggered = YES
-* Falsi Positivi: NO
-  
-### 🔴 Splunk (SPL)
+* **Rule Name:** Local User Creation via PowerShell
+* **Test Result:** Triggered = YES
+* **False Positives:** NO
+
+### Splunk (SPL)
 
 ```spl
 index=wineventlog EventCode=4720 
@@ -33,7 +34,7 @@ index=wineventlog EventCode=4720
 | table _time host Creator_Account Created_Account
 ```
 
-### 🔵 Microsoft Sentinel (KQL)
+### Microsoft Sentinel (KQL)
 
 ```kql
 SecurityEvent
@@ -42,15 +43,15 @@ SecurityEvent
 | project TimeGenerated, Computer, Creator_Account, TargetAccount
 ```
 
-### 🟡 Sigma Rule (Agnostic)
+### Sigma Rule (Agnostic)
 
-Vedi il file **local_user_creation.yml** nel repository per la regola completa.
+See the **local_user_creation.yml** file in the repository for the complete rule.
 
 ### 4. Validation Results
 
 1. **Attack Executed:** YES
 2. **Logs Generated:** YES
 3. **Detection Triggered:** YES
-4. **False Positives:** Bassi.
-  
+4. **False Positives:** Low.
+
 <img width="1180" height="353" alt="Screenshot 2026-06-11 112253" src="https://github.com/user-attachments/assets/334717ea-81be-4473-8d83-47b1fab421fc" />
