@@ -5,27 +5,27 @@ description: Identifies the creation of unusual processes started by the WMI ser
 author: Mattia
 date: 2026/07/09
 tags:
-- attack.execution
-- attack.lateral_movement
-- attack.t1047
+  - attack.execution
+  - attack.lateral_movement
+  - attack.t1047
 logsource:
 product: windows
 service: security
 detection:
 selection:
-EventID: 4688
-ParentProcessName|endswith: '\Windows\System32\wbem\WmiPrvSE.exe'
-filter_legitimate:
-NewProcessName|endswith:
-- '\System32\svchost.exe'
-- '\Program Files\Windows Defender\MsMpEng.exe'
+  EventID: 4688
+  ParentProcessName|endswith: '\Windows\System32\wbem\WmiPrvSE.exe'
+  filter_legitimate:
+  NewProcessName|endswith:
+    - '\System32\svchost.exe'
+    - '\Program Files\Windows Defender\MsMpEng.exe'
 condition: selection and not filter_legitimate
-fields:
-- Computer
-- User
-- CommandLine
-- ParentProcessName
-- TokenElevationType
+  fields:
+    - Computer
+    - User
+    - CommandLine
+    - ParentProcessName
+    - TokenElevationType
 falsepositives:
-- Legitimate administrative activity through WMI
+    - Legitimate administrative activity through WMI
 level: medium
