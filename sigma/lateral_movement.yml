@@ -1,25 +1,25 @@
 title: Detection of Lateral Movement via PsExec
 id: ffb972cc-73db-4e16-8bff-6cc2a39d2b8a
 status: experimental
-description: Rileva l'installazione di un nuovo servizio di sistema associato a PsExec, una utility legittima della suite Sysinternals di Microsoft
+description: Detects the installation of a new system service associated with PsExec, a legitimate utility from Microsoft's Sysinternals suite
 author: Mattia
 date: 2026/06/10
 modified: 2026/06/10
 tags:
-    - attack.lateral_movement
-    - attack.t1569.002
+- attack.lateral_movement
+- attack.t1569.002
 logsource:
-    category: service_creation
-    product: windows 
+category: service_creation
+product: windows
 detection:
-    sezione_EventoID:
-        EventID:
-            - 7045 
-            - 4697
-    sezione_ricerca:
-        ServiceName|contains: 'PSEXESVC'
-    condition: sezione_EventoID and sezione_ricerca
+sezione_EventoID:
+EventID:
+- 7045
+- 4697
+sezione_ricerca:
+ServiceName|contains: 'PSEXESVC'
+condition: sezione_EventoID and sezione_ricerca
 falsepositives:
-    - Utilizzo legittimo di PsExec da parte di amministratori di sistema
-    - Scansioni di vulnerabilità autorizzate che utilizzano PsExec
+- Legitimate use of PsExec by system administrators
+- Authorized vulnerability scans that use PsExec
 level: high
