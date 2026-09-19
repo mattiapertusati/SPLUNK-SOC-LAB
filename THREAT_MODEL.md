@@ -1,62 +1,68 @@
-# 🎯 Threat Modeling & Detection Strategy Framework
+# Threat Modeling & Detection Strategy Framework
 
-Questo documento definisce il **Threat Model** formale applicato al progetto `SPLUNK-SOC-LAB`. L'obiettivo di questo framework è giustificare la progettazione delle regole di rilevamento (SPL, KQL, Sigma) sulla base dei profili di minaccia simulati, della superficie di attacco esposta e degli obiettivi aziendali di mitigazione del rischio.
-
----
-
-## 👥 1. Attacker Profiles (Profili di Minaccia)
-
-Il laboratorio simula le attività tattiche e procedurali di due macro-categorie di attori malevoli, focalizzandosi sulle fasi successive alla violazione iniziale (*Post-Exploitation*).
-
-### 🔴 Profilo A: Advanced Persistent Threat (APT) / Cybercrime (Post-Phishing)
-* **Vettore di Accesso Iniziale:** Esecuzione di payload malevoli da parte di un utente interno ingannato tramite campagne di phishing mirate (*Spear-Phishing Attachment/Link*).
-* **Capacità e Risorse:** Elevate. L'attaccante utilizza strumenti di automazione, script offuscati e framework di Command & Control (C2) avanzati.
-* **Obiettivi:** Persistenza a lungo termine nell'infrastruttura Active Directory, Privilege Escalation a Domain Admin, movimenti laterali per identificare asset critici ed esfiltrazione di dati sensibili.
-* **Comportamento in Lab:** Simulato attraverso l'uso di comandi PowerShell codificati (`T1059.001`), creazione di task pianificati persistenti (`T1053.005`) e tecniche di movimento laterale via PsExec (`T1569.002`).
-
-### 🟤 Profilo B: Malicious Insider (Minaccia Interna)
-* **Vettore di Accesso Iniziale:** Accesso fisico o logico legittimo all'endpoint aziendale tramite credenziali valide (es. dipendente infedele o amministratore IT compromesso).
-* **Capacità e Risorse:** Medie. Possiede una conoscenza nativa della topologia di rete e dei sistemi di difesa aziendali.
-* **Obiettivi:** Sabotaggio industriale, interruzione delle Security Operations, furto di credenziali amministrative o manipolazione dei log per nascondere attività illecite.
-* **Comportamento in Lab:** Simulato attraverso la disattivazione mirata del Windows Firewall (`T1562.004`), il tampering delle difese antivirus (`T1562.001`) e la cancellazione intenzionale dei log di Sicurezza di Windows (`T1070.001`).
+This document defines the formal **Threat Model** applied to the `SPLUNK-SOC-LAB` project. The objective of this framework is to justify the design of detection rules (SPL, KQL, Sigma) based on the simulated threat profiles, the exposed attack surface, and the organization's risk mitigation objectives.
 
 ---
 
-## 🏗️ 2. Attack Surface Mapping (Mappatura della Superficie di Attacco)
+## 1. Attacker Profiles
 
-La topologia di rete del `DetectionLab` espone quattro componenti infrastrutturali critici. Ognuno rappresenta un obiettivo strategico differente per l'attaccante.
+The lab simulates the tactical and procedural activities of two main categories of malicious actors, focusing on the stages following the initial compromise (*Post-Exploitation*).
+
+### Profile A: Advanced Persistent Threat (APT) / Cybercrime (Post-Phishing)
+
+* **Initial Access Vector:** Execution of malicious payloads by an internal user who was deceived through targeted phishing campaigns (*Spear-Phishing Attachment/Link*).
+* **Capabilities and Resources:** High. The attacker uses automation tools, obfuscated scripts, and advanced Command & Control (C2) frameworks.
+* **Objectives:** Long-term persistence within the Active Directory infrastructure, Privilege Escalation to Domain Admin, lateral movement to identify critical assets, and exfiltration of sensitive data.
+* **Lab Behavior:** Simulated through the use of encoded PowerShell commands (`T1059.001`), creation of persistent scheduled tasks (`T1053.005`), and lateral movement techniques using PsExec (`T1569.002`).
+
+### Profile B: Malicious Insider (Insider Threat)
+
+* **Initial Access Vector:** Legitimate physical or logical access to the corporate endpoint through valid credentials (e.g., a malicious employee or a compromised IT administrator).
+* **Capabilities and Resources:** Medium. The attacker has native knowledge of the network topology and the organization's security defenses.
+* **Objectives:** Industrial sabotage, disruption of Security Operations, theft of administrative credentials, or manipulation of logs to hide unauthorized activities.
+* **Lab Behavior:** Simulated through targeted Windows Firewall disabling (`T1562.004`), antivirus defense tampering (`T1562.001`), and intentional clearing of Windows Security logs (`T1070.001`).
+
+---
+
+## 2. Attack Surface Mapping
+
+The `DetectionLab` network topology exposes four critical infrastructure components. Each represents a different strategic target for the attacker.
 
 [ WIN10-ENDPOINT ] --------> ( WEF-SERVER ) --------> [ SPLUNK-SIEM ]
-        |
-        v
+|
+v
 [ SRV-DC-01 (AD) ]
 
-### 1. WIN10-ENDPOINT (Postazioni di Lavoro Client)
-* **Ruolo nel Modello:** È la prima linea di difesa e il punto d'ingresso primario per il *Profilo A*.
-* **Rischi Critici:** Esecuzione di codice non autorizzato, furto di credenziali locali in memoria (LSASS), modifiche alle chiavi di registro di persistenza ed evasione dei controlli antivirus locali.
+### 1. WIN10-ENDPOINT (Client Workstations)
+
+* **Role in the Model:** It is the first line of defense and the primary entry point for *Profile A*.
+* **Critical Risks:** Unauthorized code execution, theft of local credentials from memory (LSASS), modifications to persistence registry keys, and evasion of local antivirus controls.
 
 ### 2. SRV-DC-01 (Active Directory Domain Controller)
-* **Ruolo nel Modello:** Il "Crown Jewel" (l'asset più prezioso) dell'intera infrastruttura.
-* **Rischi Critici:** Compromissione totale del dominio tramite abuso di privilegi, manipolazione degli account utente AD, aggiunta illegittima di membri ai gruppi amministrativi (`Administrators` / `Domain Admins`) e persistenza a livello di directory.
+
+* **Role in the Model:** The "Crown Jewel" (the most valuable asset) of the entire infrastructure.
+* **Critical Risks:** Full domain compromise through privilege abuse, manipulation of AD user accounts, unauthorized addition of members to administrative groups (`Administrators` / `Domain Admins`), and directory-level persistence.
 
 ### 3. WEF-SERVER (Windows Event Forwarding)
-* **Ruolo nel Modello:** L'arteria centrale della visibilità difensiva. Raccoglie i log Sysmon e Security dagli endpoint e li instrada verso il SIEM.
-* **Rischi Critici:** Accecamento tattico del SOC. Se l'attaccante compromette o interrompe il servizio WEF, il SIEM smette di ricevere telemetria, permettendo all'attaccante di muoversi nell'ombra senza generare allarmi centralizzati.
 
-### 4. SPLUNK-LOGGER (SIEM Centralizzato)
-* **Ruolo nel Modello:** Il cervello operativo delle Security Operations.
-* **Rischi Critici:** Tentativi di elusione tramite saturezione dei log (Log Flooding) o tentativi indiretti di bypassare le logiche delle query di correlazione studiando i pattern di esclusione dei falsi positivi.
+* **Role in the Model:** The central artery of defensive visibility. It collects Sysmon and Security logs from endpoints and forwards them to the SIEM.
+* **Critical Risks:** Tactical SOC blindness. If the attacker compromises or disrupts the WEF service, the SIEM stops receiving telemetry, allowing the attacker to operate without generating centralized alerts.
+
+### 4. SPLUNK-LOGGER (Centralized SIEM)
+
+* **Role in the Model:** The operational brain of Security Operations.
+* **Critical Risks:** Evasion attempts through log flooding or indirect attempts to bypass correlation query logic by studying false-positive exclusion patterns.
 
 ---
 
-## 🛡️ 3. Detection Objectives & MITRE Alignment (Obiettivi di Rilevamento)
+## 3. Detection Objectives & MITRE Alignment
 
-La strategia ingegneristica applicata in questo repository non mira a rilevare "qualsiasi cosa", ma si concentra sulla massimizzazione della telemetria nei punti di snodo critici della Kill Chain, dove l'attaccante è costretto a compiere azioni rumorose.
+The engineering strategy applied in this repository does not aim to detect "everything", but focuses on maximizing telemetry at critical points of the Kill Chain where the attacker is forced to perform noisy actions.
 
-| Obiettivo Strategico | Tattica MITRE | Tecniche Coperte | Razionale Ingegneristico (Il "Perché") |
-| :--- | :--- | :--- | :--- |
-| **Negare l'Esecuzione Stealth** | Execution / Defense Evasion | `T1059.001` (Encoded PowerShell) | Gli attaccanti abusano di PowerShell codificando i payload in Base64 per eludere i controlli statici di stringa. Rilevare la codifica permette di intercettare l'attacco a prescindere dal tipo di malware utilizzato. |
-| **Proteggere l'Integrità dell'Identità** | Persistence / Privilege Escalation | `T1136.001` (User Creation)<br>`T1548.002` (UAC Bypass / Group Abuse) | La creazione di account locali o l'elevazione non autorizzata nel gruppo `Administrators` sono anomalie strutturali severe. Monitorare queste variazioni previene il consolidamento dell'accesso. |
-| **Garantire la Sopravvivenza dei Log** | Defense Evasion | `T1070.001` (Clear Event Logs)<br>`T1562.001` (Disable Defender) | Un attaccante che tenta di accecare il SOC cancellando i log o spegnendo l'antivirus sta palesando la sua presenza. Questo rilevamento funge da "tripwire" (filo d'inciampo) ad altissima priorità. |
-| **Rompere la Persistenza** | Persistence | `T1053.005` (Scheduled Tasks) | I task pianificati che puntano a directory temporanee (es. `\Temp`) sono il metodo standard per mantenere l'accesso dopo un riavvio. Intercettare la loro creazione blocca l'attaccante sul nascere. |
-| **Isolare il Movimento Laterale** | Lateral Movement | `T1569.002` (PsExec)<br>`T1563.002` (RDP Hijacking) | Impedire l'espansione dell'attaccante dall'endpoint iniziale verso il Domain Controller. Monitorare l'uso abusivo di strumenti amministrativi nativi (`tscon.exe`, `PSEXESVC`) interrompe la catena di compromissione prima che diventi sistemica. |
+| Strategic Objective            | MITRE Tactic                       | Covered Techniques                                                    | Engineering Rationale (The "Why")                                                                                                                                                                                                              |
+| :----------------------------- | :--------------------------------- | :-------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Prevent Stealth Execution**  | Execution / Defense Evasion        | `T1059.001` (Encoded PowerShell)                                      | Attackers abuse PowerShell by encoding payloads in Base64 to evade static string-based controls. Detecting encoding makes it possible to identify the attack regardless of the type of malware being used.                                     |
+| **Protect Identity Integrity** | Persistence / Privilege Escalation | `T1136.001` (User Creation)<br>`T1548.002` (UAC Bypass / Group Abuse) | The creation of local accounts or unauthorized elevation into the `Administrators` group are significant structural anomalies. Monitoring these changes helps prevent access from being consolidated.                                          |
+| **Ensure Log Survival**        | Defense Evasion                    | `T1070.001` (Clear Event Logs)<br>`T1562.001` (Disable Defender)      | An attacker attempting to blind the SOC by deleting logs or disabling antivirus protection is revealing their presence. This detection acts as a high-priority "tripwire".                                                                     |
+| **Break Persistence**          | Persistence                        | `T1053.005` (Scheduled Tasks)                                         | Scheduled tasks that point to temporary directories (e.g., `\Temp`) are a common method for maintaining access after a reboot. Detecting their creation can stop the attacker early in the attack chain.                                       |
+| **Contain Lateral Movement**   | Lateral Movement                   | `T1569.002` (PsExec)<br>`T1563.002` (RDP Hijacking)                   | Prevent the attacker from expanding from the initial endpoint toward the Domain Controller. Monitoring the abusive use of native administrative tools (`tscon.exe`, `PSEXESVC`) can interrupt the compromise chain before it becomes systemic. |
