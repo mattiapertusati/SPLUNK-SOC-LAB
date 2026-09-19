@@ -1,32 +1,32 @@
-title: Rilevamento Token Impersonation - Privilegi Speciali
+title: Token Impersonation Detection - Special Privileges
 id: 4709e6d1-3ff9-48d3-83d7-8c67d8c0cacb
 status: experimental
-description: Rileva l'assegnazione di privilegi speciali (SeImpersonate, SeDebug, ecc.) a utenti non standard per identificare tentativi di Token Impersonation.
+description: Detects the assignment of special privileges (SeImpersonate, SeDebug, etc.) to non-standard users to identify Token Impersonation attempts.
 author: Mattia
 date: 2026/07/13
 references:
-    - https://mitre.org
+- https://mitre.org
 tags:
-    - attack.privilege_escalation
-    - attack.defense_evasion
-    - attack.t1134.001
+- attack.privilege_escalation
+- attack.defense_evasion
+- attack.t1134.001
 logsource:
-    product: windows
-    service: security
+product: windows
+service: security
 detection:
-    selection:
-        EventID: 4672
-        PrivilegeList|contains:
-            - 'SeImpersonatePrivilege'
-            - 'SeAssignPrimaryTokenPrivilege'
-            - 'SeDebugPrivilege'
-            - 'SeTcbPrivilege'
-    filter_system:
-        SubjectUserName: 'SYSTEM'
-    filter_machine:
-        SubjectUserName|endswith: '$'
-    condition: selection and not 1 of filter_*
+selection:
+EventID: 4672
+PrivilegeList|contains:
+- 'SeImpersonatePrivilege'
+- 'SeAssignPrimaryTokenPrivilege'
+- 'SeDebugPrivilege'
+- 'SeTcbPrivilege'
+filter_system:
+SubjectUserName: 'SYSTEM'
+filter_machine:
+SubjectUserName|endswith: '$'
+condition: selection and not 1 of filter_*
 falsepositives:
-    - Software di backup e ripristino di sistema.
-    - Amministratori di dominio che eseguono task di manutenzione avanzata.
+- System backup and recovery software.
+- Domain administrators performing advanced maintenance tasks.
 level: high
