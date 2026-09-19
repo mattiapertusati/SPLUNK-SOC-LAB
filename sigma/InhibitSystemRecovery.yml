@@ -1,4 +1,3 @@
-```yaml
 title: Inhibit System Recovery - Volume Shadow Copy Deletion
 id: 78305a2e-defb-4109-9cdf-f6c17f86f2ff
 status: experimental
@@ -25,4 +24,4 @@ detection:
 falsepositives:
     - Scheduled disk cleanup tasks or system administrators (requires immediate investigation).
 level: critical
-```
+
