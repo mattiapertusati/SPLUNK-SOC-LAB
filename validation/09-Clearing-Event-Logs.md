@@ -1,11 +1,13 @@
-## 🧪 Validation Report: Clear Windows Event Logs
+## Validation Report: Clear Windows Event Logs
 
-**Fase della Kill Chain:** Defense Evasion
-**Tecnica MITRE ATT&CK:** [T1070.001 - Clear Windows Event Logs](https://attack.mitre.org/techniques/T1070/001/)
+**Kill Chain Phase:** Defense Evasion
+**MITRE ATT&CK Technique:** [T1070.001 - Clear Windows Event Logs](https://attack.mitre.org/techniques/T1070/001/)
 
 ### 1. Attack Execution
-* **Strumento:** Native OS Command / Atomic Red Team
-* **Comando Lanciato:**
+
+* **Tool:** Native OS Command / Atomic Red Team
+* **Command Executed:**
+
   ```powershell
   wevtutil cl Security
   ```
@@ -14,41 +16,42 @@
 
 ### 2. Telemetry & Logs
 
-* **Sorgente Dati:** Windows Security Event Log
-* **EventID Atteso:** 1102 (The audit log was cleared)
+* **Data Source:** Windows Security Event Log
+* **Expected EventID:** 1102 (The audit log was cleared)
 
 <img width="899" height="879" alt="Screenshot 2026-06-10 103243" src="https://github.com/user-attachments/assets/e8443fdc-51d8-4aca-bd10-1998f61e068b" />
 
 ### 3. Detection & Validation
 
-* **Nome Regola:** Security Event Log Cleared
-* **Risultato Test:** ✅ Triggered = YES
-* **Falsi Positivi:** Bassi. Svuotare il log di Sicurezza è un'azione estremamente anomala che dovrebbe essere eseguita solo durante operazioni di manutenzione straordinaria e rigidamente tracciate.
+* **Rule Name:** Security Event Log Cleared
+* **Test Result:** Triggered = YES
+* **False Positives:** Low. Clearing the Security log is an extremely unusual action that should only be performed during exceptional maintenance operations and must be strictly monitored.
 
-### 🔴 Splunk (SPL)
+### Splunk (SPL)
 
-```spl
+```spl id="a4f6q9"
 index=wineventlog (EventCode=1102 OR EventCode=104)
 | eval User_Responsible=coalesce(SubjectUserName, Account_Name, UserID, "SYSTEM/Unknown")
 | table _time, host, EventCode, User_Responsible, TaskCategory
-```  
+```
 
-### 🔵 Microsoft Sentinel (KQL)
+### Microsoft Sentinel (KQL)
 
-```kql
+```kql id="e7k2m5"
 SecurityEvent
 | where EventID == 1102
 | project TimeGenerated, Computer, Account, Activity
 ```
 
-### 🟡 Sigma Rule (Agnostic)
-Vedi il file **log_clearing.yml** nel repository per la regola completa.
+### Sigma Rule (Agnostic)
+
+See the **log_clearing.yml** file in the repository for the complete rule.
 
 ### 4. Validation Results
 
 * **Attack Executed:** YES
-* **Logs Generated:** YES (Validato su telemetria storica)
+* **Logs Generated:** YES (Validated using historical telemetry)
 * **Detection Triggered:** YES
-* **False Positives:** Bassi.
+* **False Positives:** Low.
 
 <img width="1192" height="714" alt="Screenshot 2026-06-10 103302" src="https://github.com/user-attachments/assets/d78363ea-f625-4188-99ed-de80a3b203f2" />
