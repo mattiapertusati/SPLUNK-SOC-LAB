@@ -1,13 +1,16 @@
 # Validation Report: Detection 20 - Token Impersonation
 
-## 🎯 Scenario Simulato
+## Simulated Scenario
+
 **MITRE ATT&CK:** T1134.001 (Token Impersonation/Theft)
-**Descrizione:** Creazione di un processo con permessi elevati rubando o impersonando il token di accesso di un altro utente (es. SYSTEM).
+**Description:** Creation of a process with elevated privileges by stealing or impersonating another user's access token (e.g., SYSTEM).
 
-## 💥 Esecuzione in Lab
-Simulato con modulo meterpreter (getsystem) / incognito o tool custom. Generazione di accessi con privilegi speciali.
+## Lab Execution
 
-## 📊 Risultati
-* **SPL Triggered:** ✅ True Positive
-* **KQL Triggered:** ✅ True Positive
-* **Eventi Rilevati:** EventCode 4672 (Special privileges assigned to new logon).
+Simulated using the Meterpreter module (`getsystem`) / Incognito or a custom tool. Generation of logons with special privileges.
+
+## Results
+
+* **SPL Triggered:** True Positive
+* **KQL Triggered:** True Positive
+* **Detected Events:** EventCode 4672 (Special privileges assigned to new logon).
