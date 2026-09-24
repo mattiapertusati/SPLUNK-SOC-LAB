@@ -17,8 +17,7 @@ This rule detects the creation of a new local user account on the system. Attack
 
 ### SPL Query
 ```splunk
-index=wineventlog sourcetype=XmlWinEventLog (EventCode=4720 OR EventCode=4728) NOT SubjectUserName="*$" NOT SubjectUserName="SYSTEM"
-| transaction host maxspan=5m startswith=(EventCode=4720) endswith=(EventCode=4728)
+index=wineventlog sourcetype=XmlWinEventLog EventCode=4720 NOT SubjectUserName="*$" NOT SubjectUserName="SYSTEM"
 | rename SubjectUserName as Creator_Account, TargetUserName as Created_Account
 | stats earliest(_time) as Primo_Evento, latest(_time) as Ultimo_Evento, count by host, Creator_Account, Created_Account
 ```
